@@ -607,6 +607,19 @@
 	};
 
 	/**
+	*  Focus the menu
+	*  @method focus
+	*/
+	p.focus = function()
+	{
+		if (APP)
+		{
+			var gui = require('nw.gui');
+			gui.Window.get().menu = this.menu.parent;
+		}
+	};
+
+	/**
 	*  Close the current project
 	*  @method close
 	*/

@@ -27,11 +27,11 @@
 			if (process.platform === "darwin")
 			{	
 				var gui = require('nw.gui');
-				var menu = new gui.Menu({ type: 'menubar' });
-				menu.createMacBuiltin("RemoteTrace");
-				gui.Window.get().menu = menu;
+				this.menu = new gui.Menu({ type: 'menubar' });
+				this.menu.createMacBuiltin("Remote Trace");
+				gui.Window.get().menu = this.menu;
 			}
-		}		
+		}
 
 		/**
 		*  The output DOM container for log statements
@@ -362,6 +362,19 @@
 		if (atBottom)
 		{
 			this.output.scrollTop(this.output[0].scrollHeight);
+		}
+	};
+
+	/**
+	*  Focus the menu
+	*  @method focus
+	*/
+	p.focus = function()
+	{
+		if (APP)
+		{
+			var gui = require('nw.gui');
+			gui.Window.get().menu = this.menu;
 		}
 	};
 

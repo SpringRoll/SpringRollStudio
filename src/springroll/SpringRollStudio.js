@@ -17,14 +17,20 @@
 
 		if (APP)
 		{
+			var gui = require('nw.gui');
+			this.menu = new gui.Menu({ type: 'menubar' });
+
 			// Create the standard OSX menu
 			if (process.platform === "darwin")
-			{	
-				var gui = require('nw.gui');
-				var menu = new gui.Menu({ type: 'menubar' });
-				menu.createMacBuiltin("SpringRollStudio");
-				gui.Window.get().menu = menu;
+			{
+				this.menu.createMacBuiltin("SpringRoll Studio", {
+					hideEdit: true,
+					hideWindow: true
+				});
 			}
+
+			this.main.on('focus', this._onFocus.bind(this));
+			this._onFocus();
 
 			// Add the modules
 			$(".modules a").each(function(){
@@ -35,6 +41,16 @@
 
 	// Reference to the prototype
 	var p = SpringRollStudio.prototype = Object.create(NodeWebkitApp.prototype);
+
+	/**
+	*  Re-add the menu on focus
+	*  @method _onFocus
+	*  @private
+	*/
+	p._onFocus = function()
+	{
+		this.main.menu = this.menu;
+	};
 
 	/**
 	*  Called when the application is quit. Should do any cleanup here to be safe.

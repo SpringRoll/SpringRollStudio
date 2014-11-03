@@ -57,6 +57,7 @@
 		if (this.win)
 		{
 			this.win.focus();
+			this._onFocus();
 			return;
 		}
 
@@ -104,6 +105,7 @@
 		// Add a listener when the window closes to save the position
 		this.win.on('close', this._onClose.bind(this));
 		this.win.on('loaded', this._onLoaded.bind(this));
+		this.win.on('focus', this._onFocus.bind(this));
 	};
 
 	/**
@@ -115,6 +117,16 @@
 	{
 		this.win.show();
 		this.win.focus();
+	};
+
+	/**
+	*  On focus window event
+	*  @method  _onLoaded
+	*  @private
+	*/
+	p._onFocus = function()
+	{
+		this.win.window.module.focus();
 	};
 
 	/**

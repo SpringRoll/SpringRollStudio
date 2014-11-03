@@ -5,3 +5,8 @@ cache
 docs
 *.log
 *.map
+deploy/assets/js/captions.js
+
+deploy/assets/js/main.js
+
+deploy/assets/js/remote.js
