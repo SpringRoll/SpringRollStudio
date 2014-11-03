@@ -1,0 +1,243 @@
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-button {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+@font-face {
+  font-family: 'SourceCodePro';
+  src: url('../fonts/sourcecodepro-regular-webfont.eot');
+  src: url('../fonts/sourcecodepro-regular-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/sourcecodepro-regular-webfont.woff2') format('woff2'), url('../fonts/sourcecodepro-regular-webfont.woff') format('woff'), url('../fonts/sourcecodepro-regular-webfont.ttf') format('truetype'), url('../fonts/sourcecodepro-regular-webfont.svg#source_code_proregular') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SourceCodePro';
+  src: url('../fonts/sourcecodepro-bold-webfont.eot');
+  src: url('../fonts/sourcecodepro-bold-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/sourcecodepro-bold-webfont.woff2') format('woff2'), url('../fonts/sourcecodepro-bold-webfont.woff') format('woff'), url('../fonts/sourcecodepro-bold-webfont.ttf') format('truetype'), url('../fonts/sourcecodepro-bold-webfont.svg#source_code_probold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+.btn:focus {
+  outline: none !important;
+}
+.unselectable {
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  cursor: default;
+}
+html,
+body {
+  overflow: hidden;
+}
+#frame {
+  min-width: 400px;
+  min-height: 275px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+header .header {
+  width: 100%;
+  position: absolute;
+  z-index: 0;
+  height: 45px;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  cursor: default;
+}
+header .logo {
+  width: 145px;
+  height: 21px;
+  position: absolute;
+  left: 50%;
+  top: 13px;
+  margin-left: -72px;
+  z-index: 1;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  cursor: default;
+}
+#trace {
+  overflow: auto;
+  position: absolute;
+  top: 85px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+#trace .error,
+#trace .warning,
+#trace .info,
+#trace .debug,
+#trace .general {
+  display: none;
+}
+#trace.show-error .error,
+#trace.show-warning .warning,
+#trace.show-info .info,
+#trace.show-debug .debug,
+#trace.show-general .general {
+  display: block;
+}
+#trace .log {
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-family: "SourceCodePro", monospace;
+  font-weight: 300;
+  white-space: nowrap;
+}
+#trace .log.session {
+  font-weight: 700;
+  border-bottom: 1px solid #999;
+  margin: 10px 0;
+}
+#trace .log .type {
+  font-weight: 700;
+  padding-right: 10px;
+  display: inline-block;
+}
+#trace .log .timestamp {
+  display: none;
+  opacity: 0.8;
+  padding-right: 10px;
+  font-size: 10px;
+}
+#trace.wrap .log {
+  white-space: normal;
+}
+#trace.timestamps .timestamp {
+  display: inline-block;
+}
+#trace.default {
+  background: #fff;
+}
+#trace.default .session,
+#trace.default .general {
+  color: #000000;
+}
+#trace.default .info {
+  color: #009933;
+}
+#trace.default .debug {
+  color: #0066CC;
+}
+#trace.default .warning {
+  color: #FF9900;
+}
+#trace.default .error {
+  color: #CC0000;
+}
+#trace.solarizedDark {
+  background: #002B36;
+}
+#trace.solarizedDark .session,
+#trace.solarizedDark .general {
+  color: #93A1A1;
+}
+#trace.solarizedDark .info {
+  color: #2AA198;
+}
+#trace.solarizedDark .debug {
+  color: #859900;
+}
+#trace.solarizedDark .warning {
+  color: #DC322F;
+}
+#trace.solarizedDark .error {
+  color: #D33682;
+}
+#trace.solarizedLight {
+  background: #FDF6E3;
+}
+#trace.solarizedLight .session,
+#trace.solarizedLight .general {
+  color: #586E75;
+}
+#trace.solarizedLight .info {
+  color: #2AA198;
+}
+#trace.solarizedLight .debug {
+  color: #859900;
+}
+#trace.solarizedLight .warning {
+  color: #DC322F;
+}
+#trace.solarizedLight .error {
+  color: #D33682;
+}
+.controls {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 45px;
+  height: 40px;
+  background: #EAEAEA;
+  z-index: 2;
+  border-bottom: 1px solid #ccc;
+}
+.controls .buttons {
+  margin-top: 3px;
+  margin-left: 3px;
+}
+.controls .btn.disabled {
+  background: #CACACA;
+}
+@media screen and (min-width: 560px) {
+  .controls .btn {
+    width: 60px;
+  }
+}
+.controls .maxLogs {
+  float: right;
+  width: 140px;
+  margin-top: 3px;
+  margin-right: 3px;
+}
+@media screen and (max-width: 560px) {
+  .controls .maxLogs {
+    width: 130px;
+  }
+  .controls .maxLogs .input-group-addon {
+    font-size: 80%;
+  }
+}
+.controls #maxLogs {
+  text-align: center;
+}
+.controls .dropdown-menu a .on {
+  display: none;
+}
+.controls .dropdown-menu a .off {
+  display: inline;
+}
+.controls .dropdown-menu a.selected .on {
+  display: inline;
+}
+.controls .dropdown-menu a.selected .off {
+  display: none;
+}
+/*# sourceMappingURL=remote.css.map */

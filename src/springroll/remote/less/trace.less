@@ -1,0 +1,88 @@
+#trace {
+	overflow: auto;
+	position:absolute;
+	top:85px;
+	bottom:0;
+	left:0;
+	right:0;
+	padding:10px;
+
+	.error, 
+	.warning,
+	.info, 
+	.debug,
+	.general {
+		display:none;
+	}
+
+	&.show-error .error,
+	&.show-warning .warning,
+	&.show-info .info,
+	&.show-debug .debug,
+	&.show-general .general {
+		display: block;
+	}
+
+	.log {
+		margin-bottom:5px;
+		font-size: 12px;
+		font-family: "SourceCodePro", monospace;
+		font-weight:300;
+		white-space:nowrap;
+		
+		&.session {
+			font-weight:700;
+			border-bottom:1px solid #999;
+			margin:10px 0;
+		}
+		.type {
+			font-weight:700;
+			padding-right: 10px;
+			display:inline-block;
+		}
+		.timestamp {
+			display: none;
+			opacity: 0.8;
+			padding-right: 10px;
+			font-size: 10px;
+		}
+		.message {
+		}
+	}
+	// Options for the trace
+	&.wrap .log {
+		white-space:normal;
+	}
+	&.timestamps .timestamp {
+		display: inline-block;
+	}
+
+	// Default color scheme
+	&.default {
+		background:#fff;
+		.session,
+		.general { color: #000000;}
+		.info { color: #009933;}
+		.debug { color: #0066CC;}
+		.warning {color: #FF9900;}
+		.error {color: #CC0000;}
+	}
+	&.solarizedDark {
+		background:#002B36;
+		.session,
+		.general {color: #93A1A1;}
+		.info {color: #2AA198;}
+		.debug {color: #859900;}
+		.warning {color: #DC322F;}
+		.error {color: #D33682;}
+	}
+	&.solarizedLight {
+		background:#FDF6E3;
+		.session,
+		.general {color: #586E75;}
+		.info {color: #2AA198;}
+		.debug {color: #859900;}
+		.warning {color: #DC322F;}
+		.error {color: #D33682;}
+	}
+}

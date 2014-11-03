@@ -1,0 +1,13 @@
+{
+  "name": "SpringRollStudio",
+  "private": true,
+  "dependencies": {
+    "grunt": "~0.4.5",
+    "grunt-game-builder": "~0.3.1",
+    "load-grunt-tasks": "*",
+    "grunt-node-webkit-builder": "~0.2.2",
+    "lodash": "~2.4.1",
+    "load-grunt-config": "~0.13.1",
+    "grunt-exec": "~0.4.6"
+  }
+}

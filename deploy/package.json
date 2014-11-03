@@ -1,0 +1,31 @@
+{
+  "name": "SpringRollStudio",
+  "description": "Application for SpringRoll projects",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SpringRoll/SpringRollStudio"
+  },
+  "main": "index.html",
+  "single-instance": true,
+  "window": {
+    "icon": "assets/images/icon.png",
+    "show": false,
+    "toolbar": false,
+    "frame": true,
+    "position": "center",
+    "width": 300,
+    "height": 130,
+    "min_width": 300,
+    "min_height": 130,
+    "resizable": true
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "dependencies": {
+    "glob": "~4.0.6",
+    "ws": "~0.4.32",
+    "semver": "~4.0.3"
+  }
+}

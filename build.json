@@ -1,0 +1,73 @@
+{
+	"name": "SpringRollStudio",
+	"version": "0.0.1",
+	"main": [
+		"components/node-webkit-app/src/utils/UpdateChecker.js",
+		"components/node-webkit-app/src/NodeWebkitApp.js",
+		"src/springroll/Module.js",
+		"src/springroll/SpringRollStudio.js",
+		"src/springroll/SpringRollStudio.less"
+	],
+	"libraries": [
+		"components/jquery/dist/jquery.min.js",
+		"components/jqueryui/ui/core.js",
+		"components/jqueryui/ui/widget.js",
+		"components/jqueryui/ui/mouse.js",
+		"components/jqueryui/ui/draggable.js",
+		"components/bootstrap/dist/js/bootstrap.min.js",
+		"components/cloudkid-namespace/namespace.js",
+		"components/bootstrap/less/bootstrap.less",
+		"components/bootstrap/less/theme.less",
+		"components/bootstrap-confirmation/bootstrap-confirmation.js",
+		"components/underscore/underscore.js",
+		"components/wavesurfer.js/src/wavesurfer.js",
+		"components/wavesurfer.js/src/webaudio.js",
+		"components/wavesurfer.js/src/audioelement.js",
+		"components/wavesurfer.js/src/drawer.js",
+		"components/wavesurfer.js/src/drawer.*.js"
+	],
+	"librariesDebug": [
+		"components/jquery/dist/jquery.js",
+		"components/jqueryui/ui/core.js",
+		"components/jqueryui/ui/widget.js",
+		"components/jqueryui/ui/mouse.js",
+		"components/jqueryui/ui/draggable.js",
+		"components/bootstrap/dist/js/bootstrap.js",
+		"components/cloudkid-namespace/namespace.js",
+		"components/bootstrap/less/bootstrap.less",
+		"components/bootstrap/less/theme.less",
+		"components/bootstrap-confirmation/bootstrap-confirmation.js",
+		"components/underscore/underscore.js",
+		"components/wavesurfer.js/src/wavesurfer.js",
+		"components/wavesurfer.js/src/webaudio.js",
+		"components/wavesurfer.js/src/audioelement.js",
+		"components/wavesurfer.js/src/drawer.js",
+		"components/wavesurfer.js/src/drawer.*.js"
+	],
+	"modules": {
+		"captions": [
+			"components/node-webkit-app/src/utils/Browser.js",
+			"components/node-webkit-app/src/dialog/ModalManager.js",
+			"src/springroll/captions/ui/ContextMenu.js",
+			"src/springroll/captions/formats/*.js",
+			"src/springroll/captions/ui/ProjectModal.js",
+			"src/springroll/captions/ui/Menu.js",
+			"src/springroll/captions/data/Project.js",
+			"src/springroll/captions/ui/List.js",
+			"src/springroll/captions/ui/Controls.js",
+			"src/springroll/captions/ui/Timeline.js",
+			"src/springroll/captions/Captions.js",
+			"src/springroll/captions/Captions.less"
+		],
+		"saveDialog": [
+			"components/cloudkid-namespace/namespace.js",
+			"components/node-webkit-app/src/dialog/ModalDialog.js",
+			"src/springroll/captions/ui/SaveDialog.js"
+		],
+		"remote": [
+			"components/node-webkit-app/src/utils/Browser.js",
+			"src/springroll/remote/RemoteTrace.js",
+			"src/springroll/remote/RemoteTrace.less"
+		]
+	}
+}
