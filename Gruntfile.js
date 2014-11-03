@@ -50,7 +50,6 @@ module.exports = function(grunt)
 				installerDir : './installer',
 				modules: {
 					captions : getModule(build.modules.captions),
-					saveDialog: getModule(build.modules.saveDialog),
 					remote: getModule(build.modules.remote)
 				}
 			}

@@ -42,10 +42,5 @@ module.exports = {
 		src: '<%= jsFolder %>/remote.js',
 		overwrite: true,
 		replacements: '<%= replace.app.replacements %>'
-	},
-	saveDialog: {
-		src: '<%= jsFolder %>/saveDialog.js',
-		overwrite: true,
-		replacements: '<%= replace.app.replacements %>'
 	}
 };

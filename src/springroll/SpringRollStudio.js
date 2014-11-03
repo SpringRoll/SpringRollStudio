@@ -61,7 +61,7 @@
 		// close any modules
 		for (var i = 0; i < this.modules.length; i++)
 		{
-			this.modules[i].close();
+			this.modules[i].close(true);
 		}
 		this.modules = null;
 	};

@@ -28,20 +28,5 @@ module.exports = {
 			sourceMapURL: 'remote.css.map',
 			sourceMapBasepath: '<%= cssFolder %>'
 		}
-	},
-	remote: {
-		files: {
-			'<%= cssFolder %>/remote.css': '<%= modules.remote.css %>',
-		},
-		options: '<%= less.release.options %>'
-	},
-	"remoteDebug": {
-		files: '<%= less.remote.files %>',
-		options: {
-			sourceMap: true,
-			sourceMapFilename: '<%= cssFolder %>/remote.css.map',
-			sourceMapURL: 'remote.css.map',
-			sourceMapBasepath: '<%= cssFolder %>'
-		}
 	}
-}
+};

@@ -11,9 +11,5 @@ module.exports = {
 		'<%= jsFolder %>/remote.js',
 		'<%= cssFolder %>/remote.css.map',
 		'<%= cssFolder %>/remote.css'
-	],
-	saveDialog: [
-		'<%= jsFolder %>/saveDialog.js.map',
-		'<%= jsFolder %>/saveDialog.js'
 	]
 };

@@ -1,5 +1,5 @@
 module.exports = {
-	app_modules : {
+	appModules : {
 		command: 'npm install',
 		cwd: '<%= distFolder %>',
 		stdout: false,

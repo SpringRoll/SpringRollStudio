@@ -4,7 +4,6 @@ module.exports = {
 			'<%= build.css.main %>',
 			'<%= build.file %>',
 			'<%= modules.captions.js %>',
-			'<%= modules.saveDialog.js %>',
 			'<%= modules.remote.js %>',
 			'src/less/**/*.less'
 		],

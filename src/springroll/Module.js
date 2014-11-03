@@ -142,9 +142,6 @@
 			x : this.win.x,
 			y : this.win.y
 		}));
-		
-		// Close the module contents
-		this.win.window.module.close();
 
 		// Close the window
 		this.close();
@@ -154,11 +151,14 @@
 	*  Close the module's window
 	*  @method  close
 	*/
-	p.close = function()
-	{		
+	p.close = function(force)
+	{
 		if (this.win)
 		{
-			this.win.close(true);
+			// Close the module contents
+			this.win.window.module.close();
+
+			this.win.close(force);
 			this.win = null;
 		}
 	};

@@ -47,7 +47,6 @@
 	"modules": {
 		"captions": [
 			"components/node-webkit-app/src/utils/Browser.js",
-			"components/node-webkit-app/src/dialog/ModalManager.js",
 			"src/springroll/captions/ui/ContextMenu.js",
 			"src/springroll/captions/formats/*.js",
 			"src/springroll/captions/ui/ProjectModal.js",
@@ -58,11 +57,6 @@
 			"src/springroll/captions/ui/Timeline.js",
 			"src/springroll/captions/Captions.js",
 			"src/springroll/captions/Captions.less"
-		],
-		"saveDialog": [
-			"components/cloudkid-namespace/namespace.js",
-			"components/node-webkit-app/src/dialog/ModalDialog.js",
-			"src/springroll/captions/ui/SaveDialog.js"
 		],
 		"remote": [
 			"components/node-webkit-app/src/utils/Browser.js",

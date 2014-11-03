@@ -8,14 +8,12 @@ module.exports = function(grunt)
 		'uglify:captions',
 		'clean:remote',
 		'uglify:remote',
-		'clean:saveDialog',
-		'uglify:saveDialog',
 		'clean:css',
 		'less:release',
 		'less:captions',
 		'less:remote',
 		'libs',
-		'exec:app_modules',
+		'exec:appModules',
 		'nodewebkit'
 	]);
 	
@@ -30,15 +28,12 @@ module.exports = function(grunt)
 		'clean:remote',
 		'concat_sourcemap:remote',
 		'replace:remote',
-		'clean:saveDialog',
-		'concat_sourcemap:saveDialog',
-		'replace:saveDialog',
 		'clean:css',
 		'less:development',
 		'less:captionsDebug',
 		'less:remoteDebug',
 		'libs-debug',
-		'exec:app_modules',
+		'exec:appModules',
 		'nodewebkit'
 	]);
 

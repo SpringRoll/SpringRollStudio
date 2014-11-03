@@ -8,7 +8,6 @@
 		List = springroll.captions.List,
 		Project = springroll.captions.Project,
 		Menu = springroll.captions.Menu,
-		ModalManager = cloudkid.ModalManager,
 		XMLFormat = springroll.captions.formats.XMLFormat,
 		SBVFormat = springroll.captions.formats.SBVFormat;
 
@@ -36,6 +35,22 @@
 		*  @property {springroll.captions.List} list
 		*/
 		this.list = new List("#list");
+
+		/**
+		*  The modal save dialog
+		*  @property {jquery} saveDialog
+		*/
+		this.saveDialog = $('#saveDialog');
+
+		// Handle the save button actions
+		this.saveDialog.find('button[data-action]')
+			.click(this._saveClose.bind(this));
+
+		/**
+		*  The action to do after a save dialog
+		*  @property {function} afterSaveDialog
+		*/
+		this.afterSaveDialog = null;
 
 		/**
 		*  The current project
@@ -71,10 +86,20 @@
 		*/
 		this.menu = null;
 
+		/**
+		* The current window
+		* @property {gui.Window}
+		*/
+		this.main = null;
+
 		// Lets create the menu
 		if (APP)
 		{
 			this.menu = new Menu(this._menuHandler.bind(this));
+
+			var gui = require('nw.gui');
+			this.main = gui.Window.get();
+			this.main.on('close', this._onClose.bind(this));
 		}
 
 		// Initialize the browser utility
@@ -150,33 +175,6 @@
 
 			self.open(APP ? file.path : file.name);
 		});
-		
-		//Register the unsaved changes dialog
-		ModalManager.register(
-			"SaveDialog",
-			"assets/dialogs/saveDialog.html",
-			// Window options:
-			{
-				title: "Save Changes",
-				position: "center",
-				resizable: false,
-				width: 400,
-				height: 125,
-				toolbar: false,
-				frame: true,
-				fullscreen: false
-			},
-			// Dialog options:
-			{
-				dialogClass: "springroll.captions.SaveDialog",
-				message: "You have unsaved changes. Would you like to save?",
-				buttons:
-				[
-					{id:"save", value:"Save"},
-					{id:"cancel", value:"Cancel"},
-					{id:"doNotSave", value:"Don't Save"}
-				]
-			});
 	};
 
 	// Reference to the prototype
@@ -544,16 +542,10 @@
 	 */
 	p.refresh = function()
 	{
-		if(this.pending)
+		if (this.pending)
 		{
-			ModalManager.open(
-				"SaveDialog",
-				this.main,
-				this._saveDialogClosed.bind(
-					this,
-					this.open.bind(this, this.project.dir)
-				)
-			);
+			this.afterSaveDialog = this.open.bind(this, this.project.dir);
+			this.saveDialog.modal('show');
 		}
 		else
 		{
@@ -569,41 +561,31 @@
 	*/
 	p._onClose = function(e)
 	{
-		if(this.pending)
+		if (this.pending)
 		{
-			if (e) e.preventDefault();
+			e.preventDefault();
 
-			ModalManager.open(
-				"SaveDialog",
-				this.main,
-				this._saveDialogClosed.bind(this, s._onClose.bind(this))
-			);
-		}
-		else
-		{
-			s._onClose.call(this);
+			this.afterSaveDialog = this.main.close.bind(this.main, true);
+			this.saveDialog.modal('show');
 		}
 	};
 	
 	/**
 	*  Callback on the on saved dialog closed
-	*  @method _saveDialogClosed
+	*  @method _saveClose
 	*  @param {function} next Method to do after 
 	*  @param {String} result
 	*/
-	p._saveDialogClosed = function(next, result)
+	p._saveClose = function()
 	{
-		if (result == "Save")
+		if (this.id === "save")
 		{
 			this.project.save();
-			this.pending = false;
-			next();
 		}
-		else if (result == "Don't Save")
-		{
-			this.pending = false;
-			next();
-		}
+		this.saveDialog.modal('hide');
+		this.pending = false;
+		this.afterSaveDialog();
+		this.afterSaveDialog = null;
 	};
 
 	/**
@@ -614,8 +596,7 @@
 	{
 		if (APP)
 		{
-			var gui = require('nw.gui');
-			gui.Window.get().menu = this.menu.parent;
+			this.main.menu = this.menu.parent;
 		}
 	};
 
@@ -625,13 +606,10 @@
 	*/
 	p.close = function()
 	{
-		if(this.pending)
+		if (this.pending)
 		{
-			ModalManager.open(
-				"SaveDialog",
-				this.main,
-				this._saveDialogClosed.bind(this, this.close.bind(this))
-			);
+			this.afterSaveDialog = this.close.bind(this);
+			this.saveDialog.modal('show');
 			return;
 		}
 		$('body').addClass('empty');

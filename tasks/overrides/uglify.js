@@ -42,11 +42,5 @@ module.exports = {
 			'<%= jsFolder %>/remote.js': '<%= modules.remote.js %>'
 		}, 
 		options: '<%= uglify.app.options %>'
-	},
-	saveDialog: {
-		files: {
-			'<%= jsFolder %>/saveDialog.js': '<%= modules.saveDialog.js %>'
-		}, 
-		options: '<%= uglify.app.options %>'
 	}
 };
