@@ -54,6 +54,17 @@
 	var p = Project.prototype;
 
 	/**
+	*  The name of the project file
+	*  @property {String} PROJECT_FILE
+	*  @static
+	*  @private
+	*/
+	var PROJECT_FILE = ".springroll";
+
+	// for backward-compatibility
+	var OLD_PROJECT_FILE = ".captions";
+
+	/**
 	*  Load the caption file and project for the current locale
 	*  @method open
 	*  @param {string} dir The directory to load
@@ -69,7 +80,25 @@
 		{
 			var path = require('path');
 			var fs = require('fs');
-			var file = path.join(dir, '.captions');
+
+			// Convert the old project file to the new format
+			var oldFile = path.join(dir, OLD_PROJECT_FILE);
+			var file = path.join(dir, PROJECT_FILE);
+
+			if (fs.existsSync(oldFile))
+			{
+				// Read in the project json
+				var data = JSON.parse(fs.readFileSync(oldFile));
+
+				// Write the new project JSON file
+				fs.writeFileSync(
+					file, 
+					JSON.stringify({ captions: data }, null, "\t")
+				);
+
+				// Remove the old project file
+				fs.unlinkSync(oldFile);
+			}
 
 			if (!fs.existsSync(file))
 			{
@@ -96,7 +125,7 @@
 		{
 			$.getJSON(
 				// cache bust the file request for AJAX request
-				dir + "/.captions?cb=" + Math.random() * 10000,
+				dir + "/"+PROJECT_FILE+"?cb=" + Math.random() * 10000,
 				function(data)
 				{
 					self.onProjectLoaded(data, callback);
@@ -109,19 +138,19 @@
 	 * The project is loadd
 	 * @method  onProjectLoaded
 	 * @private
-	 * @param  {object}   data     The JSON data object
+	 * @param  {object}   data The JSON data object
 	 * @param  {Function} callback Callback when done
 	 */
 	p.onProjectLoaded = function(data, callback)
 	{
 		// No projects file!
-		if (!data)
+		if (!data || !data.captions)
 		{
 			callback(null);
 			return;
 		}
-		this.locales = data.locales;
-		this.assets = data.assets;
+		this.locales = data.captions.locales;
+		this.assets = data.captions.assets;
 		this.setLocale('default', function(project){
 			this.loaded = !!project;
 			callback(project);
@@ -185,11 +214,13 @@
 
 				// Dummy project file
 				var data = {
-					"assets" : assets,
-					"locales" : {
-						"default" : {
-							"path" : audioPath,
-							"export" : exportPath
+					"captions" : {
+						"assets" : assets,
+						"locales" : {
+							"default" : {
+								"path" : audioPath,
+								"export" : exportPath
+							}
 						}
 					}
 				};
@@ -260,22 +291,28 @@
 		{
 			var fs = require('fs');
 			var path = require('path');
+			var projectFile = path.join(this.dir, PROJECT_FILE);
+			var exportFile = path.join(this.dir, locale.export);
+
+			// Re-export the captions file
 			fs.writeFileSync(
-				path.join(this.dir, locale.export),
+				exportFile, 
 				JSON.stringify(this.captions, null, "\t")
 			);
-			fs.writeFileSync(
-				path.join(this.dir, ".captions"),
-				JSON.stringify({
-					locales: this.locales,
-					assets: this.assets
-				}, null, "\t")
-			);
+
+			// Get the project JSON file and update it
+			var project = JSON.parse(fs.readFileSync(projectFile));
+			project.captions.locales = this.locales;
+			project.captions.assets = this.assets;
+
+			// Update the project file
+			fs.writeFileSync(projectFile, JSON.stringify(project, null, "\t"));
 		}
+
 		if (WEB && DEBUG)
 		{
 			console.log("Saving... " + this.dir + "/" + locale.export);
-			console.log("Saving... " + this.dir + "/.captions");
+			console.log("Saving... " + this.dir + "/" + PROJECT_FILE);
 		}
 	};
 

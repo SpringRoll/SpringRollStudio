@@ -15,9 +15,9 @@
     "frame": true,
     "position": "center",
     "width": 300,
-    "height": 130,
+    "height": 190,
     "min_width": 300,
-    "min_height": 130,
+    "min_height": 190,
     "resizable": true
   },
   "webkit": {
@@ -26,6 +26,9 @@
   "dependencies": {
     "glob": "~4.0.6",
     "ws": "~0.4.32",
-    "semver": "~4.0.3"
+    "semver": "~4.0.3",
+    "MD5": "~1.2.0",
+    "ansi2html": "~0.0.1",
+    "node-watch" : "~0.3.4"
   }
 }

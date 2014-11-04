@@ -1,0 +1,25 @@
+<div id="tasks_<%=id%>" data-id="<%=id%>" class="tasks">
+	<% for (var i = 0; i < tasks.length; i++ ) { %>
+	<div id="task_item_<%=id%>_<%=tasks[i].name%>" class="tasks-item JS-Task-Toggle-Info" title="<%=tasks[i].info%>">
+		<span class="tasks-item-name"><%=tasks[i].name%></span>
+		<div class="tasks-actions">
+			<span style="display: none" 
+				class="tasks-action-item tasks-action-item_terminal JS-Task-Terminal" 
+				data-project-id="<%=id%>" 
+				data-task-name="<%=tasks[i].name%>" 
+				title="Terminal"><span class="icon-terminal"></span></span>
+			<span style="display: block" 
+				class="tasks-action-item tasks-action-item_run JS-Task-Run" 
+				data-project-id="<%=id%>" 
+				data-task-name="<%=tasks[i].name%>" 
+				title="Run"><span class="icon-run"></span></span>
+			<span style="display: none" 
+				class="tasks-action-item tasks-action-item_stop JS-Task-Stop" 
+				data-project-id="<%=id%>" 
+				data-task-name="<%=tasks[i].name%>" 
+				title="Stop"><span class="icon-stop"></span></span>
+		</div>
+	</div>
+	<pre id="console_<%=id%>_<%=tasks[i].name%>" class="JS-Console console"></pre>
+	<% } %>
+</div>
