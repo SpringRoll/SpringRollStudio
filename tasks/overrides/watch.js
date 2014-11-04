@@ -3,14 +3,10 @@ module.exports = {
 		files: [
 			'<%= build.css.main %>',
 			'<%= build.file %>',
-			'<%= modules.captions.js %>',
-			'<%= modules.remote.js %>',
-			'src/less/**/*.less'
+			'src/**/*.less'
 		],
 		tasks: [
-			'less:development',
-			'less:captionsDebug',
-			'less:remoteDebug'
+			'less:development'
 		]
 	}
 };

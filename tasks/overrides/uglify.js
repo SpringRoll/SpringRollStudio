@@ -30,17 +30,5 @@ module.exports = {
 				drop_console: true
 			}
 		}
-	},
-	captions: {
-		files: {
-			'<%= jsFolder %>/captions.js': '<%= modules.captions.js %>'
-		}, 
-		options: '<%= uglify.app.options %>'
-	},
-	remote: {
-		files: {
-			'<%= jsFolder %>/remote.js': '<%= modules.remote.js %>'
-		}, 
-		options: '<%= uglify.app.options %>'
 	}
 };

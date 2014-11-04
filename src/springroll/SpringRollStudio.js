@@ -2,7 +2,7 @@
 
 	// Import classes
 	var NodeWebkitApp = cloudkid.NodeWebkitApp,
-		Module = springroll.Module;
+		ModuleButton = springroll.ModuleButton;
 
 	/**
 	*  Node Webkit Application
@@ -32,9 +32,11 @@
 			this.main.on('focus', this._onFocus.bind(this));
 			this._onFocus();
 
+			var main = this.main;
+
 			// Add the modules
 			$(".modules a").each(function(){
-				modules.push(new Module(this));
+				modules.push(new ModuleButton(this, main));
 			});
 		}
 	};
@@ -50,20 +52,6 @@
 	p._onFocus = function()
 	{
 		this.main.menu = this.menu;
-	};
-
-	/**
-	*  Called when the application is quit. Should do any cleanup here to be safe.
-	*  @method close
-	*/
-	p.close = function()
-	{
-		// close any modules
-		for (var i = 0; i < this.modules.length; i++)
-		{
-			this.modules[i].close(true);
-		}
-		this.modules = null;
 	};
 
 	// Assign to namespace

@@ -1,7 +1,7 @@
 (function(){
 
 	// Import classes
-	var NodeWebkitApp = cloudkid.NodeWebkitApp,
+	var Module = springroll.Module,
 		Browser = cloudkid.Browser,
 		Controls = springroll.captions.Controls,
 		Timeline = springroll.captions.Timeline,
@@ -18,6 +18,8 @@
 	*/
 	var Captions = function()
 	{
+		Module.call(this);
+
 		/**
 		*  The controls module
 		*  @property {springroll.captions.Controls} controls
@@ -77,7 +79,7 @@
 		*  @property {jquery} quitButton
 		*/
 		this.quitButton = $("#quitButton")
-			.click(this.close.bind(this))
+			.click(this.clear.bind(this))
 			.hide();
 
 		/**
@@ -86,20 +88,10 @@
 		*/
 		this.menu = null;
 
-		/**
-		* The current window
-		* @property {gui.Window}
-		*/
-		this.main = null;
-
 		// Lets create the menu
 		if (APP)
 		{
 			this.menu = new Menu(this._menuHandler.bind(this));
-
-			var gui = require('nw.gui');
-			this.main = gui.Window.get();
-			this.main.on('close', this._onClose.bind(this));
 		}
 
 		// Initialize the browser utility
@@ -178,7 +170,7 @@
 	};
 
 	// Reference to the prototype
-	var p = Captions.prototype;
+	var p = Captions.prototype = Object.create(Module.prototype);
 
 	/**
 	*  The default width of a new caption in ms
@@ -250,7 +242,7 @@
 				}
 				case this.menu.close :
 				{
-					this.close();
+					this.clear();
 					break;
 				}
 				case this.menu.reload :
@@ -496,7 +488,7 @@
 	*/
 	p.open = function(dir)
 	{
-		this.close();
+		this.clear();
 
 		var self = this;
 		var list = this.list;
@@ -555,18 +547,20 @@
 
 	/**
 	*  Handler when the main node-webkit window closes
-	*  @method _onClose
+	*  @method shutdown
 	*  @method protected
 	*  @param {event} e The event close
 	*/
-	p._onClose = function(e)
+	p.shutdown = function(e)
 	{
 		if (this.pending)
 		{
-			e.preventDefault();
-
-			this.afterSaveDialog = this.main.close.bind(this.main, true);
+			this.afterSaveDialog = this.close.bind(this, true);
 			this.saveDialog.modal('show');
+		}
+		else
+		{
+			this.close(true);
 		}
 	};
 	
@@ -602,13 +596,13 @@
 
 	/**
 	*  Close the current project
-	*  @method close
+	*  @method clear
 	*/
-	p.close = function()
+	p.clear = function()
 	{
 		if (this.pending)
 		{
-			this.afterSaveDialog = this.close.bind(this);
+			this.afterSaveDialog = this.clear.bind(this);
 			this.saveDialog.modal('show');
 			return;
 		}
@@ -665,10 +659,7 @@
 		this.pending = true;
 	};
 
-	// Assign to namespace
-	//namespace('springroll.captions').Captions = Captions;
-
 	// Create the app on window loaded
-	$(function(){ window.module = new Captions(); });
+	Module.create(Captions);
 
 }());

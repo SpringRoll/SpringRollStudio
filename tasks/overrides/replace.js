@@ -32,15 +32,5 @@ module.exports = {
 			from: /\bAPP\b/g,
 			to: "true"
 		}]
-	},
-	captions: {
-		src: '<%= jsFolder %>/captions.js',
-		overwrite: true,
-		replacements: '<%= replace.app.replacements %>'
-	},
-	remote: {
-		src: '<%= jsFolder %>/remote.js',
-		overwrite: true,
-		replacements: '<%= replace.app.replacements %>'
 	}
 };

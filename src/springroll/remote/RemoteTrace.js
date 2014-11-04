@@ -6,12 +6,16 @@
 		var WebSocketServer = require('ws').Server;
 	}
 
+	var Module = springroll.Module;
+
 	/**
 	*  The application for receiving WebSocket messages from other applications
 	*  @class RemoteTrace
 	*/
 	var RemoteTrace = function()
 	{
+		Module.call(this);
+
 		if (APP)
 		{
 			/**
@@ -29,7 +33,7 @@
 				var gui = require('nw.gui');
 				this.menu = new gui.Menu({ type: 'menubar' });
 				this.menu.createMacBuiltin("Remote Trace");
-				gui.Window.get().menu = this.menu;
+				this.main.menu = this.menu;
 			}
 		}
 
@@ -134,7 +138,7 @@
 	};
 
 	// Reference to the prototype
-	var p = RemoteTrace.prototype;
+	var p = RemoteTrace.prototype = Object.create(Module.prototype);
 
 	// The collection of all themes
 	var allFilters = ['general','debug','info','warning','error'];
@@ -373,28 +377,25 @@
 	{
 		if (APP)
 		{
-			var gui = require('nw.gui');
-			gui.Window.get().menu = this.menu;
+			this.main.menu = this.menu;
 		}
 	};
 
 	/**
 	*  Close the application
-	*  @method close
+	*  @method shutdown
 	*/
-	p.close = function()
+	p.shutdown = function()
 	{
 		if (this.server)
 		{
 			this.server.close();
 			this.server = null;
 		}
+		this.close(true);
 	};
 
-	// Assign to namespace
-	//namespace('springroll.remote').RemoteTrace = RemoteTrace;
-
-	// Create the app on window loaded
-	$(function(){ window.module = new RemoteTrace(); });
+	// Create the new Remote trace
+	Module.create(RemoteTrace);
 
 }());

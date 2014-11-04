@@ -4,7 +4,7 @@
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/NodeWebkitApp.js",
-		"src/springroll/Module.js",
+		"src/springroll/ModuleButton.js",
 		"src/springroll/SpringRollStudio.js",
 		"src/springroll/SpringRollStudio.less"
 	],
@@ -47,6 +47,7 @@
 	"modules": {
 		"captions": [
 			"components/node-webkit-app/src/utils/Browser.js",
+			"src/springroll/Module.js",
 			"src/springroll/captions/ui/ContextMenu.js",
 			"src/springroll/captions/formats/*.js",
 			"src/springroll/captions/ui/ProjectModal.js",
@@ -60,6 +61,7 @@
 		],
 		"remote": [
 			"components/node-webkit-app/src/utils/Browser.js",
+			"src/springroll/Module.js",
 			"src/springroll/remote/RemoteTrace.js",
 			"src/springroll/remote/RemoteTrace.less"
 		]
