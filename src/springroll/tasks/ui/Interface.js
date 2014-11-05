@@ -5,7 +5,8 @@
 	var path = require("path");
 
 	// Import classes
-	var TerminalWindow = springroll.tasks.TerminalWindow;
+	var TerminalWindow = springroll.tasks.TerminalWindow,
+		Settings = springroll.tasks.Settings;
 	
 	/**
 	*  The main interface class
@@ -95,11 +96,11 @@
 					.toggleClass(SIDEBAR_CLASS)
 					.hasClass(SIDEBAR_CLASS);
 
-				app.settings.collapsedSidebar = collapsed;
+				Settings.collapsedSidebar = collapsed;
 			}
 		);
 
-		if (app.settings.collapsedSidebar)
+		if (Settings.collapsedSidebar)
 		{
 			body.addClass(SIDEBAR_CLASS);
 		}

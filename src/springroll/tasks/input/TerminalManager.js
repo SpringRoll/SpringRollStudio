@@ -8,6 +8,8 @@
 	*  Manage the terminal window
 	*  @class TerminalManager
 	*  @namespace springroll.tasks
+	*  @constructor
+	*  @param {springroll.tasks.TaskRunner} app The instance of the app
 	*/
 	var TerminalManager = function(app)
 	{

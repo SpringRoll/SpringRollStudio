@@ -5,16 +5,14 @@
 	*  @class Settings
 	*  @namespace springroll.tasks
 	*/
-	var Settings = function(){};
-
-	// Reference to the prototype
-	var p = Settings.prototype;
+	var Settings = {};
 
 	/**
 	*  Get the current active project
 	*  @property {String} activeProject
+	*  @static
 	*/
-	Object.defineProperty(p, "activeProject", {
+	Object.defineProperty(Settings, "activeProject", {
 		get : function()
 		{
 			return localStorage.TasksDataActive || null;
@@ -28,8 +26,9 @@
 	/**
 	*  If the sidebar is collapsed or not
 	*  @property {Boolean} collapsedSidebar
+	*  @static
 	*/
-	Object.defineProperty(p, "collapsedSidebar", {
+	Object.defineProperty(Settings, "collapsedSidebar", {
 		get : function()
 		{
 			return JSON.parse(localStorage.TasksDataSidebar || "false");
@@ -43,9 +42,10 @@
 	/**
 	*  Save the collection of projects
 	*  @method setProjects
+	*  @static
 	*  @param {Array} project The projects to set
 	*/
-	p.setProjects = function(projects)
+	Settings.setProjects = function(projects)
 	{
 		localStorage.TasksData = JSON.stringify(projects);
 	};
@@ -53,9 +53,10 @@
 	/**
 	*  Get the projects
 	*  @method getProjects
+	*  @static
 	*  @return {Array} The collection of projects
 	*/
-	p.getProjects = function()
+	Settings.getProjects = function()
 	{
 		var projects;
 		try
@@ -72,11 +73,12 @@
 	/**
 	*  Save the window settings
 	*  @method saveWindow
+	*  @static
 	*  @param {String} alias The alias for the window
 	*  @param {Window} win Node webkit window object
 	*  @param {Boolean} [isTerminal=false] If we're setting the terminal window 
 	*/
-	p.saveWindow = function(alias, win)
+	Settings.saveWindow = function(alias, win)
 	{
 		localStorage[alias] = JSON.stringify({
 			width : win.width,
@@ -89,10 +91,11 @@
 	/**
 	*  Load the window to the saved size
 	*  @method loadWIndow
+	*  @static
 	*  @param {String} alias The alias for the window
 	*  @param {Window} win The GUI window object
 	*/
-	p.loadWindow = function(alias, win)
+	Settings.loadWindow = function(alias, win)
 	{
 		var rect;
 		try

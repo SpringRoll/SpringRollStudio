@@ -1,15 +1,17 @@
-// LESS
+@import 'less/fonts';
 
-.moduleContainer {
-	width:100%;
-	height:100%;
-	position:absolute;
-	top:0;
-	left:0;
-	z-index:1;
+.moduleHover(@file){
+	background:linear-gradient(
+		rgba(0, 0, 0, 0.4), 
+		rgba(0, 0, 0, 0.1)
+	), url(@file);
+	background-repeat:no-repeat;
+	background-size:cover;
 }
 
 .modules {
+	font-family:'OpenSans', sans-serif;
+	font-weight: lighter;
 	position:absolute;
 	width:100%;
 	height:100%;
@@ -18,6 +20,16 @@
 	box-sizing:border-box;
 
 	a {
+		&:first-child {
+			border-top-left-radius: 6px;
+			border-top-right-radius: 6px;
+		}
+		&:last-child {
+			border-bottom-left-radius: 6px;
+			border-bottom-right-radius: 6px;
+		}
+		color:#fff;
+		font-size:140%;
 		diplay:block;
 		background:#ccc;
 		position:absolute;
@@ -31,47 +43,33 @@
 			display:block;
 			position:absolute;
 			top:50%;
-			left:50%;
-			-webkit-transform:translate(-50%,-50%);
-			transform:translate(-50%,-50%);
+			text-align:center;
+			width:100%;
+			-webkit-transform:translateY(-50%);
+			transform:translateY(-50%);
 		}
 		&#captions {
 			top:0;
-			background-image:url(../images/captions-banner.svg);
+			background-image:url('../images/captions-banner.svg');
 		}
 		&#remote {
 			top:percentage(1/3);
-			background-image:url(../images/remote-banner.svg);
+			background-image:url('../images/remote-banner.svg');
 		}
 		&#tasks {
 			top:percentage(2/3);
-			background-image:url(../images/remote-banner.svg);
+			background-image:url('../images/tasks-banner.svg');
 			border:0;
 		}
 		&:hover {
 			&#captions {
-				background:linear-gradient(
-					rgba(0, 0, 0, 0.25), 
-					rgba(0, 0, 0, 0.25)
-			    ), url(../images/captions-banner.svg);
-			    background-repeat:no-repeat;
-				background-size:cover;
+				.moduleHover('../images/captions-banner.svg');
 			}
 			&#remote {
-				background:linear-gradient(
-					rgba(0, 0, 0, 0.25), 
-					rgba(0, 0, 0, 0.25)
-			    ), url(../images/remote-banner.svg);
-			    background-repeat:no-repeat;
-				background-size:cover;
+				.moduleHover('../images/remote-banner.svg');
 			}
 			&#tasks {
-				background:linear-gradient(
-					rgba(0, 0, 0, 0.25), 
-					rgba(0, 0, 0, 0.25)
-			    ), url(../images/remote-banner.svg);
-			    background-repeat:no-repeat;
-				background-size:cover;
+				.moduleHover('../images/tasks-banner.svg');
 			}
 		}
 	}

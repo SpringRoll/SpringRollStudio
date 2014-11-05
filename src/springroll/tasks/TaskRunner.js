@@ -5,6 +5,7 @@
 		// Import node modules
 		var ansi2html = require('ansi2html');
 		var watch = require('node-watch');
+		var path = require('path');
 	}
 
 	var Module = springroll.Module,
@@ -36,12 +37,6 @@
 		*  @property {jquery} tasks
 		*/
 		this.tasks = $(".task-tab");
-
-		/**
-		*  The settings object
-		*  @property {springroll.tasks.Settings} settings
-		*/
-		this.settings = new Settings();
 
 		/**
 		*  The project manager
@@ -85,7 +80,7 @@
 
 		if (manager.projects.length > 0)
 		{
-			var activeId = this.settings.activeProject,
+			var activeId = Settings.activeProject,
 				foundActive = false,
 				firstId;
 			
@@ -210,7 +205,7 @@
 		$('#tasks_' + id).show();
 
 		// Save the current project
-		this.settings.activeProject = id;
+		Settings.activeProject = id;
 	};
 
 	/**

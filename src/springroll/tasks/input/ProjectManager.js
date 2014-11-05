@@ -5,12 +5,15 @@
 	var fs = require('fs');
 
 	// Import classes
-	var Utils = springroll.tasks.Utils;
+	var Utils = springroll.tasks.Utils,
+		Settings = springroll.tasks.Settings;
 
 	/**
 	*  Add projects to the interface
 	*  @class ProjectManager
 	*  @namespace springroll.tasks
+	*  @constructor
+	*  @param {springroll.tasks.TaskRunner} app The instance of the app
 	*/
 	var ProjectManager = function(app)
 	{
@@ -24,7 +27,7 @@
 		*  The collection of currently loaded projects
 		*  @property {Array} projects
 		*/
-		this.projects = app.settings.getProjects();
+		this.projects = Settings.getProjects();
 	};
 
 	// The reference to the prototype
@@ -240,7 +243,7 @@
 		if (!exists)
 		{
 			this.projects.push(project);
-			this.app.settings.setProjects(this.projects);
+			Settings.setProjects(this.projects);
 		}
 		if (DEBUG)
 		{
@@ -261,7 +264,7 @@
 			projects.push(this.getById(ids[i]));
 		}
 		this.projects = projects;
-		this.app.settings.setProjects(this.projects);
+		Settings.setProjects(this.projects);
 	};
 
 	/**
@@ -281,7 +284,7 @@
 		);
 
 		// Update projects
-		this.app.settings.setProjects(this.projects);
+		Settings.setProjects(this.projects);
 
 		// Kill all project related tasks
 		this.app.terminalManager.killProjectWorkers(id);

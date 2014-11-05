@@ -3,6 +3,9 @@
 	// Import modules
 	var gui = require('nw.gui');
 
+	// Import classes
+	var Settings = springroll.tasks.Settings;
+
 	/**
 	*  The Terminal Window manages the output of a task into it's own console window
 	*  @class TerminalWindow
@@ -39,9 +42,9 @@
 
 		/**
 		*  Reference to the nodejs window
-		*  @property {Window} nodeWindow
+		*  @property {nw.gui.Window} main
 		*/
-		this.nodeWindow = null;
+		this.main = null;
 
 		/**
 		*  The observer to watch changes in the output
@@ -71,13 +74,13 @@
 	p.create = function()
 	{
 		// Open the new window
-		this.nodeWindow = gui.Window.get(
-			window.open('tasks-terminal.html', {
+		this.main = gui.Window.get(
+			window.open('tasks-terminal.html'), {
 				show : false
-			})
+			}
 		);
-		this.nodeWindow.on('close', this.close.bind(this));
-		this.nodeWindow.on('loaded', this.onLoaded.bind(this));
+		this.main.on('close', this.close.bind(this));
+		this.main.on('loaded', this.onLoaded.bind(this));
 	};
 
 	/**
@@ -86,10 +89,10 @@
 	*/
 	p.onLoaded = function()
 	{
-		this.app.settings.loadWindow(WINDOW_ALIAS, this.nodeWindow);
+		Settings.loadWindow(WINDOW_ALIAS, this.main);
 
 		// Get the dom output
-		this.terminal = this.nodeWindow.window.document.getElementById('terminal');
+		this.terminal = this.main.window.document.getElementById('terminal');
 
 		// Setup the observer
 		this.observer = new MutationObserver(this.onUpdate.bind(this));
@@ -130,7 +133,7 @@
 		this.output = document.getElementById('console_' + projectId + "_" + taskName);
 		
 		// Update the title
-		this.nodeWindow.title = this.taskName;
+		this.main.title = this.taskName;
 
 		// define what element should be observed by the observer
 		// and what types of mutations trigger the callback
@@ -142,8 +145,8 @@
 		this.onUpdate();
 
 		// Reveal the window
-		this.nodeWindow.show();
-		this.nodeWindow.focus();
+		this.main.show();
+		this.main.focus();
 	};
 
 	/**
@@ -159,8 +162,8 @@
 		}
 		this.output = null;
 		this.terminal.innerHTML = "";
-		this.app.settings.saveWindow(WINDOW_ALIAS, this.nodeWindow);
-		this.nodeWindow.hide();
+		Settings.saveWindow(WINDOW_ALIAS, this.main);
+		this.main.hide();
 	};
 
 	/**
@@ -172,8 +175,8 @@
 		this.close();
 		this.observer = null;
 		this.terminal = null;
-		this.nodeWindow.close(true);
-		this.nodeWindow = null;
+		this.main.close(true);
+		this.main = null;
 	};
 
 	// Assign to global space
