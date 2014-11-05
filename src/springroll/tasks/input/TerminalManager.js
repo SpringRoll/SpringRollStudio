@@ -1,8 +1,11 @@
 (function(){
 
-	// Import node modules
-	var spawn = require("child_process").spawn;
-	var exec = require("child_process").exec;
+	if (APP)
+	{
+		// Import node modules
+		var spawn = require("child_process").spawn;
+		var exec = require("child_process").exec;
+	}
 	
 	/**
 	*  Manage the terminal window
@@ -23,13 +26,19 @@
 		*  The command to use based on the platform, either grunt.cmd or grunt
 		*  @property {String} command
 		*/
-		this.command = (process.platform === 'win32') ? 'grunt.cmd' : 'grunt';
+		this.command = null;
+
+		if (APP)
+		{
+			// Get the command based on the platform
+			this.command = (process.platform === 'win32') ? 'grunt.cmd' : 'grunt';
+		}
 
 		/**
 		*  The list of current processes by project id
-		*  @property {dict} process_list
+		*  @property {dict} processList
 		*/
-		this.process_list = {};
+		this.processList = {};
 	};
 
 	// Reference to the prototype
@@ -42,7 +51,7 @@
 	p.killWorkers = function()
 	{
 		var self = this;
-		_.forEach(self.process_list,
+		_.forEach(self.processList,
 			function(project, project_id)
 			{
 				self.killProjectWorkers(project_id);
@@ -60,7 +69,7 @@
 	{
 		var self = this;
 
-		var project = this.process_list[project_id];
+		var project = this.processList[project_id];
 
 		if (!project)
 		{
@@ -96,12 +105,12 @@
 
 		var terminal = spawn(this.command, [task_name], {cwd: project.path});
 
-		if (_.isUndefined(this.process_list[project_id]))
+		if (_.isUndefined(this.processList[project_id]))
 		{
-			this.process_list[project_id] = {};
+			this.processList[project_id] = {};
 		}
 
-		this.process_list[project_id][task_name] = {
+		this.processList[project_id][task_name] = {
 			name: task_name,
 			terminal: terminal,
 			status: 'running'
@@ -145,12 +154,12 @@
 	*/
 	p.stopTask = function(project_id, task_name)
 	{
-		if (!_.isUndefined(this.process_list[project_id]))
+		if (!_.isUndefined(this.processList[project_id]))
 		{
 			try
 			{
 				this.killTask(project_id, task_name);
-				var pid = this.process_list[project_id][task_name].status = "stop";
+				var pid = this.processList[project_id][task_name].status = "stop";
 			}
 			catch(e)
 			{
@@ -167,14 +176,17 @@
 	*/
 	p.killTask = function(project_id, task_name)
 	{
-		if (process.platform === 'win32')
+		if (APP)
 		{
-			var pid = this.process_list[project_id][task_name].terminal.pid;
-			exec('taskkill /pid ' + pid + ' /T /F');
-		}
-		else
-		{
-			this.process_list[project_id][task_name].terminal.kill();
+			if (process.platform === 'win32')
+			{
+				var pid = this.processList[project_id][task_name].terminal.pid;
+				exec('taskkill /pid ' + pid + ' /T /F');
+			}
+			else
+			{
+				this.processList[project_id][task_name].terminal.kill();
+			}
 		}
 	};
 

@@ -66,8 +66,15 @@ module.exports = function(grunt)
 				options: '<%= uglify.app.options %>'
 			};
 
-			// The replacements for debug
+			// The replacements for web
 			config.replace[name] = {
+				src: '<%= jsFolder %>/'+name+'.js',
+				overwrite: true,
+				replacements: '<%= replace.main.replacements %>'
+			};
+
+			// The replacements for app
+			config.replace[name+'App'] = {
 				src: '<%= jsFolder %>/'+name+'.js',
 				overwrite: true,
 				replacements: '<%= replace.app.replacements %>'
@@ -87,10 +94,16 @@ module.exports = function(grunt)
 				'<%= jsFolder %>/'+name+'.js'
 			);
 
+			config.watch.main.files.push(js);
+			config.watch.main.tasks.push(
+				'concat_sourcemap:'+name, 
+				'replace:'+name
+			);
+
 			moduleTasks.push('uglify:'+name);
 			moduleTasksDebug.push(
 				'concat_sourcemap:'+name,
-				'replace:'+name
+				'replace:'+name+'App'
 			);
 		}
 

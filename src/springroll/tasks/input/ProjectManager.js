@@ -1,8 +1,11 @@
 (function(){
 
-	var exec = require('child_process').exec;
-	var path = require('path');
-	var fs = require('fs');
+	if (APP)
+	{
+		var exec = require('child_process').exec;
+		var path = require('path');
+		var fs = require('fs');
+	}
 
 	// Import classes
 	var Utils = springroll.tasks.Utils,

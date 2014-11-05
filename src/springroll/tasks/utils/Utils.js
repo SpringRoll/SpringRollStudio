@@ -1,8 +1,11 @@
 (function(){
 
-	// Import node modules
-	var md5 = require("MD5");
-	var fs = require("fs");
+	if (APP)
+	{
+		// Import node modules
+		var md5 = require("MD5");
+		var fs = require("fs");
+	}
 
 	/**
 	*  Basic app utilities

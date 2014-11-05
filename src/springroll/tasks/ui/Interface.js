@@ -1,8 +1,11 @@
 (function(){
 
-	// Global node modules
-	var fs = require('fs');
-	var path = require("path");
+	if (APP)
+	{
+		// Global node modules
+		var fs = require('fs');
+		var path = require("path");
+	}
 
 	// Import classes
 	var TerminalWindow = springroll.tasks.TerminalWindow,

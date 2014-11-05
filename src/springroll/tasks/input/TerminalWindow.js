@@ -1,7 +1,10 @@
 (function(){
 
-	// Import modules
-	var gui = require('nw.gui');
+	if (APP)
+	{
+		// Import modules
+		var gui = require('nw.gui');
+	}
 
 	// Import classes
 	var Settings = springroll.tasks.Settings;
