@@ -166,7 +166,7 @@ body {
   position: absolute;
   right: 0;
   top: 0;
-  background: url(../img/sidebar-shadow.png) repeat-x;
+  background: url(../images/sidebar-shadow.png) repeat-x;
   z-index: 2;
 }
 .sidebar-title {

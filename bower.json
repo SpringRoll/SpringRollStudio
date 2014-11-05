@@ -9,6 +9,7 @@
 		"bootstrap-confirmation": "https://github.com/tavicu/bootstrap-confirmation.git",
 		"wavesurfer.js": "*",
 		"underscore": "~1.7.0",
-		"node-webkit-app": "*"
+		"node-webkit-app": "*",
+		"sortable": "farhadi/html5sortable"
 	}
 }

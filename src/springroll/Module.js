@@ -23,6 +23,11 @@
 		{
 			this.main = gui.Window.get();
 			this.main.on('close', this.shutdown.bind(this));
+
+			if (DEBUG)
+			{
+				this.main.showDevTools();
+			}
 		}		
 	};
 

@@ -12,6 +12,7 @@
 		ProjectManager = springroll.tasks.ProjectManager,
 		TerminalWindow = springroll.tasks.TerminalWindow,
 		Interface = springroll.tasks.Interface,
+		Utils = springroll.tasks.Utils,
 		TerminalManager = springroll.tasks.TerminalManager;
 
 	/**
@@ -52,7 +53,7 @@
 		*  The console output manager
 		*  @property {springroll.tasks.TerminalManager} terminalManager
 		*/
-		this.terminalManager = new TerminalManager();
+		this.terminalManager = new TerminalManager(this);
 
 		/**
 		*  The interface instance

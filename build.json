@@ -14,6 +14,7 @@
 		"components/jqueryui/ui/widget.js",
 		"components/jqueryui/ui/mouse.js",
 		"components/jqueryui/ui/draggable.js",
+		"components/sortable/jquery.sortable.js",
 		"components/bootstrap/dist/js/bootstrap.min.js",
 		"components/cloudkid-namespace/namespace.js",
 		"components/bootstrap/less/bootstrap.less",
@@ -32,6 +33,7 @@
 		"components/jqueryui/ui/widget.js",
 		"components/jqueryui/ui/mouse.js",
 		"components/jqueryui/ui/draggable.js",
+		"components/sortable/jquery.sortable.js",
 		"components/bootstrap/dist/js/bootstrap.js",
 		"components/cloudkid-namespace/namespace.js",
 		"components/bootstrap/less/bootstrap.less",
@@ -69,9 +71,10 @@
 			"src/springroll/Module.js",
 			"src/springroll/tasks/utils/Utils.js",
 			"src/springroll/tasks/utils/Settings.js",
+			"src/springroll/tasks/input/TerminalWindow.js",
+			"src/springroll/tasks/ui/Interface.js",
 			"src/springroll/tasks/input/ProjectManager.js",
 			"src/springroll/tasks/input/TerminalManager.js",
-			"src/springroll/tasks/input/TerminalWindow.js",
 			"src/springroll/tasks/TaskRunner.js",
 			"src/springroll/tasks/TaskRunner.less"
 		]

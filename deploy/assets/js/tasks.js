@@ -23,6 +23,11 @@
 		{
 			this.main = gui.Window.get();
 			this.main.on('close', this.shutdown.bind(this));
+
+			if (true)
+			{
+				this.main.showDevTools();
+			}
 		}		
 	};
 
@@ -260,7 +265,359 @@
 })();
 (function(){
 
+	// Import modules
+	var gui = require('nw.gui');
+
+	/**
+	*  The Terminal Window manages the output of a task into it's own console window
+	*  @class TerminalWindow
+	*  @namespace springroll.tasks
+	*  @constructor
+	*  @param {String} projectId The unqiue project id
+	*  @param {String} taskName The task name
+	*/
+	var TerminalWindow = function(projectId, taskName)
+	{
+		/**
+		*  The unique project id
+		*  @property {String} projectId
+		*/
+		this.projectId = projectId;
+
+		/**
+		*  The name of the task
+		*  @property {String} taskName
+		*/
+		this.taskName = taskName;
+
+		/**
+		*  The jQuery node for the task output
+		*  @property {jquery} output
+		*/
+		this.output = null;
+
+		/**
+		*  The DOM element on the output window
+		*  @property {DOM} terminal
+		*/
+		this.terminal = null;
+
+		/**
+		*  Reference to the nodejs window
+		*  @property {Window} nodeWindow
+		*/
+		this.nodeWindow = null;
+
+		/**
+		*  The observer to watch changes in the output
+		*  @property {MutationObserver} observer
+		*/
+		this.observer = null;
+
+		// create the new window
+		this.create();
+	};
+
+	// Reference to the prototype
+	var p = TerminalWindow.prototype = {};
+
+	/** 
+	*  The window reference
+	*  @property {String} WINDOW_ALIAS
+	*  @private
+	*  @static
+	*/
+	var WINDOW_ALIAS = 'TasksTerminalWindow';
+
+	/**
+	*  Open the dialog
+	*  @method create
+	*/
+	p.create = function()
+	{
+		// Open the new window
+		this.nodeWindow = gui.Window.get(
+			window.open('tasks-terminal.html', {
+				show : false
+			})
+		);
+		this.nodeWindow.on('close', this.close.bind(this));
+		this.nodeWindow.on('loaded', this.onLoaded.bind(this));
+	};
+
+	/**
+	*  Open after the DOM is loaded on the new window
+	*  @method onLoaded
+	*/
+	p.onLoaded = function()
+	{
+		this.app.settings.loadWindow(WINDOW_ALIAS, this.nodeWindow);
+
+		// Get the dom output
+		this.terminal = this.nodeWindow.window.document.getElementById('terminal');
+
+		// Setup the observer
+		this.observer = new MutationObserver(this.onUpdate.bind(this));
+
+		// Open the constructor task
+		this.open(this.projectId, this.taskName);
+	};
+
+	/**
+	*  Everytime the output is updated
+	*  @method onUpdate
+	*  @private
+	*/
+	p.onUpdate = function()
+	{
+		this.terminal.innerHTML = this.output.innerHTML;
+
+		// Scroll to the bottom of the output window
+		this.terminal.scrollTop = this.terminal.scrollHeight;
+	};
+
+	/**
+	*  New
+	*  @method open
+	*  @param {String} projectId The unqiue project id
+	*  @param {String} taskName The task name
+	*/
+	p.open = function(projectId, taskName)
+	{
+		if (this.observer)
+		{
+			this.observer.disconnect();
+		}
+		this.terminal.innerHTML = "";
+
+		this.projectId = projectId;
+		this.taskName = taskName;
+		this.output = document.getElementById('console_' + projectId + "_" + taskName);
+		
+		// Update the title
+		this.nodeWindow.title = this.taskName;
+
+		// define what element should be observed by the observer
+		// and what types of mutations trigger the callback
+		this.observer.observe(this.output, {
+			attributes: true,
+			childList: true,
+			characterData: true
+		});
+		this.onUpdate();
+
+		// Reveal the window
+		this.nodeWindow.show();
+		this.nodeWindow.focus();
+	};
+
+	/**
+	*  Close the window
+	*  @method close
+	*  @private
+	*/
+	p.close = function()
+	{
+		if (this.observer)
+		{
+			this.observer.disconnect();
+		}
+		this.output = null;
+		this.terminal.innerHTML = "";
+		this.app.settings.saveWindow(WINDOW_ALIAS, this.nodeWindow);
+		this.nodeWindow.hide();
+	};
+
+	/**
+	*  Destroy and don't use after this
+	*  @method destroy
+	*/
+	p.destroy = function()
+	{
+		this.close();
+		this.observer = null;
+		this.terminal = null;
+		this.nodeWindow.close(true);
+		this.nodeWindow = null;
+	};
+
+	// Assign to global space
+	namespace('springroll.tasks').TerminalWindow = TerminalWindow;
+
+}());
+(function(){
+
+	// Global node modules
+	var fs = require('fs');
+	var path = require("path");
+
+	// Import classes
+	var TerminalWindow = springroll.tasks.TerminalWindow;
+	
+	/**
+	*  The main interface class
+	*  @class Interface
+	*  @namespace springroll.tasks
+	*  @constructor
+	*  @param {springroll.tasks.TaskRunner} app The instance of the app
+	*/
+	var Interface = function(app)
+	{
+		var body = $('body').on(
+			'click',
+			'.JS-Sidebar-Item',
+			function()
+			{
+				app.switchProject($(this).data('id').toString());
+				return false;
+			}
+		)
+		.on(
+			'click',
+			'.JS-Project-Remove',
+			function()
+			{
+				app.removeProject($(this).data('id').toString());
+				return false;
+			}
+		)
+		.on(
+			'dblclick',
+			'.JS-Task-Toggle-Info',
+			function()
+			{
+				var run = $(this).find('.JS-Task-Run');
+				var project_id = run.data('project-id').toString();
+				var task_name = run.data('task-name').toString();
+				app.runTask(project_id, task_name);
+				return false;
+			}
+		)
+		.on(
+			'click',
+			'.JS-Task-Run',
+			function()
+			{
+				var project_id = $(this).data('project-id').toString();
+				var task_name = $(this).data('task-name').toString();
+				app.runTask(project_id, task_name);
+				return false;
+			}
+		)
+		.on(
+			'click',
+			'.JS-Task-Terminal',
+			function(e)
+			{
+				var projectId = $(this).data('project-id').toString();
+				var taskName = $(this).data('task-name').toString();
+
+				if (!app.terminal)
+				{
+					app.terminal = new TerminalWindow(projectId, taskName);
+				}
+				else
+				{
+					app.terminal.open(projectId, taskName);
+				}
+				return false;
+			}
+		)
+		.on(
+			'click',
+			'.JS-Task-Stop',
+			function()
+			{
+				var project_id = $(this).data('project-id').toString();
+				var task_name = $(this).data('task-name').toString();
+				app.stopTask(project_id, task_name);
+				return false;
+			}
+		);
+
+		$('.sidebar-toggle').click(
+			function()
+			{
+				collapsed = body
+					.toggleClass(SIDEBAR_CLASS)
+					.hasClass(SIDEBAR_CLASS);
+
+				app.settings.collapsedSidebar = collapsed;
+			}
+		);
+
+		if (app.settings.collapsedSidebar)
+		{
+			body.addClass(SIDEBAR_CLASS);
+		}
+
+		// Enable sortable list
+		$('.sidebar-list').sortable().on('sortupdate', function(){
+			var ids = [];
+			$(".sidebar-item").each(
+				function()
+				{
+					ids.push($(this).data('id').toString());
+				}
+			);
+			app.projectManager.reorder(ids);
+		});
+
+		$(document).on(
+			'dragover',
+			function handleDragOver(event)
+			{
+				event.stopPropagation();
+				event.preventDefault();
+			}
+		)
+		.on(
+			'drop',
+			function handleDrop(event)
+			{
+				event.stopPropagation();
+				event.preventDefault();
+
+				var files = event.originalEvent.dataTransfer.files;
+
+				_.each(files, function(file){
+
+					var stats = fs.statSync(file.path);
+
+					if (stats.isDirectory() && path.dirname(file.path) !== file.path)
+					{
+						app.addProject(file.path);
+					}
+					else if (stats.isFile() && path.dirname(path.dirname(file.path)) !== path.dirname(file.path))
+					{
+						app.addProject(path.dirname(file.path));
+					}
+				});
+				return false;
+			}
+		);
+	};
+
+	/**
+	*  The class for the sidebar collapsed
+	*  @property {String} SIDEBAR_CLASS
+	*  @static
+	*  @private
+	*/
+	var SIDEBAR_CLASS = 'collapsed-sidebar';
+
+	// Assign to namespace
+	namespace('springroll.tasks').Interface = Interface;
+
+}());
+(function(){
+
 	var exec = require('child_process').exec;
+	var path = require('path');
+	var fs = require('fs');
+
+	// Import classes
+	var Utils = springroll.tasks.Utils;
 
 	/**
 	*  Add projects to the interface
@@ -762,188 +1119,6 @@
 	namespace('springroll.tasks').TerminalManager = TerminalManager;
 	
 }());
-(function(){
-
-	// Import modules
-	var gui = require('nw.gui');
-
-	/**
-	*  The Terminal Window manages the output of a task into it's own console window
-	*  @class TerminalWindow
-	*  @namespace springroll.tasks
-	*  @constructor
-	*  @param {String} projectId The unqiue project id
-	*  @param {String} taskName The task name
-	*/
-	var TerminalWindow = function(projectId, taskName)
-	{
-		/**
-		*  The unique project id
-		*  @property {String} projectId
-		*/
-		this.projectId = projectId;
-
-		/**
-		*  The name of the task
-		*  @property {String} taskName
-		*/
-		this.taskName = taskName;
-
-		/**
-		*  The jQuery node for the task output
-		*  @property {jquery} output
-		*/
-		this.output = null;
-
-		/**
-		*  The DOM element on the output window
-		*  @property {DOM} terminal
-		*/
-		this.terminal = null;
-
-		/**
-		*  Reference to the nodejs window
-		*  @property {Window} nodeWindow
-		*/
-		this.nodeWindow = null;
-
-		/**
-		*  The observer to watch changes in the output
-		*  @property {MutationObserver} observer
-		*/
-		this.observer = null;
-
-		// create the new window
-		this.create();
-	};
-
-	// Reference to the prototype
-	var p = TerminalWindow.prototype = {};
-
-	/** 
-	*  The window reference
-	*  @property {String} WINDOW_ALIAS
-	*  @private
-	*  @static
-	*/
-	var WINDOW_ALIAS = 'TasksTerminalWindow';
-
-	/**
-	*  Open the dialog
-	*  @method create
-	*/
-	p.create = function()
-	{
-		// Open the new window
-		this.nodeWindow = gui.Window.get(
-			window.open('tasks-terminal.html', {
-				show : false
-			})
-		);
-		this.nodeWindow.on('close', this.close.bind(this));
-		this.nodeWindow.on('loaded', this.onLoaded.bind(this));
-	};
-
-	/**
-	*  Open after the DOM is loaded on the new window
-	*  @method onLoaded
-	*/
-	p.onLoaded = function()
-	{
-		this.app.settings.loadWindow(WINDOW_ALIAS, this.nodeWindow);
-
-		// Get the dom output
-		this.terminal = this.nodeWindow.window.document.getElementById('terminal');
-
-		// Setup the observer
-		this.observer = new MutationObserver(this.onUpdate.bind(this));
-
-		// Open the constructor task
-		this.open(this.projectId, this.taskName);
-	};
-
-	/**
-	*  Everytime the output is updated
-	*  @method onUpdate
-	*  @private
-	*/
-	p.onUpdate = function()
-	{
-		this.terminal.innerHTML = this.output.innerHTML;
-
-		// Scroll to the bottom of the output window
-		this.terminal.scrollTop = this.terminal.scrollHeight;
-	};
-
-	/**
-	*  New
-	*  @method open
-	*  @param {String} projectId The unqiue project id
-	*  @param {String} taskName The task name
-	*/
-	p.open = function(projectId, taskName)
-	{
-		if (this.observer)
-		{
-			this.observer.disconnect();
-		}
-		this.terminal.innerHTML = "";
-
-		this.projectId = projectId;
-		this.taskName = taskName;
-		this.output = document.getElementById('console_' + projectId + "_" + taskName);
-		
-		// Update the title
-		this.nodeWindow.title = this.taskName;
-
-		// define what element should be observed by the observer
-		// and what types of mutations trigger the callback
-		this.observer.observe(this.output, {
-			attributes: true,
-			childList: true,
-			characterData: true
-		});
-		this.onUpdate();
-
-		// Reveal the window
-		this.nodeWindow.show();
-		this.nodeWindow.focus();
-	};
-
-	/**
-	*  Close the window
-	*  @method close
-	*  @private
-	*/
-	p.close = function()
-	{
-		if (this.observer)
-		{
-			this.observer.disconnect();
-		}
-		this.output = null;
-		this.terminal.innerHTML = "";
-		this.app.settings.saveWindow(WINDOW_ALIAS, this.nodeWindow);
-		this.nodeWindow.hide();
-	};
-
-	/**
-	*  Destroy and don't use after this
-	*  @method destroy
-	*/
-	p.destroy = function()
-	{
-		this.close();
-		this.observer = null;
-		this.terminal = null;
-		this.nodeWindow.close(true);
-		this.nodeWindow = null;
-	};
-
-	// Assign to global space
-	namespace('springroll.tasks').TerminalWindow = TerminalWindow;
-
-}());
 (function($){
 
 	if (true)
@@ -958,6 +1133,7 @@
 		ProjectManager = springroll.tasks.ProjectManager,
 		TerminalWindow = springroll.tasks.TerminalWindow,
 		Interface = springroll.tasks.Interface,
+		Utils = springroll.tasks.Utils,
 		TerminalManager = springroll.tasks.TerminalManager;
 
 	/**
@@ -998,7 +1174,7 @@
 		*  The console output manager
 		*  @property {springroll.tasks.TerminalManager} terminalManager
 		*/
-		this.terminalManager = new TerminalManager();
+		this.terminalManager = new TerminalManager(this);
 
 		/**
 		*  The interface instance
