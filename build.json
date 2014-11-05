@@ -69,9 +69,9 @@
 			"src/springroll/Module.js",
 			"src/springroll/tasks/utils/Utils.js",
 			"src/springroll/tasks/utils/Settings.js",
-			"src/springroll/tasks/components/ProjectManager.js",
-			"src/springroll/tasks/components/TerminalManager.js",
-			"src/springroll/tasks/components/TerminalWindow.js",
+			"src/springroll/tasks/input/ProjectManager.js",
+			"src/springroll/tasks/input/TerminalManager.js",
+			"src/springroll/tasks/input/TerminalWindow.js",
 			"src/springroll/tasks/TaskRunner.js",
 			"src/springroll/tasks/TaskRunner.less"
 		]
