@@ -43,10 +43,11 @@
 			'.JS-Task-Toggle-Info',
 			function()
 			{
-				var run = $(this).find('.JS-Task-Run');
-				var project_id = run.data('project-id').toString();
-				var task_name = run.data('task-name').toString();
-				app.runTask(project_id, task_name);
+				var button = $(this).find('.JS-Task-Run');
+				app.toggleTask(
+					button.data('project-id').toString(),
+					button.data('task-name').toString()
+				);
 				return false;
 			}
 		)
@@ -55,9 +56,11 @@
 			'.JS-Task-Run',
 			function()
 			{
-				var project_id = $(this).data('project-id').toString();
-				var task_name = $(this).data('task-name').toString();
-				app.runTask(project_id, task_name);
+				var button = $(this);
+				app.toggleTask(
+					button.data('project-id').toString(), 
+					button.data('task-name').toString()
+				);
 				return false;
 			}
 		)
@@ -66,8 +69,9 @@
 			'.JS-Task-Terminal',
 			function(e)
 			{
-				var projectId = $(this).data('project-id').toString();
-				var taskName = $(this).data('task-name').toString();
+				var button = $(this);
+				var projectId = button.data('project-id').toString();
+				var taskName = button.data('task-name').toString();
 
 				if (!app.terminal)
 				{
@@ -85,9 +89,11 @@
 			'.JS-Task-Stop',
 			function()
 			{
-				var project_id = $(this).data('project-id').toString();
-				var task_name = $(this).data('task-name').toString();
-				app.stopTask(project_id, task_name);
+				var button = $(this);
+				app.toggleTask(
+					button.data('project-id').toString(), 
+					button.data('task-name').toString()
+				);
 				return false;
 			}
 		);

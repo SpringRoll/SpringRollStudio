@@ -1,24 +1,23 @@
-<div id="tasks_<%=id%>" data-id="<%=id%>" class="tasks">
+<div id="tasks_<%=id%>" data-id="<%=id%>" class="tasks container-fluid">
 	<% for (var i = 0; i < tasks.length; i++ ) { %>
-	<div id="task_item_<%=id%>_<%=tasks[i].name%>" class="tasks-item JS-Task-Toggle-Info" title="<%=tasks[i].info%>">
-		<span class="tasks-item-name"><%=tasks[i].name%></span>
-		<div class="tasks-actions">
-			<span style="display: none" 
-				class="tasks-action-item tasks-action-item_terminal JS-Task-Terminal" 
+	<div id="task_item_<%=id%>_<%=tasks[i].name%>" class="tasks-item row JS-Task-Toggle-Info" title="<%=tasks[i].info%>">
+		<div class="tasks-actions btn-group pull-right">
+			<button
+				class="btn btn-default run JS-Task-Run" 
 				data-project-id="<%=id%>" 
 				data-task-name="<%=tasks[i].name%>" 
-				title="Terminal"><span class="icon-terminal"></span></span>
-			<span style="display: block" 
-				class="tasks-action-item tasks-action-item_run JS-Task-Run" 
+				title="Run">
+				<span class="play glyphicon glyphicon-play"></span>
+				<span class="stop glyphicon glyphicon-stop"></span>
+			</button>
+			<button
+				class="btn btn-default terminal JS-Task-Terminal" 
 				data-project-id="<%=id%>" 
 				data-task-name="<%=tasks[i].name%>" 
-				title="Run"><span class="icon-run"></span></span>
-			<span style="display: none" 
-				class="tasks-action-item tasks-action-item_stop JS-Task-Stop" 
-				data-project-id="<%=id%>" 
-				data-task-name="<%=tasks[i].name%>" 
-				title="Stop"><span class="icon-stop"></span></span>
+				title="Terminal"><span class="glyphicon glyphicon-align-left"></span>
+			</button>
 		</div>
+		<div class="name"><%=tasks[i].name%></div>
 	</div>
 	<pre id="console_<%=id%>_<%=tasks[i].name%>" class="JS-Console console"></pre>
 	<% } %>

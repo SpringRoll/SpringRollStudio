@@ -1,6 +1,6 @@
 (function($, undefined){
 
-	if (false)
+	if (true)
 	{
 		var gui = require('nw.gui');
 	}
@@ -19,7 +19,7 @@
 		*/
 		this.main = null;
 
-		if (false)
+		if (true)
 		{
 			this.main = gui.Window.get();
 			this.main.on('close', this.shutdown.bind(this));
@@ -81,7 +81,7 @@
 }(jQuery));
 (function(){
 
-	if (false)
+	if (true)
 	{
 		// Import node modules
 		var md5 = require("MD5");
@@ -271,7 +271,7 @@
 })();
 (function(){
 
-	if (false)
+	if (true)
 	{
 		// Import modules
 		var gui = require('nw.gui');
@@ -459,7 +459,7 @@
 }());
 (function(){
 
-	if (false)
+	if (true)
 	{
 		// Global node modules
 		var fs = require('fs');
@@ -502,10 +502,11 @@
 			'.JS-Task-Toggle-Info',
 			function()
 			{
-				var run = $(this).find('.JS-Task-Run');
-				var project_id = run.data('project-id').toString();
-				var task_name = run.data('task-name').toString();
-				app.runTask(project_id, task_name);
+				var button = $(this).find('.JS-Task-Run');
+				app.toggleTask(
+					button.data('project-id').toString(),
+					button.data('task-name').toString()
+				);
 				return false;
 			}
 		)
@@ -514,9 +515,11 @@
 			'.JS-Task-Run',
 			function()
 			{
-				var project_id = $(this).data('project-id').toString();
-				var task_name = $(this).data('task-name').toString();
-				app.runTask(project_id, task_name);
+				var button = $(this);
+				app.toggleTask(
+					button.data('project-id').toString(), 
+					button.data('task-name').toString()
+				);
 				return false;
 			}
 		)
@@ -525,8 +528,9 @@
 			'.JS-Task-Terminal',
 			function(e)
 			{
-				var projectId = $(this).data('project-id').toString();
-				var taskName = $(this).data('task-name').toString();
+				var button = $(this);
+				var projectId = button.data('project-id').toString();
+				var taskName = button.data('task-name').toString();
 
 				if (!app.terminal)
 				{
@@ -544,9 +548,11 @@
 			'.JS-Task-Stop',
 			function()
 			{
-				var project_id = $(this).data('project-id').toString();
-				var task_name = $(this).data('task-name').toString();
-				app.stopTask(project_id, task_name);
+				var button = $(this);
+				app.toggleTask(
+					button.data('project-id').toString(), 
+					button.data('task-name').toString()
+				);
 				return false;
 			}
 		);
@@ -628,7 +634,7 @@
 }());
 (function(){
 
-	if (false)
+	if (true)
 	{
 		var exec = require('child_process').exec;
 		var path = require('path');
@@ -961,7 +967,7 @@
 })();
 (function(){
 
-	if (false)
+	if (true)
 	{
 		// Import node modules
 		var spawn = require("child_process").spawn;
@@ -989,7 +995,7 @@
 		*/
 		this.command = null;
 
-		if (false)
+		if (true)
 		{
 			// Get the command based on the platform
 			this.command = (process.platform === 'win32') ? 'grunt.cmd' : 'grunt';
@@ -1137,7 +1143,7 @@
 	*/
 	p.killTask = function(project_id, task_name)
 	{
-		if (false)
+		if (true)
 		{
 			if (process.platform === 'win32')
 			{
@@ -1157,7 +1163,7 @@
 }());
 (function($){
 
-	if (false)
+	if (true)
 	{
 		// Import node modules
 		var ansi2html = require('ansi2html');
@@ -1355,8 +1361,8 @@
 	*/
 	p.switchProject = function(id)
 	{
-		$('.sidebar-item_current').removeClass('sidebar-item_current');
-		$('#project_' + id).addClass('sidebar-item_current');
+		$('.sidebar-item-current').removeClass('sidebar-item-current');
+		$('#project_' + id).addClass('sidebar-item-current');
 
 		$('.tasks').hide();
 		$('#tasks_' + id).show();
@@ -1386,7 +1392,7 @@
 
 		this.clearProject(id);
 
-		if ($('.sidebar-item_current').length === 0 && this.projectManager.projects.length > 0)
+		if ($('.sidebar-item-current').length === 0 && this.projectManager.projects.length > 0)
 		{
 			this.switchProject(this.projectManager.projects[0].id);
 		}
@@ -1420,61 +1426,44 @@
 	};
 
 	/**
-	*  Start running a task
-	*  @method runTask
+	*  Start running or stop running a task
+	*  @method toggleTask
 	*  @param {String} project_id The unqiue project id
 	*  @param {String} task_name The name of the task
 	*/
-	p.runTask = function(project_id, task_name)
+	p.toggleTask = function(project_id, task_name)
 	{
-		var id = '#task_item_' + project_id + "_" + task_name;
+		var item = $('#task_item_' + project_id + "_" + task_name);
 
-		this.terminalManager.runTask(
-			project_id,
-			task_name,
-			function()
-			{
-				//start event
-				$(id).addClass('tasks-item_running')
-					.removeClass('tasks-item_error');
-				$(id + " .tasks-action-item_terminal").show();
-				$(id + " .tasks-action-item_stop").show();
-				$(id + " .tasks-action-item_run").hide();
-			},
-			function()
-			{
-				//end event
-				$(id).removeClass('tasks-item_running');
-				$(id + " .tasks-action-item_terminal").hide();
-				$(id + " .tasks-action-item_stop").hide();
-				$(id + " .tasks-action-item_run").show();
-			},
-			function()
-			{
-				//error event
-				$(id).addClass('tasks-item_error')
-					.removeClass('tasks-item_running');
-				$(id + " .tasks-action-item_terminal").hide();
-				$(id + " .tasks-action-item_stop").hide();
-				$(id + " .tasks-action-item_run").show();
-			}
-		);
-	};
-
-	/**
-	*  Stop the task
-	*  @method stopTask
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task 
-	*/
-	p.stopTask = function(project_id, task_name)
-	{
-		this.terminalManager.stopTask(project_id, task_name);
-		$('#task_item_' + project_id + "_" + task_name).removeClass('tasks-item_running');
-		$('#task_item_' + project_id + "_" + task_name).removeClass('tasks-item_error');
-		$('#task_item_' + project_id + "_" + task_name + " .tasks-action-item_terminal").hide();
-		$('#task_item_' + project_id + "_" + task_name + " .tasks-action-item_stop").hide();
-		$('#task_item_' + project_id + "_" + task_name + " .tasks-action-item_run").show();
+		if (item.hasClass('running'))
+		{
+			this.terminalManager.stopTask(project_id, task_name);
+			item.removeClass('running error');
+		}
+		else
+		{
+			this.terminalManager.runTask(
+				project_id,
+				task_name,
+				function()
+				{
+					//start event
+					item.addClass('running')
+						.removeClass('error');
+				},
+				function()
+				{
+					//end event
+					item.removeClass('running');
+				},
+				function()
+				{
+					//error event
+					item.addClass('error')
+						.removeClass('running');
+				}
+			);
+		}
 	};
 
 	/**

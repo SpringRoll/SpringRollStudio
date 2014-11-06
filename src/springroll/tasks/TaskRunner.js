@@ -198,8 +198,8 @@
 	*/
 	p.switchProject = function(id)
 	{
-		$('.sidebar-item_current').removeClass('sidebar-item_current');
-		$('#project_' + id).addClass('sidebar-item_current');
+		$('.sidebar-item-current').removeClass('sidebar-item-current');
+		$('#project_' + id).addClass('sidebar-item-current');
 
 		$('.tasks').hide();
 		$('#tasks_' + id).show();
@@ -229,7 +229,7 @@
 
 		this.clearProject(id);
 
-		if ($('.sidebar-item_current').length === 0 && this.projectManager.projects.length > 0)
+		if ($('.sidebar-item-current').length === 0 && this.projectManager.projects.length > 0)
 		{
 			this.switchProject(this.projectManager.projects[0].id);
 		}
@@ -263,61 +263,44 @@
 	};
 
 	/**
-	*  Start running a task
-	*  @method runTask
+	*  Start running or stop running a task
+	*  @method toggleTask
 	*  @param {String} project_id The unqiue project id
 	*  @param {String} task_name The name of the task
 	*/
-	p.runTask = function(project_id, task_name)
+	p.toggleTask = function(project_id, task_name)
 	{
-		var id = '#task_item_' + project_id + "_" + task_name;
+		var item = $('#task_item_' + project_id + "_" + task_name);
 
-		this.terminalManager.runTask(
-			project_id,
-			task_name,
-			function()
-			{
-				//start event
-				$(id).addClass('tasks-item_running')
-					.removeClass('tasks-item_error');
-				$(id + " .tasks-action-item_terminal").show();
-				$(id + " .tasks-action-item_stop").show();
-				$(id + " .tasks-action-item_run").hide();
-			},
-			function()
-			{
-				//end event
-				$(id).removeClass('tasks-item_running');
-				$(id + " .tasks-action-item_terminal").hide();
-				$(id + " .tasks-action-item_stop").hide();
-				$(id + " .tasks-action-item_run").show();
-			},
-			function()
-			{
-				//error event
-				$(id).addClass('tasks-item_error')
-					.removeClass('tasks-item_running');
-				$(id + " .tasks-action-item_terminal").hide();
-				$(id + " .tasks-action-item_stop").hide();
-				$(id + " .tasks-action-item_run").show();
-			}
-		);
-	};
-
-	/**
-	*  Stop the task
-	*  @method stopTask
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task 
-	*/
-	p.stopTask = function(project_id, task_name)
-	{
-		this.terminalManager.stopTask(project_id, task_name);
-		$('#task_item_' + project_id + "_" + task_name).removeClass('tasks-item_running');
-		$('#task_item_' + project_id + "_" + task_name).removeClass('tasks-item_error');
-		$('#task_item_' + project_id + "_" + task_name + " .tasks-action-item_terminal").hide();
-		$('#task_item_' + project_id + "_" + task_name + " .tasks-action-item_stop").hide();
-		$('#task_item_' + project_id + "_" + task_name + " .tasks-action-item_run").show();
+		if (item.hasClass('running'))
+		{
+			this.terminalManager.stopTask(project_id, task_name);
+			item.removeClass('running error');
+		}
+		else
+		{
+			this.terminalManager.runTask(
+				project_id,
+				task_name,
+				function()
+				{
+					//start event
+					item.addClass('running')
+						.removeClass('error');
+				},
+				function()
+				{
+					//end event
+					item.removeClass('running');
+				},
+				function()
+				{
+					//error event
+					item.addClass('error')
+						.removeClass('running');
+				}
+			);
+		}
 	};
 
 	/**
