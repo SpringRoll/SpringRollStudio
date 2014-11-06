@@ -12,3 +12,17 @@ deploy/assets/js/main.js
 deploy/assets/js/remote.js
 
 deploy/tasks-test.html
+
+deploy/assets/js/tasks.js
+
+deploy/assets/js/libraries.js
+
+deploy/assets/css/tasks.css
+
+deploy/assets/css/remote.css
+
+deploy/assets/css/main.css
+
+deploy/assets/css/libraries.css
+
+deploy/assets/css/captions.css
