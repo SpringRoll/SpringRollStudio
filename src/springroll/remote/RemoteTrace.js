@@ -6,7 +6,9 @@
 		var WebSocketServer = require('ws').Server;
 	}
 
-	var Module = springroll.Module;
+	// Import classes
+	var Module = springroll.Module,
+		Browser = cloudkid.Browser;
 
 	/**
 	*  The application for receiving WebSocket messages from other applications
@@ -15,6 +17,9 @@
 	var RemoteTrace = function()
 	{
 		Module.call(this);
+
+		// Initialize the browser utility
+		Browser.init();
 
 		if (APP)
 		{
@@ -278,7 +283,7 @@
 		if (APP)
 		{
 			// Browse for file and save output
-			this.browser.saveAs(
+			Browser.saveAs(
 				function(file)
 				{
 					var fs = require('fs');

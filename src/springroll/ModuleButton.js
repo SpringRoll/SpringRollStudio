@@ -29,12 +29,20 @@
 		*  The default window size
 		*  @property {object} defaultSize
 		*/
+		var resizable = link.data('resizable');
 		this.defaultSize = {
 			width: link.data('width'),
 			height: link.data('height'),
 			minWidth: link.data('min-width'),
-			minHeight: link.data('min-height')
+			minHeight: link.data('min-height'),
+			resizable: resizable !== undefined ? (resizable === true || resizable === "true") : true
 		};
+
+		if (DEBUG)
+		{
+			console.log(dom);
+			console.log("is resizable "+ resizable);
+		}
 
 		/**
 		*  The current opened window
@@ -65,18 +73,28 @@
 
 		// Get the size from saved settings or get the default size
 		var size = JSON.parse(localStorage.getItem(this.dom.id) || 'null') || this.defaultSize;
+		var resizable = this.defaultSize.resizable;
 
 		// The node-webkit window options
 		var options = {
 			title: this.dom.title,
-			resizable: true,
-			width: size.width,
-			height: size.height,
+			resizable: resizable,
 			toolbar: false,
 			frame: true,
 			fullscreen: false,
 			show: false
 		};
+
+		if (resizable)
+		{
+			options.width = size.width;
+			options.height = size.height;
+		}
+		else
+		{
+			options.width = this.defaultSize.width;
+			options.height = this.defaultSize.height;
+		}
 
 		// Move the window if we have coordinates
 		if (size.x !== undefined && size.y !== undefined)

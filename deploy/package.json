@@ -15,10 +15,8 @@
     "frame": true,
     "position": "center",
     "width": 300,
-    "height": 190,
-    "min_width": 300,
-    "min_height": 190,
-    "resizable": true
+    "height": 255,
+    "resizable": false
   },
   "webkit": {
     "plugin": true

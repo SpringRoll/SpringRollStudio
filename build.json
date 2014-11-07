@@ -77,6 +77,12 @@
 			"src/springroll/tasks/input/TerminalManager.js",
 			"src/springroll/tasks/TaskRunner.js",
 			"src/springroll/tasks/TaskRunner.less"
+		],
+		"new": [
+			"components/node-webkit-app/src/utils/Browser.js",
+			"src/springroll/Module.js",
+			"src/springroll/new/NewProject.js",
+			"src/springroll/new/NewProject.less"
 		]
 	}
 }
