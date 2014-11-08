@@ -38,12 +38,6 @@
 			resizable: resizable !== undefined ? (resizable === true || resizable === "true") : true
 		};
 
-		if (DEBUG)
-		{
-			console.log(dom);
-			console.log("is resizable "+ resizable);
-		}
-
 		/**
 		*  The current opened window
 		*  @property {nw.gui.Window} main
@@ -67,7 +61,6 @@
 		if (this.main)
 		{
 			this.main.focus();
-			this._onFocus();
 			return;
 		}
 

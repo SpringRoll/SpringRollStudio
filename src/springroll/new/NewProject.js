@@ -1,7 +1,8 @@
 (function(undefined){
 
 	// Import classes
-	var Module = springroll.Module;
+	var Module = springroll.Module,
+		Browser = cloudkid.Browser;
 
 	/**
 	*  Create a new project
@@ -11,18 +12,22 @@
 	{
 		Module.call(this);
 
-		var noNative = $('.no-native');
+		var noNative = $('.no-native input');
 		
 		$('input[name="display"]').change(function(){
+
+			noNative.removeAttr('disabled')
+				.parent().removeClass('disabled');
+
 			if (this.value === "native")
 			{
-				noNative.hide();
+				noNative.attr('checked', false)
+					.attr('disabled', true)
+					.parent().addClass('disabled');
 			} 
-			else
-			{
-				noNative.show();
-			}
 		});
+
+		Browser.init();
 
 		// Add close button handler
 		$("#closeButton").click(this.shutdown.bind(this));
@@ -49,10 +54,15 @@
 		}
 	};
 
-	p.browser = function()
+	/**
+	*  Select a folder
+	*  @method browse
+	*/
+	p.browse = function()
 	{
 		Browser.folder(function(folder){
-			
+			console.log(folder);
+			$("#folder").val(folder);
 		});
 	};
 
