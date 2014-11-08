@@ -30,13 +30,21 @@
 		Browser.init();
 
 		// Add close button handler
-		$("#closeButton").click(this.shutdown.bind(this));
+		this.closeButton = $("#closeButton").click(
+			this.shutdown.bind(this)
+		);
 
 		// Add create button handler
-		$("#createButton").click(this.create.bind(this));
+		this.createButton = $("#createButton").click(
+			this.create.bind(this)
+		);
 
 		// Browse for a folder
-		$("#folderBrowse").click(this.browse.bind(this));
+		this.folderBrowse = $("#folderBrowse").click(
+			this.browse.bind(this)
+		);
+
+		this.folder = $("#folder");
 	};
 
 	// Reference to the prototype
@@ -60,10 +68,17 @@
 	*/
 	p.browse = function()
 	{
-		Browser.folder(function(folder){
-			console.log(folder);
-			$("#folder").val(folder);
-		});
+		if (APP)
+		{
+			var folder = this.folder;
+			Browser.folder(function(uri){
+				var path = require('path');
+				console.log(uri);
+				folder.data('folder', uri)
+					.val(path.basename(uri));
+			});
+		}
+		
 	};
 
 	// Create the new Remote trace
