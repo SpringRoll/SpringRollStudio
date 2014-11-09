@@ -9,3 +9,12 @@ body {
 label.disabled {
 	color:#999;
 }
+
+label {
+	.on { display:none }
+	.off { display:inline-block }
+	&.active {
+		.on { display:inline-block }
+		.off { display:none }
+	}
+}

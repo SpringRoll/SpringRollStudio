@@ -1,0 +1,9 @@
+{
+	"private": true,
+	"dependencies": {
+		"grunt": "*",
+		"grunt-game-builder": "*",
+		"load-grunt-config": "*",
+		"lodash": "*"
+	}
+}

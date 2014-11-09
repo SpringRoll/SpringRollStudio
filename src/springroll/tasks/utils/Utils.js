@@ -35,7 +35,7 @@
 		if (!Utils.templates[templateFileName])
 		{
 			var template = fs.readFileSync(
-				"assets/templates/" + templateFileName + ".html",
+				"assets/html/" + templateFileName + ".html",
 				{encoding: "utf-8"}
 			);
 

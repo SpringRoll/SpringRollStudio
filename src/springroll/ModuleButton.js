@@ -82,6 +82,18 @@
 		{
 			options.width = size.width;
 			options.height = size.height;
+
+			// The minimum window size
+			if (this.defaultSize.minWidth !== undefined)
+			{
+				options.min_width = this.defaultSize.minWidth;
+			}
+
+			// The maximum window size
+			if (this.defaultSize.minHeight !== undefined)
+			{
+				options.min_height = this.defaultSize.minHeight;
+			}
 		}
 		else
 		{
@@ -100,42 +112,29 @@
 			options.position = "center";
 		}
 
-		// The minimum window size
-		if (this.defaultSize.minWidth !== undefined)
-		{
-			options.min_width = this.defaultSize.minWidth;
-		}
-
-		// The maximum window size
-		if (this.defaultSize.minHeight !== undefined)
-		{
-			options.min_height = this.defaultSize.minHeight;
-		}
-
 		// Open a new window
 		this.main = gui.Window.open(this.dom.href, options);
 
 		// Add a listener when the window closes to save the position
 		this.main.on('close', this._onClose.bind(this));
 		this.main.on('closed', this._onClosed.bind(this));
-		this.main.on('loaded', onLoaded);
+		
 		this.main.on('focus', onFocus);
-	};
-
-	/**
-	*  When the window is finished loading
-	*  @method  _onLoaded
-	*  @private
-	*/
-	var onLoaded = function()
-	{
-		this.show();
-		this.focus();
+		this.main.on('loaded', function()
+		{
+			// For some reason children windows that are opened
+			// count the top frame as part of the height
+			// we'll reset the height before we show
+			this.height = options.height;
+			
+			this.show();
+			this.focus();
+		});
 	};
 
 	/**
 	*  On focus window event
-	*  @method  _onLoaded
+	*  @method  onFocus
 	*  @private
 	*/
 	var onFocus = function()

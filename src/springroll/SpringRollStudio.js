@@ -54,9 +54,6 @@
 		this.main.menu = this.menu;
 	};
 
-	// Assign to namespace
-	//namespace("springroll").SpringRollStudio = SpringRollStudio;
-
 	// Create the application
 	$(function(){ window.app = new SpringRollStudio(); });
 

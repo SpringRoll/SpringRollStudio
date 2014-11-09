@@ -1,0 +1,22 @@
+{
+	"name": "_className_",
+	"displayName": "_name_",
+	"version": "_version_",
+	"main": [
+		"src/_namespace_/_className_.js",
+		"src/main.js",
+		"src/main.less"
+	],
+	"libraries": [
+		"components/normalize-less/normalize.less",
+		"components/preloadjs/lib/preloadjs.min.js",
+		"_libraries_",
+		"_modules_"
+	],
+	"librariesDebug": [
+		"components/normalize-less/normalize.less",
+		"components/preloadjs/lib/preloadjs.combined.js",
+		"_librariesDebug_",
+		"_modulesDebug_"
+	]
+}
