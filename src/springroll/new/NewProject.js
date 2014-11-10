@@ -197,12 +197,14 @@
 
 		// The colection of modules
 		var modules = [],
+			modulesDebug = [],
 			libraries = [],
 			librariesDebug = [],
 			bower = {};
 
 		$(".module:checkbox:checked").each(function(){
-			modules.push(this.value);
+			modules.push(this.value + ".min.js");
+			modulesDebug.push(this.value + ".js");
 
 			// Get the depdencencies
 			var module = $(this);
@@ -226,10 +228,8 @@
 						height: this.validate(this.appHeight),
 						destination: this.folder.data('folder'),
 						version: this.validate(this.version),
-						modules: modules.join('.min.js",\n\t\t"') + ".min.js",
-						modulesDebug: modules.join('.js",\n\t\t"') + ".js",
-						libraries: libraries.join('",\n\t\t"'),
-						librariesDebug: librariesDebug.join('",\n\t\t"'),
+						libraries: libraries.concat(modules),
+						librariesDebug: librariesDebug.concat(modulesDebug),
 						displayClass: this.displays.filter(':checked:first').data('display-class'),
 						bower: bower
 					},

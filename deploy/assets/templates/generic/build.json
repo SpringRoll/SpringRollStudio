@@ -10,13 +10,11 @@
 	"libraries": [
 		"components/normalize-less/normalize.less",
 		"components/preloadjs/lib/preloadjs.min.js",
-		"_libraries_",
-		"_modules_"
+		"_libraries_"
 	],
 	"librariesDebug": [
 		"components/normalize-less/normalize.less",
 		"components/preloadjs/lib/preloadjs.combined.js",
-		"_librariesDebug_",
-		"_modulesDebug_"
+		"_librariesDebug_"
 	]
 }

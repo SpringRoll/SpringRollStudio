@@ -94,11 +94,26 @@
 		if (Object.keys(options.bower).length > 0)
 		{
 			// Update the bower file added dependencies
-			var bowerPath = path.join(dest, "bower.json");
-			var bower = JSON.parse(fs.readFileSync(bowerPath));
+			var bower = this.readJSON('bower.json');
 			$.extend(bower.dependencies, options.bower);
-			fs.writeFileSync(bowerPath, JSON.stringify(bower, null, "\t"));
+			this.writeJSON('bower.json', bower);
 		}
+
+		// Update the build file with libraries and modules
+		var build = this.readJSON("build.json");
+		
+		// Replace tokens with the list of depdendencies
+		insertAt(
+			"_libraries_", 
+			build.libraries, 
+			options.libraries
+		);
+		insertAt(
+			"_librariesDebug_", 
+			build.librariesDebug, 
+			options.librariesDebug
+		);
+		this.writeJSON('build.json', build);
 		
 		// Replace text in the files
 		var type, value, option, replacements = {};
@@ -106,12 +121,15 @@
 		{
 			value = options[option];
 
+			// Ignore arrays
+			if (Array.isArray(value)) continue;
+
 			// The collection of replacements
-			replacements["_" + option + "_"] = options[option];
+			replacements["_" + option + "_"] = value;
 
 			replace({
 				regex: "_" + option + "_",
-				replacement: options[option],
+				replacement: value,
 				paths: [options.destination],
 				recursive: true,
 				silent: true
@@ -121,7 +139,6 @@
 		// local function references
 		var processGlob = this._processGlob.bind(this);
 		var complete = this.complete;
-
 
 		// now folder names (we have to do folders and file as two 
 		// separate operations due to the issue of renaming a file's
@@ -138,6 +155,47 @@
 				complete();
 			});
 		});
+	};
+
+	/**
+	*  Add a group of items to an array
+	*  @method insertAt
+	*  @private
+	*  @param {array} arr The array to update
+	*  @param {array} items The items to add
+	*/
+	var insertAt = function(key, source, items)
+	{
+		var i = source.indexOf(key);
+		if (items.length)
+		{
+			source.splice(i, 1);
+			source.splice.apply(source, [i, 0].concat(items));
+		}
+		return source;
+	};
+
+	/**
+	*  Read a JSON file
+	*  @method readJSON
+	*  @param {string} file The file name
+	*/
+	p.readJSON = function(file)
+	{
+		var filePath = path.join(this.options.destination, file);
+		return JSON.parse(fs.readFileSync(filePath));
+	};
+
+	/**
+	*  Write a JSON file
+	*  @method writeJSON
+	*  @param {string} file The file name
+	*  @param {object} obj The object to update
+	*/
+	p.writeJSON = function(file, obj)
+	{
+		var filePath = path.join(this.options.destination, file);
+		fs.writeFileSync(filePath, JSON.stringify(obj, null, "\t"));
 	};
 
 	/**
