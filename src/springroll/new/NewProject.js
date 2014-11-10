@@ -9,6 +9,7 @@
 	// Import classes
 	var Module = springroll.Module,
 		Browser = cloudkid.Browser,
+		TemplateManager = springroll.new.TemplateManager,
 		Installer = springroll.new.Installer;
 
 	/**
@@ -20,6 +21,16 @@
 		Module.call(this);
 
 		Browser.init();
+
+		/**
+		*  Manager of the templates
+		*  @property {springroll.new.TemplateManager} manager
+		*/
+		this.templates = new TemplateManager(
+			"#templates", 
+			"#templateModal", 
+			"#templateButton"
+		);
 
 		/**
 		*  The close/cancel button
@@ -219,7 +230,7 @@
 			{
 				this.validate(this.folder);
 				this.installer.run(
-					path.resolve('.', 'assets', 'templates', 'generic'),
+					this.templates.val(),
 					{
 						name: this.validate(this.name),
 						className: this.validate(this.className),
