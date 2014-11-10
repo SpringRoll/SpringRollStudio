@@ -26,11 +26,7 @@
 		*  Manager of the templates
 		*  @property {springroll.new.TemplateManager} manager
 		*/
-		this.templates = new TemplateManager(
-			"#templates", 
-			"#templateModal", 
-			"#templateButton"
-		);
+		this.templates = new TemplateManager();
 
 		/**
 		*  The close/cancel button

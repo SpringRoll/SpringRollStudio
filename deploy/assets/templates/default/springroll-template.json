@@ -1,0 +1,8 @@
+{
+	"name" : "Default",
+	"version" : "1.0.0",
+	"rename" : {
+		"gitignore" : ".gitignore",
+		"bowerrc" : ".bowerrc"
+	}
+}

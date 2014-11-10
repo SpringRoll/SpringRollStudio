@@ -7,7 +7,6 @@
 		var path = require('path');
 		var replace = require("replace");
 		var glob = require("glob");
-		var mkdirp = require('mkdirp').sync;
 		var ncp = require('ncp').ncp;
 	}
 
@@ -58,6 +57,11 @@
 		this.options = options;
 		this.complete = complete;
 
+		if (DEBUG)
+		{
+			console.log("Copy " + template + " to " + this.options.destination);
+		}
+
 		ncp(
 			template, 
 			this.options.destination, 
@@ -75,21 +79,33 @@
 	{
 		if (err)
 		{
-			throw "Error copying:" + err;
+			throw "Error copying: " + err;
 		}
 
 		var options = this.options;
 		var dest = options.destination;
 
-		fs.renameSync(
-			path.join(dest, "gitignore"), 
-			path.join(dest, ".gitignore")
-		);
+		// Add hidden files		
+		var configFile = "springroll-template.json";
+		var config = this.readJSON(configFile);
+		options.templateVersion = config.version;
+		options.templateName = config.name;
 
-		fs.renameSync(
-			path.join(dest, "bowerrc"), 
-			path.join(dest, ".bowerrc")
-		);
+		// Rename any local files that should actually
+		// be hidden
+		if (config.rename)
+		{
+			for(var file in config.rename)
+			{
+				fs.renameSync(
+					path.join(dest, file), 
+					path.join(dest, config.rename[file])
+				);
+			}
+		}
+
+		// Remove the template file
+		fs.unlinkSync(path.join(dest, configFile));
 
 		if (Object.keys(options.bower).length > 0)
 		{
@@ -117,6 +133,7 @@
 		
 		// Replace text in the files
 		var type, value, option, replacements = {};
+
 		for (option in options)
 		{
 			value = options[option];

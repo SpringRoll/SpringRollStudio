@@ -18,3 +18,50 @@ label {
 		.off { display:none }
 	}
 }
+
+
+#dropTemplate {
+	position: relative;
+	min-height: 150px;
+	border: 4px solid #ccc;
+	width: 100%;
+	color: #999;
+	background-color: #F7F7F7;
+	font-size: 120%;
+	transition:background-color 0.2s, color 0.2s, border-color 0.2s;
+	cursor:pointer;
+	.folder { display:none }
+	.instructions { display:block }
+	.error { display:none }
+	&.dragging {
+		background-color:#EEFFFA;
+		border-color:#6BD2B4;
+		color:#5EB9A2;
+	}
+	&.has-folder {
+		border-color:#73ADEC;
+		color:#5E84C8;
+		background-color: #E9F2FF;
+		.folder { display:block }
+		.instructions { display:none }
+		.error { display:none }
+	}
+	&.has-error {
+		border-color:#DF8D8D;
+		color: #D17B7B;
+		background-color:#FFEBEB;
+		.folder { display:none }
+		.instructions { display:none }
+		.error { display:block }
+	}
+}
+
+.center-vertical {
+	transform:translateY(-50%);
+	-webkit-transform:translateY(-50%);
+	position:absolute;
+	display:block;
+	width: 100%;
+	text-align:center;
+	top:50%;
+}
