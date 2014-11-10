@@ -21,12 +21,6 @@
 		*  @property {object} options
 		*/
 		this.options = null;
-
-		/**
-		*  The path to the template folder
-		*  @property {string} options
-		*/
-		this.template = null;
 	};
 
 	// Reference to the prototype
@@ -52,37 +46,16 @@
 	*/
 	p.run = function(template, options, complete)
 	{
-		this.template = template;
 		this.options = options;
-		this.complete = complete;
+		var dest = options.destination;
 
 		if (DEBUG)
 		{
-			console.log("Copy " + template + " to " + this.options.destination);
+			console.log("Copy " + template + " to " + dest);
 		}
 
-		fs.copy(
-			template, 
-			this.options.destination, 
-			onCopiedFiles.bind(this)
-		);
-	};
-
-	/**
-	*  Handler when the files have been copied
-	*  @method onCopiedFiles
-	*  @private
-	*  @param {string} err if there was an error
-	*/
-	var onCopiedFiles = function(err)
-	{
-		if (err)
-		{
-			throw "Error copying: " + err;
-		}
-
-		var options = this.options;
-		var dest = options.destination;
+		// Copy the files
+		fs.copySync(template, dest);
 
 		// Add hidden files		
 		var configFile = "springroll-template.json";
@@ -154,7 +127,6 @@
 
 		// local function references
 		var processGlob = this._processGlob.bind(this);
-		var complete = this.complete;
 
 		// now folder names (we have to do folders and file as two 
 		// separate operations due to the issue of renaming a file's

@@ -170,34 +170,21 @@
 		// Create the folder
 		fs.mkdirpSync(templatePath);
 		
-		var self = this;
-
 		// Copy the files
-		fs.copy(
-			folder, 
-			templatePath, 
-			function(err)
-			{
-				if (err)
-				{
-					self.error("Error copying: " + err);
-					return;
-				}
+		fs.copySync(folder, templatePath);
+		
+		// Add template
+		this.templates[templatePath] = config;
+		this.save();
 
-				// Add template
-				self.templates[templatePath] = config;
-				self.save();
+		// Add to the selection list
+		this.append(templatePath, config.name);
 
-				// Add to the selection list
-				self.append(templatePath, config.name);
+		// Dismiss the modal
+		this._modal.modal('hide');
 
-				// Dismiss the modal
-				self._modal.modal('hide');
-
-				// Clear everything
-				self.reset();
-			}
-		);
+		// Clear everything
+		this.reset();
 	};
 
 	/**
