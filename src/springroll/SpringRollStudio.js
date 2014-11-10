@@ -1,5 +1,10 @@
 (function($, undefined){
 
+	if (APP)
+	{
+		var gui = require('nw.gui');
+	}
+
 	// Import classes
 	var NodeWebkitApp = cloudkid.NodeWebkitApp,
 		ModuleButton = springroll.ModuleButton;
@@ -17,10 +22,8 @@
 
 		if (APP)
 		{
-			var gui = require('nw.gui');
 			this.menu = new gui.Menu({ type: 'menubar' });
 
-			// Create the standard OSX menu
 			if (process.platform === "darwin")
 			{
 				this.menu.createMacBuiltin("SpringRoll Studio", {
@@ -29,8 +32,8 @@
 				});
 			}
 
-			this.main.on('focus', this._onFocus.bind(this));
-			this._onFocus();
+			this.main.on('focus', this.focus.bind(this));
+			this.focus();
 
 			var main = this.main;
 
@@ -46,10 +49,10 @@
 
 	/**
 	*  Re-add the menu on focus
-	*  @method _onFocus
+	*  @method focus
 	*  @private
 	*/
-	p._onFocus = function()
+	p.focus = function()
 	{
 		this.main.menu = this.menu;
 	};

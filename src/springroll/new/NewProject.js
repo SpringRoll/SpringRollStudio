@@ -22,6 +22,11 @@
 
 		Browser.init();
 
+		if (APP)
+		{
+			this.initMenubar(false, true);
+		}
+
 		/**
 		*  Manager of the templates
 		*  @property {springroll.new.TemplateManager} manager

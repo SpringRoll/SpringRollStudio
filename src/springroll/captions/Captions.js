@@ -91,7 +91,12 @@
 		// Lets create the menu
 		if (APP)
 		{
-			this.menu = new Menu(this._menuHandler.bind(this));
+			this.initMenubar();
+			this.menu = new Menu(
+				this.main, 
+				this.menubar, 
+				this._menuHandler.bind(this)
+			);
 		}
 
 		// Initialize the browser utility
@@ -580,18 +585,6 @@
 		this.pending = false;
 		this.afterSaveDialog();
 		this.afterSaveDialog = null;
-	};
-
-	/**
-	*  Focus the menu
-	*  @method focus
-	*/
-	p.focus = function()
-	{
-		if (APP)
-		{
-			this.main.menu = this.menu.parent;
-		}
 	};
 
 	/**

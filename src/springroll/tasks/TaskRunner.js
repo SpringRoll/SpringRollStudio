@@ -62,6 +62,12 @@
 		*/
 		this.terminal = null;
 
+		if (APP)
+		{
+			// Create the menu
+			this.initMenubar(true, true);
+		}
+
 		// Initialize
 		this.init();
 	};

@@ -4,6 +4,7 @@
 	if (APP)
 	{
 		var WebSocketServer = require('ws').Server;
+		var gui = require('nw.gui');
 	}
 
 	// Import classes
@@ -32,14 +33,8 @@
 			// Handle incoming messages
 			this.server.on('connection', this._onInit.bind(this));
 
-			// Create the standard OSX menu
-			if (process.platform === "darwin")
-			{	
-				var gui = require('nw.gui');
-				this.menu = new gui.Menu({ type: 'menubar' });
-				this.menu.createMacBuiltin("Remote Trace");
-				this.main.menu = this.menu;
-			}
+			// Initialize the menu
+			this.initMenubar(false, true);
 		}
 
 		/**
@@ -371,18 +366,6 @@
 		if (atBottom)
 		{
 			this.output.scrollTop(this.output[0].scrollHeight);
-		}
-	};
-
-	/**
-	*  Focus the menu
-	*  @method focus
-	*/
-	p.focus = function()
-	{
-		if (APP)
-		{
-			this.main.menu = this.menu;
 		}
 	};
 

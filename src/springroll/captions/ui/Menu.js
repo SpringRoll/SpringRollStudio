@@ -15,17 +15,17 @@
 	*  @class Menu
 	*  @namespace springroll.captions 
 	*  @constructor
+	*  @param {nw.gui.Window} main Reference to the window
+	*  @param {nw.gui.Menu} menubar The main menubar
 	*  @param {function} callback Handler for menu item clicks
 	*/
-	var Menu = function(callback)
+	var Menu = function(main, menubar, callback)
 	{
-		var main = Window.get();
-
 		/**
 		*  The root menu
 		*  @property {gui.Menu} parent
 		*/
-		this.parent = new SubMenu({ type: 'menubar' });
+		this.parent = menubar;
 
 		/**
 		*  Handler for the menu click callback
@@ -44,13 +44,6 @@
 		*  @property {gui.Menu} export
 		*/
 		this.exportMenu = new SubMenu();
-
-		if (isOSX)
-		{
-			// Create the build in mac menubar
-			// this needs to happen BEFORE assigning the menu
-			this.parent.createMacBuiltin("Caption Creator");
-		}
 
 		// Create the file menu
 		this.createFileMenu(this.file, this.exportMenu);

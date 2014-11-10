@@ -19,6 +19,12 @@
 		*/
 		this.main = null;
 
+		/**
+		*  The menubar
+		*  @property {nw.gui.Menu} menubar
+		*/
+		this.menubar = null;
+
 		if (APP)
 		{
 			this.main = gui.Window.get();
@@ -51,7 +57,36 @@
 	*/
 	p.focus = function()
 	{
-		// override
+		if (APP)
+		{
+			if (this.menubar)
+			{
+				this.main.menu = this.menubar;
+			}
+		}
+	};
+
+	/**
+	*  Create the menubar
+	*  @method  initMenubar
+	*  @protected
+	*  @param {boolean} [hideEdit=false] Hide the edit menu on OS X
+	*  @param {boolean} [hideWindow=false] Hide the window menu on OS X
+	*/
+	p.initMenubar = function(hideEdit, hideWindow)
+	{
+		this.menubar = new gui.Menu({ type: 'menubar' });
+
+		// Create the standard OSX menu
+		if (process.platform === "darwin")
+		{	
+			this.menubar.createMacBuiltin("SpringRoll Studio", {
+				hideEdit: !!hideEdit,
+				hideWindow: !!hideWindow
+			});
+		}
+		this.focus();
+		return this.menubar;
 	};
 
 	/**
