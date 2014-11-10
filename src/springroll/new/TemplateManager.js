@@ -2,11 +2,9 @@
 	
 	if (APP)
 	{
-		var fs = require('fs');
+		var fs = require('fs-extra');
 		var path = require('path');
 		var gui = require('nw.gui');
-		var ncp = require('ncp').ncp;
-		var mkdirp = require('mkdirp').sync;
 	}
 
 	var Browser = cloudkid.Browser;
@@ -26,19 +24,29 @@
 		this._select = $("#templates");
 
 		/**
+		*  The select element
+		*  @property {jquery} _list
+		*  @private
+		*/
+		this._list = $("#listTemplates");
+
+		/**
+		*  The button markup
+		*  @property {string} _listTemp
+		*  @private
+		*/
+		this._listTemp = this._list.html().trim();
+
+		// Empty the list
+		this._list.html('');
+
+		/**
 		*  The modal element
 		*  @property {jquery} _modal
 		*  @private
 		*/
 		this._modal = $("#templateModal")
 			.on('hidden.bs.modal', this.reset.bind(this));
-
-		/**
-		*  The button element
-		*  @property {jquery} _button
-		*  @private
-		*/
-		this._button = $("#templateButton").click(this.addTemplate.bind(this));
 
 		// Turn off all file dragging
 		$(document.body).on("dragover drop", function(e){
@@ -53,7 +61,7 @@
 			.click(function(){
 				Browser.folder(function(path){
 					self.reset();
-					self.validate(path);
+					self.addTemplate(path);
 				});
 			})
 			.on("dragenter", function(ev){
@@ -91,7 +99,7 @@
 						self.error("Folders only. Please drag a project folder.");
 						return;
 					}
-					self.validate(file.path);
+					self.addTemplate(file.path);
 				}
 			});
 		
@@ -116,32 +124,11 @@
 
 	/**
 	*  Validate a template
-	*  @method  validate
+	*  @method  addTemplate
 	*  @param  {string} path The folder path to add
 	*/
-	p.validate = function(folder)
+	p.addTemplate = function(folder)
 	{
-		var configFile = path.join(folder, TEMPLATE_FILE);
-		if (!fs.existsSync(configFile))
-		{
-			this.error("Not a valid template.");
-			return;
-		}
-		this.reset();
-		this.dropTemplate.addClass(FOLDER_CLASS)
-			.data('folder', folder)
-			.find('.folder').text(folder);
-	};
-
-	/**
-	*  Add the template
-	*  @method addTemplate
-	*  @private
-	*/
-	p.addTemplate = function()
-	{
-		var folder = this.dropTemplate.data('folder');
-
 		// Check that there's a template to add
 		if (!folder)
 		{
@@ -149,14 +136,26 @@
 			return;
 		}
 
-		var config = JSON.parse(
-			fs.readFileSync(
-				path.join(folder, TEMPLATE_FILE)
-			)
-		);
+		var configFile = path.join(folder, TEMPLATE_FILE);
+		if (!fs.existsSync(configFile))
+		{
+			this.error("Not a valid template.");
+			return;
+		}
 
-		// 1. Check for existing template
-		var templatePath = path.join(gui.App.dataPath, 'Templates', config.name);
+		this.reset();
+		this.dropTemplate.addClass(FOLDER_CLASS)
+			.find('.folder')
+			.text(folder);
+
+		var config = JSON.parse(fs.readFileSync(configFile));
+
+		// Check for existing template
+		var templatePath = path.join(
+			gui.App.dataPath, 
+			'Templates', 
+			config.name
+		);
 		
 		// Check for existing
 		if (fs.existsSync(templatePath))
@@ -169,12 +168,12 @@
 		}
 
 		// Create the folder
-		mkdirp(templatePath);
+		fs.mkdirpSync(templatePath);
 		
 		var self = this;
 
 		// Copy the files
-		ncp(
+		fs.copy(
 			folder, 
 			templatePath, 
 			function(err)
@@ -234,6 +233,24 @@
 	*/
 	p.append = function(dir, name)
 	{
+		// Add to the list of items
+		var template = $(this._listTemp);
+
+		// Make some changes
+		if (name !== "Default")
+		{
+			template.find('button')
+				.removeClass('disabled btn-default')
+				.addClass('btn-danger')
+				.prop('disabled', false)
+				.click(this.removeTemplate.bind(this, dir));
+
+			template.find('.name').text(name);
+		}
+		
+		// Add to the list of existing templates
+		this._list.append(template);
+
 		// Deselect all items
 		this._select.find('option').removeProp('selected');
 
@@ -244,6 +261,31 @@
 		option.prop('selected', true);
 
 		this._select.append(option);
+	};
+
+	/**
+	*  Remove a template
+	*  @method  removeTemplate
+	*  @private
+	*  @param  {event} e Click event
+	*  @param  {String} folder The path to the template
+  	*/
+	p.removeTemplate = function(folder, e)
+	{
+		// Delete from the saved temlates
+		delete this.templates[folder];
+
+		// Remove the select option
+		this._select.find("option[value='" + folder + "']").remove();
+
+		// Remove the template from list
+		$(e.currentTarget).closest(".template").remove();
+
+		// Remove the template
+		fs.removeSync(folder);
+
+		// Save the saved templates
+		this.save();
 	};
 
 	/**

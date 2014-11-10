@@ -30,6 +30,7 @@ label {
 	font-size: 120%;
 	transition:background-color 0.2s, color 0.2s, border-color 0.2s;
 	cursor:pointer;
+	margin-bottom:20px;
 	.folder { display:none }
 	.instructions { display:block }
 	.error { display:none }
@@ -53,6 +54,26 @@ label {
 		.folder { display:none }
 		.instructions { display:none }
 		.error { display:block }
+	}
+}
+
+.templates {
+	max-height:280px;
+	overflow:hidden;
+	overflow-y: auto;
+	.template {
+		padding: 5px 0 0;
+		height: 45px;
+		border-top: 1px solid #ddd;
+		&:last-child {
+			border-bottom:1px solid #ddd;
+		}
+		.name {
+			font-size: 110%;
+			display: block;
+			float: left;
+			padding-top: 5px;
+		}
 	}
 }
 

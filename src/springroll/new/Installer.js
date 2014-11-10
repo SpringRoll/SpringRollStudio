@@ -3,11 +3,10 @@
 	// Import node plugins
 	if (APP)
 	{
-		var fs = require('fs');
+		var fs = require('fs-extra');
 		var path = require('path');
 		var replace = require("replace");
 		var glob = require("glob");
-		var ncp = require('ncp').ncp;
 	}
 
 	/**
@@ -62,7 +61,7 @@
 			console.log("Copy " + template + " to " + this.options.destination);
 		}
 
-		ncp(
+		fs.copy(
 			template, 
 			this.options.destination, 
 			onCopiedFiles.bind(this)
