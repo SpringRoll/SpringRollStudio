@@ -1,34 +1,34 @@
 {
-  "name": "SpringRollStudio",
-  "description": "Application for SpringRoll projects",
-  "version": "0.0.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SpringRoll/SpringRollStudio"
-  },
-  "main": "index.html",
-  "single-instance": true,
-  "window": {
-    "icon": "assets/images/icon.png",
-    "show": false,
-    "toolbar": false,
-    "frame": true,
-    "position": "center",
-    "width": 300,
-    "height": 222,
-    "resizable": false
-  },
-  "webkit": {
-    "plugin": true
-  },
-  "dependencies": {
-    "glob": "~4.0.6",
-    "ws": "~0.4.32",
-    "semver": "~4.0.3",
-    "MD5": "~1.2.0",
-    "ansi2html": "~0.0.1",
-    "node-watch": "~0.3.4",
-    "replace": "~0.3.0",
-    "fs-extra": "~0.12.0"
-  }
+	"name": "SpringRollStudio",
+	"description": "Application for SpringRoll projects",
+	"version": "0.0.2",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SpringRoll/SpringRollStudio"
+	},
+	"main": "index.html",
+	"single-instance": true,
+	"window": {
+		"icon": "assets/images/icon.png",
+		"show": false,
+		"toolbar": false,
+		"frame": true,
+		"position": "center",
+		"width": 300,
+		"height": 222,
+		"resizable": false
+	},
+	"webkit": {
+		"plugin": true
+	},
+	"dependencies": {
+		"glob": "~4.0.6",
+		"ws": "~0.4.32",
+		"semver": "~4.0.3",
+		"MD5": "~1.2.0",
+		"ansi2html": "~0.0.1",
+		"node-watch": "~0.3.4",
+		"replace": "~0.3.0",
+		"fs-extra": "~0.12.0"
+	}
 }
