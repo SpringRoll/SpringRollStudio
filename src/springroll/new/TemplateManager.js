@@ -5,6 +5,7 @@
 		var fs = require('fs-extra');
 		var path = require('path');
 		var gui = require('nw.gui');
+		var semver = require('semver');
 	}
 
 	var Browser = cloudkid.Browser;
@@ -119,8 +120,13 @@
 	// Has an error
 	var ERROR_CLASS = "has-error";
 
-	// The springroll template configuration
-	var TEMPLATE_FILE = "springroll-template.json";
+	/**
+	*  The template metadata file
+	*  @property {string} FILE
+	*  @static
+	*  @default "springroll-template.json"
+	*/
+	TemplateManager.FILE = "springroll-template.json";
 
 	/**
 	*  Validate a template
@@ -136,7 +142,7 @@
 			return;
 		}
 
-		var configFile = path.join(folder, TEMPLATE_FILE);
+		var configFile = path.join(folder, TemplateManager.FILE);
 		if (!fs.existsSync(configFile))
 		{
 			this.error("Not a valid template.");
@@ -154,14 +160,18 @@
 		var templatePath = path.join(
 			gui.App.dataPath, 
 			'Templates', 
-			config.name
+			config.id
 		);
 		
 		// Check for existing
 		if (fs.existsSync(templatePath))
 		{
-			// Ask if we should proceed
-			if (!confirm("Do you want to replace the existing template " + config.name + "?"))
+			var temp = this.templates[templatePath] || "0.0.1";
+			var message = "Attempting to replace and older version of the template " + config.name + ". Continue?";
+			
+			// If the version being added is not greater than the existing one
+			// we should ask for a confirmation first
+			if (!semver.gt(config.version, temp.version) && !confirm(message))
 			{
 				return;
 			}
@@ -304,17 +314,12 @@
 			this.templates = {};
 			this.templates[folder] = JSON.parse(
 				fs.readFileSync(
-					path.join(folder, TEMPLATE_FILE)
+					path.join(folder, TemplateManager.FILE)
 				)
 			);
 			this.save();
 		}
 
-		if (DEBUG)
-		{
-			console.log("TEMPLATES");
-			console.log(this.templates);
-		}
 		// Load the existing templates
 		for(var dir in this.templates)
 		{

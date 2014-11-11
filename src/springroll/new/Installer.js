@@ -9,6 +9,8 @@
 		var glob = require("glob");
 	}
 
+	var TemplateManager = springroll.new.TemplateManager;
+
 	/**
 	*  Script to install the new springroll project
 	*  @class Installer
@@ -58,8 +60,7 @@
 		fs.copySync(template, dest);
 
 		// Add hidden files		
-		var configFile = "springroll-template.json";
-		var config = this.readJSON(configFile);
+		var config = this.readJSON(TemplateManager.FILE);
 		options.templateVersion = config.version;
 		options.templateName = config.name;
 
@@ -77,7 +78,7 @@
 		}
 
 		// Remove the template file
-		fs.unlinkSync(path.join(dest, configFile));
+		fs.unlinkSync(path.join(dest, TemplateManager.FILE));
 
 		if (Object.keys(options.bower).length > 0)
 		{

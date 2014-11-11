@@ -1,5 +1,6 @@
 {
 	"name" : "Default",
+	"id" : "io.springroll.default",
 	"version" : "1.0.0",
 	"rename" : {
 		"gitignore" : ".gitignore",
