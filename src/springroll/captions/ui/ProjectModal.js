@@ -1,5 +1,11 @@
 (function(){
 
+	if (APP)
+	{
+		var fs = require('fs');
+		var path = require('path');
+	}
+
 	// Import classes
 	var Browser = cloudkid.Browser;
 
@@ -105,7 +111,6 @@
 	{
 		var dir = this._dir;
 		Browser.folder(function(folder){
-			var path = require('path');
 			this.audioPath.val(path.relative(dir, folder));
 		}.bind(this), dir);
 	};
@@ -123,7 +128,6 @@
 			{
 				throw "Export file must end in '.json'";
 			}
-			var path = require('path');
 			this.exportPath.val(path.relative(dir, file));
 		}.bind(this), dir);
 	};
@@ -135,30 +139,11 @@
 	 */
 	p._onConfirm = function()
 	{
-		this._confirmed = true;
-		this.parent.modal('hide');
-	};
-
-	/**
-	 * Close handler for the dialog
-	 * @method _onHide
-	 * @private
-	 */
-	p._onHide = function()
-	{
-		if (!this._confirmed)
-		{
-			this.close(false);
-			return;
-		}
-
 		var exportPath = this.exportPath.val();
 		var audioPath = this.audioPath.val();
 
 		var error = false;
-		var fs = require('fs');
-		var path = require('path');
-
+		
 		if (!audioPath)
 		{
 			error = 'Audio Path is empty';
@@ -178,19 +163,41 @@
 
 		if (error)
 		{
-			this.close(false);
-			throw error;
+			$('<div class="alert alert-danger">'+
+			    '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+			    '<strong>Error!</strong> ' + error + '</div>')
+			.insertBefore(this.projectPath);
 		}
 		else
 		{
+			this._confirmed = true;
+
+			// Save the export settings for later
 			localStorage.setItem('exportPath', exportPath);
 			localStorage.setItem('audioPath', audioPath);
 
+			// Close and pass the export settings
 			this.close({
 				exportPath : exportPath,
 				audioPath : audioPath
 			});
+
+			// Close the dialog
+			this.parent.modal('hide');
 		}		
+	};
+
+	/**
+	 * Close handler for the dialog
+	 * @method _onHide
+	 * @private
+	 */
+	p._onHide = function()
+	{
+		if (!this._confirmed)
+		{
+			this.close(false);
+		}	
 	};
 
 	/**

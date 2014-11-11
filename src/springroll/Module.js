@@ -59,7 +59,7 @@
 	{
 		if (APP)
 		{
-			if (this.menubar)
+			if (this.main && this.menubar)
 			{
 				this.main.menu = this.menubar;
 			}
@@ -108,6 +108,7 @@
 	{
 		this.main.close(force);
 		this.main = null;
+		this.menubar = null;
 	};
 
 	// Assign to namespace
