@@ -300,6 +300,11 @@
 	*/
 	p.load = function()
 	{
+		if (DEBUG)
+		{
+			localStorage.removeItem('templates');
+		}
+
 		try
 		{
 			this.templates = JSON.parse(localStorage.getItem('templates'));

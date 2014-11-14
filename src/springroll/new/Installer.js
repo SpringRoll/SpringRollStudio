@@ -29,6 +29,15 @@
 	var p = Installer.prototype;
 
 	/**
+	*  The build file required for springroll
+	*  @property {String} FILE
+	*  @readOnly
+	*  @static
+	*  @default  "springroll.json"
+	*/
+	Installer.FILE = 'springroll.json';
+
+	/**
 	*  The main execution point for creating a new project
 	*  @method run
 	*  @param {string} template The path to the template to use
@@ -89,7 +98,7 @@
 		}
 
 		// Update the build file with libraries and modules
-		var build = this.readJSON("build.json");
+		var build = this.readJSON(Installer.FILE);
 		
 		// Replace tokens with the list of depdendencies
 		insertAt(
@@ -102,7 +111,7 @@
 			build.librariesDebug, 
 			options.librariesDebug
 		);
-		this.writeJSON('build.json', build);
+		this.writeJSON(Installer.FILE, build);
 		
 		// Replace text in the files
 		var type, value, option, replacements = {};

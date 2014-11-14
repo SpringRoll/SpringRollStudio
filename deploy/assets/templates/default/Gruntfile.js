@@ -8,7 +8,7 @@ module.exports = function(grunt)
 	grunt.initConfig(_.extend(
 
 		// Setup the default game tasks
-		require('grunt-game-builder')(grunt, { autoInit: false }),
+		require('grunt-springroll')(grunt, { autoInit: false }),
 
 		// Setup the current project tasks
 		require('load-grunt-config')(grunt,
@@ -22,7 +22,7 @@ module.exports = function(grunt)
 			{
 				pattern: [
 					'grunt-*',
-					'!grunt-game-builder'
+					'!grunt-springroll'
 				]
 			}
 		})

@@ -2,7 +2,7 @@
 	"private": true,
 	"dependencies": {
 		"grunt": "*",
-		"grunt-game-builder": "*",
+		"grunt-springroll": "*",
 		"load-grunt-config": "*",
 		"lodash": "*"
 	}

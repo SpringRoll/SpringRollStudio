@@ -201,11 +201,11 @@
 			);
 		};
 
-		exec('grunt _spock_usertasks',
+		exec('grunt _springroll_usertasks',
 			{ cwd : project.path },
 			function(error, stdout, strderr)
 			{
-				//console.log("_spock_usertasks callback");
+				//console.log("_springroll_usertasks callback");
 				//try { var a = {}; a.debug(); } catch(ex) {console.log(ex.stack);}
 				if (error)
 				{

@@ -3,8 +3,8 @@
 !define DESCRIPTION "Application for SpringRoll projects"
 # These three must be integers
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 0
-!define VERSIONBUILD 2
+!define VERSIONMINOR 1
+!define VERSIONBUILD 0
 # These will be displayed by the "Click here for support information" link in "Add/Remove Programs"
 # It is possible to use "mailto:" links in here to open the email client
 !define HELPURL "https://github.com/SpringRoll/SpringRollStudio/issues"
