@@ -162,13 +162,13 @@
 			'Templates', 
 			config.id
 		);
-		
+
 		// Check for existing
 		if (fs.existsSync(templatePath))
 		{
-			var temp = this.templates[templatePath] || "0.0.1";
+			var temp = this.templates[templatePath] || {"version" : "0.0.1"};
 			var message = "Attempting to replace and older version of the template " + config.name + ". Continue?";
-			
+
 			// If the version being added is not greater than the existing one
 			// we should ask for a confirmation first
 			if (!semver.gt(config.version, temp.version) && !confirm(message))
