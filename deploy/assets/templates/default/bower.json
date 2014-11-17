@@ -9,7 +9,7 @@
 		".gitignore",
 		".gitattributes",
 		"src",
-		"build.json",
+		"springroll.json",
 		"Gruntfile.js",
 		"package.js"
 	]
