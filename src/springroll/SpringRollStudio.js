@@ -16,7 +16,7 @@
 	*/
 	var SpringRollStudio = function()
 	{
-		NodeWebkitApp.call(this);
+		NodeWebkitApp.call(this, 0.25); // update blocker: 15 minutes
 
 		var modules = this.modules = [];
 
