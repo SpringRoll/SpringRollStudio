@@ -5,30 +5,13 @@ module.exports = function(grunt)
 
 	// Combine the game builder and current project
 	// configs into one object
-	var config = _.extend(
-
-		// Setup the default game tasks
-		require('grunt-game-builder')(grunt, { autoInit: false }), 
-
-		// Setup the current project tasks
-		require('load-grunt-config')(grunt, {
-			// The path for the tasks
-			configPath: path.join(process.cwd(), 'tasks'),
-			autoInit: false, 
-
-			// We don't want to reload builder
-			loadGruntTasks: { pattern: [
-				'grunt-*', 
-				'!grunt-game-builder'
-			] },
-
-			// Share the deploy folder with the tasks
-			data: { 
-				buildDir : './build',
-				installerDir : './installer',
-			}
-		})
-	);
+	var config = require('project-grunt')(grunt, {
+		autoInit: false,
+		data: { 
+			buildDir : './build',
+			installerDir : './installer',
+		}
+	});
 
 	// Add the modules to config
 	var build = grunt.file.readJSON('build.json');
@@ -84,8 +67,9 @@ module.exports = function(grunt)
 			config.jshint.main.push(js);
 
 			// Add to source maps
-			config.concat_sourcemap[name] = {
-				files: output
+			config.concat[name] = {
+				src: js,
+				dest: '<%= jsFolder %>/'+name+'.js'
 			};
 
 			// add files to clean
@@ -96,13 +80,13 @@ module.exports = function(grunt)
 
 			config.watch.main.files.push(js);
 			config.watch.main.tasks.push(
-				'concat_sourcemap:'+name, 
+				'concat:'+name, 
 				'replace:'+name
 			);
 
 			moduleTasks.push('uglify:'+name);
 			moduleTasksDebug.push(
-				'concat_sourcemap:'+name,
+				'concat:'+name,
 				'replace:'+name+'App'
 			);
 		}
