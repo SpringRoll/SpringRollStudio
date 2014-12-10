@@ -1,6 +1,6 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/NodeWebkitApp.js",
