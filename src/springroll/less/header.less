@@ -19,4 +19,12 @@ header {
 	background-image: -o-linear-gradient(top,#428bca 0,#2d6ca2 100%);
 	background-image: linear-gradient(to bottom,#428bca 0,#2d6ca2 100%);
 	background-repeat: repeat-x;
+
+	&.fixed {
+		position:fixed;
+		width:100%;
+		top:0;
+		left:0;
+		z-index:100;
+	}
 }
