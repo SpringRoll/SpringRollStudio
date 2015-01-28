@@ -1,12 +1,12 @@
 {
-  "name": "SpringRollStudio",
-  "private": true,
-  "version": "0.1.2",
-  "dependencies": {
-    "grunt": "~0.4.5",
-    "grunt-exec": "~0.4.6",
-    "grunt-node-webkit-builder": "^0.2.2",
-    "lodash": "~3.0.0",
-    "project-grunt": "*"
-  }
+	"name": "SpringRollStudio",
+	"private": true,
+	"version": "0.1.3",
+	"dependencies": {
+		"grunt": "~0.4.5",
+		"grunt-exec": "~0.4.6",
+		"grunt-node-webkit-builder": "^0.2.2",
+		"lodash": "~3.0.0",
+		"project-grunt": "*"
+	}
 }

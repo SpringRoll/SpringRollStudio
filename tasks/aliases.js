@@ -6,7 +6,7 @@ module.exports = function(grunt)
 		'uglify:app',
 		'clean:css',
 		'less:release',
-		'moduleTasks',
+		'moduleAppTasks',
 		'libs',
 		'exec:appModules',
 		'nodewebkit'
@@ -19,7 +19,7 @@ module.exports = function(grunt)
 		'replace:app',
 		'clean:css',
 		'less:development',
-		'moduleTasksDebug',
+		'moduleAppTasksDebug',
 		'libs-debug',
 		'exec:appModules',
 		'nodewebkit'
