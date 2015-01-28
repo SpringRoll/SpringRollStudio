@@ -1,8 +1,8 @@
 module.exports = {
 	css: {
 		files: [
-			'<%= build.css.main %>',
-			'<%= build.file %>',
+			'<%= project.css.main %>',
+			'<%= project.file %>',
 			'src/**/*.less'
 		],
 		tasks: [

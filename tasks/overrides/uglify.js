@@ -1,7 +1,7 @@
 module.exports = {
 	main: {
 		files: {
-			'<%= jsFolder %>/main.js': '<%= build.js.main %>'
+			'<%= jsFolder %>/main.js': '<%= project.js.main %>'
 		},
 		options: {
 			compress: {

@@ -9,9 +9,9 @@ module.exports = {
 		cmd: 'makensis <%= installerDir %>/win.nsi'
 	},
 	createOSXInstall: {
-		cmd: 'appdmg <%= installerDir %>/osx.json <%= buildDir %>/<%= build.name %>-Setup.dmg'
+		cmd: 'appdmg <%= installerDir %>/osx.json <%= buildDir %>/<%= project.name %>-Setup.dmg'
 	},
 	openOSXApp : {
-		cmd: 'open <%= buildDir %>/<%= build.name %>/osx/<%= build.name %>.app'
+		cmd: 'open <%= buildDir %>/<%= project.name %>/osx/<%= project.name %>.app'
 	}
 };
