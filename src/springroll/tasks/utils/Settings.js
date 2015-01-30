@@ -8,69 +8,6 @@
 	var Settings = {};
 
 	/**
-	*  Get the current active project
-	*  @property {String} activeProject
-	*  @static
-	*/
-	Object.defineProperty(Settings, "activeProject", {
-		get : function()
-		{
-			return localStorage.TasksDataActive || null;
-		},
-		set : function(projectId)
-		{
-			localStorage.TasksDataActive = projectId;
-		}
-	});
-
-	/**
-	*  If the sidebar is collapsed or not
-	*  @property {Boolean} collapsedSidebar
-	*  @static
-	*/
-	Object.defineProperty(Settings, "collapsedSidebar", {
-		get : function()
-		{
-			return JSON.parse(localStorage.TasksDataSidebar || "false");
-		},
-		set : function(collapsed)
-		{
-			localStorage.TasksDataSidebar = JSON.stringify(collapsed);
-		}
-	});
-
-	/**
-	*  Save the collection of projects
-	*  @method setProjects
-	*  @static
-	*  @param {Array} project The projects to set
-	*/
-	Settings.setProjects = function(projects)
-	{
-		localStorage.TasksData = JSON.stringify(projects);
-	};
-
-	/**
-	*  Get the projects
-	*  @method getProjects
-	*  @static
-	*  @return {Array} The collection of projects
-	*/
-	Settings.getProjects = function()
-	{
-		var projects;
-		try
-		{
-			projects = JSON.parse(localStorage.TasksData || '[]');
-		}
-		catch(e)
-		{
-			alert('Error Reading Tasks! Reverting to defaults.');
-		}
-		return projects || [];
-	};
-
-	/**
 	*  Save the window settings
 	*  @method saveWindow
 	*  @static

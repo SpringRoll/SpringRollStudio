@@ -28,9 +28,21 @@
 
 		/**
 		*  The collection of currently loaded projects
-		*  @property {Array} projects
+		*  @property {Array} project
 		*/
-		this.projects = Settings.getProjects();
+		this.project = null;
+
+		/**
+		 * The path to the grunt executable
+		 * @property {string} gruntBin
+		 */
+		this.gruntBin = path.resolve('.','node_modules','grunt-cli','bin','grunt');
+
+		/**
+		 * The path to the npm executable
+		 * @property {string} npmBin
+		 */
+		this.npmBin = path.resolve('.','node_modules','npm','bin','npm-cli.js');
 	};
 
 	// The reference to the prototype
@@ -40,60 +52,40 @@
 	*  Add a project to the interface
 	*  @method add
 	*  @param {String} dir The directory of project file
-	*  @param {function} init The intialized callback
-	*  @param {function} failed The fail callback
 	*  @param {function} success The callback when added
+	*  @param {function} failed The fail callback
 	*/
-	p.add = function(dir, init, failed, success)
+	p.add = function(dir, success, failed)
 	{
-		var self = this,
-			project;
-			
-		_.each(this.projects, function(p){
-			if (!path.relative(p.path, dir))
-			{
-				project = p;
-				project.exists = true;
-			}
-		});
-
-		// Create a new project
-		if (!project)
-		{
-			var name = path.basename(dir);
-			project = {
-				id: Utils.uid(name),
-				name: name,
-				path: dir,
-				tasks: null,
-				exists: false
-			};
-		}
-
-		// We have a new project
-		init(project);
+		var self = this, project;
+		var name = path.basename(dir);
+		this.project = project = {
+			name: name,
+			path: dir,
+			tasks: []
+		};
 
 		// Check for grunt within project
 		if (!fs.existsSync(path.join(project.path, 'node_modules')))
 		{
-			exec('npm install',
+			exec('node ' + self.npmBin + ' install',
 				{ cwd : project.path },
 				function(error, stdout, stderr)
 				{
 					if (error)
 					{
-						failed(project.id, 'npm install error: ' + error);
+						failed('Install Error: ' + error);
 					}
 					else
 					{
-						self.proceed(project, failed, success);
+						this.proceed(success, failed);
 					}
-				}
+				}.bind(this)
 			);
 		}
 		else
 		{
-			self.proceed(project, failed, success);
+			this.proceed(success, failed);
 		}
 	};
 
@@ -105,33 +97,34 @@
 	*  @param {function} failed
 	*  @param {function} success
 	*/
-	p.proceed = function(project, failed, success)
+	p.proceed = function(success, failed)
 	{
 		var self = this;
+		var project = this.project;
 
 		// Check for grunt within project
 		if (!fs.existsSync(path.join(project.path, 'node_modules/grunt')))
 		{
-			failed(project.id, 'Unable to find local grunt.');
+			failed('Unable to find local grunt.');
 			return;
 		}
 
 		// Check for grunt file
 		if (!fs.existsSync(path.join(project.path, 'Gruntfile.js')))
 		{
-			failed(project.id, 'Unable to find Gruntfile.js.');
+			failed('Unable to find Gruntfile.js.');
 			return;
 		}
 
 		var tasksFromHelp = function()
 		{
-			exec('grunt -h',
+			exec('node ' + self.gruntBin + ' -h',
 				{ cwd : project.path },
 				function (error, stdout, stderr)
 				{
 					if (error)
 					{
-						failed(project.id, 'exec error: ' + error);
+						failed('Exec error: ' + error);
 						return;
 					}
 
@@ -142,7 +135,7 @@
 
 					if (index === -1)
 					{
-						failed(project.id, "There was a problem fetching tasks");
+						failed("There was a problem fetching tasks");
 						return;
 					}
 
@@ -184,29 +177,28 @@
 							next++;
 						}
 
-						// Add to the list of tasks
-						tasks.push({
-							name: name,
-							info: task.replace(/&/g, '&amp;')
-								.replace(/'/g, '&apos;')
-								.replace(/"/g, '&quot;')
-								.replace(/</g, '&lt;')
-								.replace(/>/g, '&gt;')
-						});
+						if (name)
+						{
+							// Add to the list of tasks
+							project.tasks.push({
+								name: name,
+								info: task.replace(/&/g, '&amp;')
+									.replace(/'/g, '&apos;')
+									.replace(/"/g, '&quot;')
+									.replace(/</g, '&lt;')
+									.replace(/>/g, '&gt;')
+							});
+						}						
 					});
-
-					self.addTasks(project, tasks);
 					success(project);
 				}
 			);
 		};
 
-		exec('grunt _springroll_usertasks',
+		exec('node ' + self.gruntBin + ' _springroll_usertasks',
 			{ cwd : project.path },
 			function(error, stdout, strderr)
 			{
-				//console.log("_springroll_usertasks callback");
-				//try { var a = {}; a.debug(); } catch(ex) {console.log(ex.stack);}
 				if (error)
 				{
 					// Try to get tasks from the help
@@ -223,106 +215,9 @@
 				catch(e)
 				{
 					console.error(e);
-					tasks = [];
 				}
-				self.addTasks(project, tasks);
+				project.tasks = tasks;
 				success(project);
-			}
-		);
-	};
-
-	p.addTasks = function(project, tasks)
-	{
-		// Add the tasks
-		project.tasks = tasks || [];
-
-		var exists = project.exists;
-		delete project.exists;
-
-		//console.log("project exists: " + exists);
-
-		// If we don't exist yet, add to the 
-		// collection of opened projects
-		if (!exists)
-		{
-			this.projects.push(project);
-			Settings.setProjects(this.projects);
-		}
-		if (DEBUG)
-		{
-			console.log(project);
-		}
-	};
-
-	/**
-	*  Reorder the project
-	*  @method reorder
-	*  @param {Array} ids The new collection of ids
-	*/
-	p.reorder = function(ids)
-	{
-		var projects = [];
-		for (var i = 0; i < ids.length; i++)
-		{
-			projects.push(this.getById(ids[i]));
-		}
-		this.projects = projects;
-		Settings.setProjects(this.projects);
-	};
-
-	/**
-	*  Remove a project from the interface
-	*  @method remove
-	*  @param {string} id The unique project id
-	*/
-	p.remove = function(id)
-	{
-		// Removing from the list of projects
-		this.projects = _.reject(
-			this.projects,
-			function(project)
-			{
-				return project.id === id;
-			}
-		);
-
-		// Update projects
-		Settings.setProjects(this.projects);
-
-		// Kill all project related tasks
-		this.app.terminalManager.killProjectWorkers(id);
-	};
-
-	/**
-	*  Get a project by id
-	*  @method getById
-	*  @param {string} id The unique project id
-	*  @return {object} The project
-	*/
-	p.getById = function(id)
-	{
-		return _.find(
-			this.app.projectManager.projects,
-			function(project)
-			{
-				return project.id === id;
-			}
-		);
-	};
-
-	/**
-	*  Get a project by id
-	*  @method getById
-	*  @param {string} path The unique project path
-	*  @return {object} The project
-	*/
-	p.getByPath = function(path)
-	{
-		return _.find(
-			this.app.projectManager.projects,
-			function(project)
-			{
-				return project.path === path;
 			}
 		);
 	};

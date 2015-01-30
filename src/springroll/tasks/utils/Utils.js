@@ -48,21 +48,6 @@
 		}
 	};
 
-	/**
-	*  Get a unique id hash for a string
-	*  @method uid
-	*  @static
-	*  @param {string} str The string to hash
-	*  @return {string} The hashed string
-	*/
-	Utils.uid = function(str)
-	{
-		return md5((new Date().toISOString() + str)
-			.toLowerCase()
-			.replace(/\\/gi, '/'))
-			.substr(8, 8);
-	};
-
 	// Assign to the global space
 	namespace('springroll.tasks').Utils = Utils;
 

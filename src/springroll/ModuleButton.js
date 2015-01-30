@@ -11,8 +11,9 @@
 	*  @namespace springroll
 	*  @constructor
 	*  @param {Element} dom The DOM element link
+	*  @param {springroll.SpringRollStudio} app Reference to the app
 	*/
-	var ModuleButton = function(dom, parent)
+	var ModuleButton = function(dom, app)
 	{
 		/**
 		*  The reference to the DOM link
@@ -20,7 +21,11 @@
 		*/
 		this.dom = dom;
 
-		this.parent = parent;
+		/**
+		 * The parent main app
+		 * @property {springroll.SpringRollStudio} parent
+		 */
+		this.parent = app;
 
 		// jquery object
 		var link = $(dom).click(this._onOpen.bind(this));
@@ -140,6 +145,19 @@
 	var onFocus = function()
 	{
 		this.window.module.focus();
+	};
+
+	/**
+	 * Close the module
+	 * @method close
+	 * @param {boolean} [force=false] If we should force the close
+	 */
+	p.close = function(force)
+	{
+		if (this.main)
+		{
+			this.main.close(force);
+		}
 	};
 
 	/**

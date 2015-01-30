@@ -1,12 +1,48 @@
 @import 'less/fonts';
 
-.modules {
+body {
+	-webkit-user-select:none;
+	cursor:default;
 	font-family:'OpenSans', sans-serif;
 	font-weight: lighter;
+}
+
+.modules {
 	width:100%;
 	border:10px solid #fff;
 	border-bottom-width: 0;
 	&:last-child {
 		border-bottom-width: 10px;
 	}
+}
+
+header {
+	.logo {
+		display:block;
+		margin:10px auto 0;
+		width:100px;
+	}
+}
+
+input[type="file"] {
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+nav {
+	.btn {
+		width:33.333%;
+		text-align:center;
+		.icon {
+			margin-right:5px;
+		}
+	}
+}
+
+.version {
+	text-align: center;
+	margin-top: 7px;
+	font-size:90%;
+	color: #999;
 }

@@ -21,33 +21,12 @@
 	var Interface = function(app)
 	{
 		var body = $('body').on(
-			'click',
-			'.JS-Sidebar-Item',
-			function()
-			{
-				app.switchProject($(this).data('id').toString());
-				return false;
-			}
-		)
-		.on(
-			'click',
-			'.JS-Project-Remove',
-			function()
-			{
-				app.removeProject($(this).data('id').toString());
-				return false;
-			}
-		)
-		.on(
 			'dblclick',
 			'.JS-Task-Toggle-Info',
 			function()
 			{
 				var button = $(this).find('.JS-Task-Run');
-				app.toggleTask(
-					button.data('project-id').toString(),
-					button.data('task-name').toString()
-				);
+				app.toggleTask(button.data('task-name'));
 				return false;
 			}
 		)
@@ -56,11 +35,7 @@
 			'.JS-Task-Run',
 			function()
 			{
-				var button = $(this);
-				app.toggleTask(
-					button.data('project-id').toString(), 
-					button.data('task-name').toString()
-				);
+				app.toggleTask($(this).data('task-name'));
 				return false;
 			}
 		)
@@ -70,16 +45,15 @@
 			function(e)
 			{
 				var button = $(this);
-				var projectId = button.data('project-id').toString();
 				var taskName = button.data('task-name').toString();
 
 				if (!app.terminal)
 				{
-					app.terminal = new TerminalWindow(projectId, taskName);
+					app.terminal = new TerminalWindow(taskName);
 				}
 				else
 				{
-					app.terminal.open(projectId, taskName);
+					app.terminal.open(taskName);
 				}
 				return false;
 			}
@@ -89,42 +63,10 @@
 			'.JS-Task-Stop',
 			function()
 			{
-				var button = $(this);
-				app.toggleTask(
-					button.data('project-id').toString(), 
-					button.data('task-name').toString()
-				);
+				app.toggleTask($(this).data('task-name'));
 				return false;
 			}
 		);
-
-		$('.sidebar-toggle').click(
-			function()
-			{
-				collapsed = body
-					.toggleClass(SIDEBAR_CLASS)
-					.hasClass(SIDEBAR_CLASS);
-
-				Settings.collapsedSidebar = collapsed;
-			}
-		);
-
-		if (Settings.collapsedSidebar)
-		{
-			body.addClass(SIDEBAR_CLASS);
-		}
-
-		// Enable sortable list
-		$('.sidebar-list').sortable().on('sortupdate', function(){
-			var ids = [];
-			$(".sidebar-item").each(
-				function()
-				{
-					ids.push($(this).data('id').toString());
-				}
-			);
-			app.projectManager.reorder(ids);
-		});
 
 		$(document).on(
 			'dragover',
@@ -133,8 +75,8 @@
 				event.stopPropagation();
 				event.preventDefault();
 			}
-		)
-		.on(
+		);
+		/*.on(
 			'drop',
 			function handleDrop(event)
 			{
@@ -158,16 +100,8 @@
 				});
 				return false;
 			}
-		);
+		);*/
 	};
-
-	/**
-	*  The class for the sidebar collapsed
-	*  @property {String} SIDEBAR_CLASS
-	*  @static
-	*  @private
-	*/
-	var SIDEBAR_CLASS = 'collapsed-sidebar';
 
 	// Assign to namespace
 	namespace('springroll.tasks').Interface = Interface;

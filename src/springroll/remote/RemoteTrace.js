@@ -28,7 +28,7 @@
 			*  The new websocket server
 			*  @property {WebSocketServer} server
 			*/
-			this.server = new WebSocketServer({port: 1025});
+			this.server = new WebSocketServer({port: 1026});
 
 			// Handle incoming messages
 			this.server.on('connection', this._onInit.bind(this));

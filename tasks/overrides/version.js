@@ -22,6 +22,14 @@ module.exports = {
 			return contents.replace(/(\!define VERSIONMAJOR) [0-9]+/, "$1 " + parts[0])
 				.replace(/(\!define VERSIONMINOR) [0-9]+/, "$1 " + parts[1])
 				.replace(/(\!define VERSIONBUILD) [0-9]+/, "$1 " + parts[2]);
-		}
+		},
+		'deploy/index.html' : [
+			'cache-bust',
+			function(contents, version)
+			{
+				return contents.replace(/<span id\=\"version\">[^<]+<\/span>/, 
+					'<span id="version">'+version+'</span>');
+			}
+		]
 	}
 };

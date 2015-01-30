@@ -14,11 +14,16 @@
 		var dragOptions = {
 			axis: "x",
 			drag: this._onResizeCurrent,
-			stop: this._onResizeCurrent
+			stop: this._onResizeCurrent,
+			scroll:false
 		};
 
 		this.parent = $(selector).scroll(this._onScroll.bind(this));
 		this.captions = $("#captions");
+		this.wave = $("#wave");
+
+		this._captions = [];
+
 		this.removeButton = $("#removeButton");
 		this.resizeLeft = $("#resizeLeft").draggable(dragOptions);
 		this.resizeRight = $("#resizeRight").draggable(dragOptions);
@@ -91,8 +96,23 @@
 		{
 			textarea.trigger('focus');
 		}
+		this._captions.push(textarea[0]);
+		this._captions.sort(sortCaptions);
 
 		return textarea;
+	};
+
+	/**
+	 * Sort function for the captions by the position
+	 * @method  sortCaptions
+	 * @private
+	 * @param  {jquery} a 
+	 * @param  {jquery} b 
+	 * @return {int}   
+	 */
+	var sortCaptions = function(a, b)
+	{
+		return $(a).position().left - $(b).position().left;
 	};
 
 	/**
@@ -136,6 +156,7 @@
 		this.removeButton.show().css('left', right);
 
 		this.currentCaption = textarea.addClass('current');
+		this.setContainments();
 	};
 
 	/**
@@ -149,7 +170,10 @@
 		var left = scrollLeft + this.resizeLeft.position().left;
 		var right = scrollLeft + this.resizeRight.position().left + this.resizeRight.outerWidth();
 
-		this.currentCaption.outerWidth(right - left).css('left', left);
+		if (this.currentCaption)
+		{
+			this.currentCaption.outerWidth(right - left).css('left', left);
+		}
 		this.removeButton.css('left', right);
 	};
 
@@ -227,6 +251,74 @@
 	};
 
 	/**
+	 * Set the containment for the drag handles
+	 * @method  setContainments
+	 */
+	p.setContainments = function()
+	{
+		var padLeft = 2;
+		var padRight = 2;
+		var captionMinWidth = 100;
+		var parentLeft = this.parent.position().left;
+		var scrollLeft = this.parent[0].scrollLeft;
+		var captions = this._captions;
+		var i = captions.indexOf(this.currentCaption[0]);
+
+		var leftBounds = [
+			parentLeft + padLeft,
+			0,
+			this.resizeRight.position().left - 
+				captionMinWidth + 
+				parentLeft,
+			0
+		];
+
+		var rightBounds = [
+			this.resizeLeft.position().left + 
+				captionMinWidth + 
+				parentLeft,
+			0,
+			this.wave.outerWidth()  - 
+				scrollLeft - 
+				this.removeButton.outerWidth() -
+				padRight,
+			0
+		];
+
+		// Get the min y position to the left
+		if (i > 0)
+		{
+			var prevCaption = $(captions[i-1]);
+			leftBounds[0] = prevCaption.position().left + 
+				prevCaption.outerWidth() + 
+				padLeft -
+				scrollLeft + 
+				parentLeft;
+		}
+		
+		// Get the max y position to the right
+		if (captions[i+1])
+		{
+			var nextCaption = $(captions[i+1]);
+			rightBounds[2] = nextCaption.position().left + 
+				padRight -
+				scrollLeft;
+		}
+
+		this.resizeLeft.draggable(
+			"option",
+			"containment",
+			leftBounds
+		);
+
+		this.resizeRight.draggable(
+			"option",
+			"containment",
+			rightBounds
+		);
+	};
+
+	/**
 	*  If the panel is enabled and ready to changed captions
 	*  @property {boolean} enabled
 	*/
@@ -259,20 +351,30 @@
 		get : function()
 		{
 			var data = [];
-			this.captions.find('textarea').each(function(){
-				var textarea = $(this);
+
+			// Keep track of the last ending position
+			// to prevent overlapping captions
+			var lastEnd = 0;
+
+			for (var i = 0; i < this._captions.length; i++)
+			{
+				var textarea = $(this._captions[i]);
 				var content = textarea.val().trim().replace('/\n|\r/', '');
 
 				// Block adding empty captions
-				if (!content) return;
-				
+				if (!content) continue;
+
 				var left = textarea.position().left;
+				var end = ((left + textarea.outerWidth()) / RATE) | 0;
+
 				data.push({
 					content: textarea.val(),
-					start: (left / RATE) | 0,
-					end: ((left + textarea.outerWidth()) / RATE) | 0
+					start: Math.max((left / RATE) | 0, lastEnd),
+					end: end
 				});
-			});
+
+				lastEnd = end;
+			}
 			return data;
 		},
 		set : function(lines)
@@ -295,6 +397,7 @@
 	*/
 	p.removeAll = function()
 	{
+		this._captions.length = 0;
 		this.parent.scrollLeft(0);
 		this.removeCurrent();
 		this.captions.children()
@@ -315,6 +418,11 @@
 		if (currentCaption)
 		{
 			currentCaption.off('keyup focus').remove();
+			var i = this._captions.indexOf(currentCaption[0]);
+			if (i < -1)
+			{
+				this._captions.splice(i, 1);
+			}
 		}
 	};
 

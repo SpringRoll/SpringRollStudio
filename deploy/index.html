@@ -3,28 +3,37 @@
 	<head>
 		<meta charset="utf-8">
 		<title>SpringRoll Studio</title>
-		<link href="assets/css/libraries.css?v=0.2.0" rel="stylesheet">
-		<link href="assets/css/main.css?v=0.2.0" rel="stylesheet">
-		<script src="assets/js/libraries.js?v=0.2.0"></script>
-		<script src="assets/js/main.js?v=0.2.0"></script>
+		<link href="assets/css/libraries.css?v=0.2.0-alpha" rel="stylesheet">
+		<link href="assets/css/main.css?v=0.2.0-alpha" rel="stylesheet">
+		<script src="assets/js/libraries.js?v=0.2.0-alpha"></script>
+		<script src="assets/js/main.js?v=0.2.0-alpha"></script>
 	</head>
 	<body>
+		<header>
+			<img src="assets/images/icon.png?v=0.2.0-alpha" class="logo">
+		</header>
+		<nav class="modules btn-group">
+			<a class="btn btn-primary" href="new.html" id="new" target="_blank" title="New Project" data-width="550" data-height="670" data-resizable="false">
+				<span class="icon glyphicon glyphicon-file"></span> New
+			</a>
+			<button class="btn btn-primary" id="openButton" title="Open Project">
+				<span class="icon glyphicon glyphicon-folder-open"></span> Open
+			</button>
+			<button class="btn btn-primary" id="closeButton" title="Close Project">
+				<span class="icon glyphicon glyphicon-remove"></span> Close
+			</button>
+		</nav>
 		<div class="modules btn-group-vertical">
-			<a class="btn btn-primary btn-lg" href="captions.html" id="captions" target="_blank" title="Caption Creator" data-width="640" data-height="480" data-min-width="510" data-min-height="400">
+			<a class="btn btn-primary btn-lg requires-project" href="captions.html" id="captions" target="_blank" title="Caption Creator" data-width="640" data-height="480" data-min-width="510" data-min-height="400">
 				Caption Creator
+			</a>
+			<a class="btn btn-primary btn-lg requires-project" href="tasks.html" id="tasks" target="_blank" title="Task Runner" data-width="480" data-height="400" data-min-height="275" data-min-width="280">
+				Task Runner
 			</a>
 			<a class="btn btn-primary btn-lg" href="remote.html" id="remote" target="_blank" title="Remote Trace" data-width="480" data-height="400" data-min-height="275" data-min-width="400">
 				Remote Trace
 			</a>
-			<a class="btn btn-primary btn-lg" href="tasks.html" id="tasks" target="_blank" title="Task Runner" data-width="480" data-height="400" data-min-height="275" data-min-width="400">
-				Task Runner
-			</a>
 		</div>
-		<div class="modules btn-group-vertical">
-			<!-- <button class="btn btn-default" id="open" title="Open Project">Open Project</button> -->
-			<a class="btn btn-default" href="new.html" id="new" target="_blank" title="New Project" data-width="550" data-height="670" data-resizable="false">
-				New Project
-			</a>
-		</div>
+		<footer class="version">Version <span id="version">0.2.0-alpha</span></footer>
 	</body>
 </html>

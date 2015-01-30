@@ -5,6 +5,7 @@
 		// Import node modules
 		var spawn = require("child_process").spawn;
 		var exec = require("child_process").exec;
+		var isWin = /^win/.test(process.platform);
 	}
 	
 	/**
@@ -31,14 +32,14 @@
 		if (APP)
 		{
 			// Get the command based on the platform
-			this.command = (process.platform === 'win32') ? 'grunt.cmd' : 'grunt';
+			this.command = isWin ? 'grunt.cmd' : 'grunt';
 		}
 
 		/**
 		*  The list of current processes by project id
-		*  @property {dict} processList
+		*  @property {dict} tasks
 		*/
-		this.processList = {};
+		this.tasks = {};
 	};
 
 	// Reference to the prototype
@@ -46,83 +47,64 @@
 
 	/**
 	*  Kill all the workers for all projects
-	*  @method killWorkers
+	*  @method killTasks
 	*/
-	p.killWorkers = function()
+	p.killTasks = function()
 	{
-		var self = this;
-		_.forEach(self.processList,
-			function(project, project_id)
+		_.forEach(this.tasks,
+			function(task, name)
 			{
-				self.killProjectWorkers(project_id);
-			}
-		);
-	};
-
-
-	/**
-	*  Kill the project workers
-	*  @method killProjectWorkers
-	*  @param {String} project_id The unqiue project id
-	*/
-	p.killProjectWorkers = function(project_id)
-	{
-		var self = this;
-
-		var project = this.processList[project_id];
-
-		if (!project)
-		{
-			return;
-		}
-
-		_.forEach(project,
-			function(task, task_name)
-			{
-				if (task.status === "running")
+				if (task.status == 'running')
 				{
-					self.killTask(project_id, task_name);
+					this.killTask(name);
 				}
-			}
+			}.bind(this)
 		);
 	};
-
 
 	/**
 	*  Run a task
 	*  @method runTask
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task
+	*  @param {String} name The name of the task
 	*  @param {Function} startCb The starting callback function
 	*  @param {Function} endCb The ending callback function
 	*  @param {Function} errorCb The error callback function
 	*/
-	p.runTask = function(project_id, task_name, startCb, endCb, errorCb)
+	p.runTask = function(name, startCb, endCb, errorCb)
 	{
-		var project = this.app.projectManager.getById(project_id);
+		var app = this.app;
+		var project = app.projectManager.project;
 
 		startCb();
 
-		var terminal = spawn(this.command, [task_name], {cwd: project.path});
+		var terminal = spawn(
+			this.command,
+			[name],
+			{cwd: project.path}
+		);
 
-		if (_.isUndefined(this.processList[project_id]))
+		var task = this.tasks[name];
+
+		if (_.isUndefined(task))
 		{
-			this.processList[project_id] = {};
+			task = {
+				name: name,
+				terminal: terminal,
+				status: 'running'
+			};
 		}
+		else
+		{
+			task.terminal = terminal;
+			task.status = 'running';
+		}		
 
-		this.processList[project_id][task_name] = {
-			name: task_name,
-			terminal: terminal,
-			status: 'running'
-		};
-
-		var app = this.app;
 		terminal.stdout.setEncoding('utf8');
 		terminal.stdout.on(
 			'data',
 			function(data)
 			{
-				app.putCliLog(data, project_id, task_name);
+				app.putCliLog(data, name);
 			}
 		);
 
@@ -130,7 +112,7 @@
 			'data',
 			function(data)
 			{
-				app.putCliLog(data, project_id, task_name);
+				app.putCliLog(data, name);
 				errorCb();
 			}
 		);
@@ -140,8 +122,7 @@
 			function(code)
 			{
 				endCb();
-				//console.log('child process exited with code ', code);
-				terminal.status = "stop";
+				terminal.status = 'stop';
 			}
 		);
 	};
@@ -149,17 +130,18 @@
 	/**
 	*  Stop a task
 	*  @method stopTask
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task
+	*  @param {String} name The name of the task
 	*/
-	p.stopTask = function(project_id, task_name)
+	p.stopTask = function(name)
 	{
-		if (!_.isUndefined(this.processList[project_id]))
+		var task = this.tasks[name];
+
+		if (!_.isUndefined(task))
 		{
 			try
 			{
-				this.killTask(project_id, task_name);
-				var pid = this.processList[project_id][task_name].status = "stop";
+				this.killTask(name);
+				task.status = "stop";
 			}
 			catch(e)
 			{
@@ -171,21 +153,20 @@
 	/**
 	*  Kill a task
 	*  @method killTask
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task
+	*  @param {String} name The name of the task
 	*/
-	p.killTask = function(project_id, task_name)
+	p.killTask = function(name)
 	{
 		if (APP)
 		{
-			if (process.platform === 'win32')
+			if (isWin)
 			{
-				var pid = this.processList[project_id][task_name].terminal.pid;
+				var pid = this.tasks[name].terminal.pid;
 				exec('taskkill /pid ' + pid + ' /T /F');
 			}
 			else
 			{
-				this.processList[project_id][task_name].terminal.kill();
+				this.tasks[name].terminal.kill();
 			}
 		}
 	};

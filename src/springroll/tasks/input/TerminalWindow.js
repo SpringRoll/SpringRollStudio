@@ -14,17 +14,10 @@
 	*  @class TerminalWindow
 	*  @namespace springroll.tasks
 	*  @constructor
-	*  @param {String} projectId The unqiue project id
 	*  @param {String} taskName The task name
 	*/
-	var TerminalWindow = function(projectId, taskName)
+	var TerminalWindow = function(taskName)
 	{
-		/**
-		*  The unique project id
-		*  @property {String} projectId
-		*/
-		this.projectId = projectId;
-
 		/**
 		*  The name of the task
 		*  @property {String} taskName
@@ -101,7 +94,7 @@
 		this.observer = new MutationObserver(this.onUpdate.bind(this));
 
 		// Open the constructor task
-		this.open(this.projectId, this.taskName);
+		this.open(this.taskName);
 	};
 
 	/**
@@ -120,10 +113,9 @@
 	/**
 	*  New
 	*  @method open
-	*  @param {String} projectId The unqiue project id
 	*  @param {String} taskName The task name
 	*/
-	p.open = function(projectId, taskName)
+	p.open = function(taskName)
 	{
 		if (this.observer)
 		{
@@ -131,9 +123,8 @@
 		}
 		this.terminal.innerHTML = "";
 
-		this.projectId = projectId;
 		this.taskName = taskName;
-		this.output = document.getElementById('console_' + projectId + "_" + taskName);
+		this.output = document.getElementById('console_' + taskName);
 		
 		// Update the title
 		this.main.title = this.taskName;

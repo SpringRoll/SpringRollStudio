@@ -27,16 +27,10 @@
 		Module.call(this);
 
 		/**
-		*  The projects container
-		*  @property {jquery} sidebar
-		*/
-		this.sidebar = $(".sidebar-list");
-
-		/**
 		*  The tasks container
 		*  @property {jquery} tasks
 		*/
-		this.tasks = $(".task-tab");
+		this.tasks = $("#tasks");
 
 		/**
 		*  The project manager
@@ -68,84 +62,31 @@
 			this.initMenubar(true, true);
 		}
 
-		// Initialize
-		this.init();
+		// Load the project
+		var project = localStorage.getItem('project');
+		if (!project)
+		{
+			throw "Not a valid project: " + project;
+		}
+		this.addProject(project);
 	};
 
 	// Reference to the prototype
 	var p = TaskRunner.prototype = Object.create(Module.prototype);
 
 	/**
-	*  Initalize the application, load any shaved projects
-	*  @method init
-	*/
-	p.init = function()
-	{
-		var self = this,
-			manager = this.projectManager;
-
-		if (manager.projects.length > 0)
-		{
-			var activeId = Settings.activeProject,
-				foundActive = false,
-				firstId;
-			
-			_.each(manager.projects, function(project, i, projects){
-				manager.add(project.path,
-					self.initProject.bind(self),
-					self.clearProject,
-					function(project)
-					{
-						if (!firstId)
-						{
-							firstId = project.id;
-						}
-						if (project)
-						{
-							self.addedProject(project);
-						}
-						lastId = project.id;
-
-						if (activeId && project.id === activeId)
-						{
-							foundActive = true;
-						}
-						// Last project, end of the line
-						if (i + 1 === projects.length)
-						{
-							// If the active project isn't found
-							// so we'll use the first project in the list
-							if (!foundActive)
-							{
-								activeId = firstId;
-							}
-							self.switchProject(activeId);
-						}
-					}
-				);
-			});
-		}
-	};
-
-	/**
 	*  Add a project to the list of projects
 	*  @method addProject
-	*  @param {string} dir The directory of the project to load
+	*  @param {string} projectPath The directory of the project to load
 	*/
-	p.addProject = function(dir)
+	p.addProject = function(projectPath)
 	{
-		var self = this;
-		this.projectManager.add(dir,
-			this.initProject.bind(this),
-			function(projectId, message)
+		this.projectManager.add(
+			projectPath,
+			this.addedProject.bind(this),
+			function(message)
 			{
 				alert(message);
-				self.clearProject(projectId);
-			},
-			function(project)
-			{
-				self.addedProject(project);
-				self.switchProject(project.id);
 			}
 		);
 	};
@@ -160,29 +101,27 @@
 		var self = this;
 		watch(
 			path.join(projectPath, "Gruntfile.js"),
-			function()
-			{
-				var project = self.projectManager.getByPath(projectPath);
-				if (!project)
-				{
-					console.error("No project found matching " + projectPath);
-					return;
-				}
-				self.removeProject(project.id);
-				self.addProject(projectPath);
-			}
+			this.refreshTasks.bind(this)
 		);
 	};
 
 	/**
-	*  Add the project header
-	*  @method initProject
-	*/
-	p.initProject = function(project)
+	 * Refresh the project tasks
+	 * @method  refreshTasks
+	 */
+	p.refreshTasks = function()
 	{
-		this.clearProject(project.id);
-		var html = Utils.getTemplate('project', project);
-		$(html).appendTo(this.sidebar);
+		this.tasks.addClass('loading');
+		
+		// Stop any running tasks
+		this.terminalManager.killTasks();
+		this.terminalManager.tasks = {};
+
+		// Clear the project
+		this.projectManager.project = null;
+
+		// Reload
+		this.addProject(localStorage.getItem('project'));
 	};
 
 	/**
@@ -192,102 +131,57 @@
 	*/
 	p.addedProject = function(project)
 	{
-		$('#project_' + project.id).removeClass('loading');
-		$(Utils.getTemplate('tasks', project)).appendTo(this.tasks);
+		$(Utils.getTemplate('tasks', project))
+			.appendTo(this.tasks);
+
+		this.tasks.removeClass('loading');
+
 		this.watchProject(project.path);
-	};
-
-	/**
-	*  Switch view to another project
-	*  @method switchProject
-	*  @param {String} id The unique project id
-	*/
-	p.switchProject = function(id)
-	{
-		$('.sidebar-item-current').removeClass('sidebar-item-current');
-		$('#project_' + id).addClass('sidebar-item-current');
-
-		$('.tasks').hide();
-		$('#tasks_' + id).show();
-
-		// Save the current project
-		Settings.activeProject = id;
-	};
-
-	/**
-	*  Clear the project from the display
-	*  @method clearProject
-	*  @param {String} id The unique project id
-	*/
-	p.clearProject = function(id)
-	{
-		$('#project_' + id  + ', #tasks_' + id).remove();
-	};
-
-	/**
-	*  Remove a project
-	*  @method removeProject
-	*  @param {String} id The unique project id
-	*/
-	p.removeProject = function(id)
-	{
-		this.projectManager.remove(id);
-
-		this.clearProject(id);
-
-		if ($('.sidebar-item-current').length === 0 && this.projectManager.projects.length > 0)
-		{
-			this.switchProject(this.projectManager.projects[0].id);
-		}
 	};
 
 	/**
 	*  Put the commandline log into the terminal window
 	*  @method putCliLog
 	*  @param {String} data The log data to add
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task
+	*  @param {String} taskName The name of the task
 	*/
-	p.putCliLog = function(data, project_id, task_name)
+	p.putCliLog = function(data, taskName)
 	{
 		var output = ansi2html(data);
-		$('<p>' + output + '</p>').appendTo($('#console_' + project_id + "_" + task_name));
-		this.terminalScrollToBottom(project_id, task_name);
+		$('<p>' + output + '</p>').appendTo($('#console_' + taskName));
+		this.terminalScrollToBottom(taskName);
 	};
 
 	/**
 	*  Scroll to the bottom of the console output
 	*  @method terminalScrollToBottom
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task
+	*  @param {String} taskName The name of the task
 	*/
-	p.terminalScrollToBottom = function(project_id, task_name)
+	p.terminalScrollToBottom = function(taskName)
 	{
 		_.throttle(function(){
-			$('#console_' + project_id + "_" + task_name).scrollTop(999999999);
+			$('#console_' + taskName).scrollTop(999999999);
 		}, 100)();
 	};
 
 	/**
 	*  Start running or stop running a task
 	*  @method toggleTask
-	*  @param {String} project_id The unqiue project id
-	*  @param {String} task_name The name of the task
+	*  @param {String} taskName The name of the task
 	*/
-	p.toggleTask = function(project_id, task_name)
+	p.toggleTask = function(taskName)
 	{
-		var item = $('#task_item_' + project_id + "_" + task_name);
+		var item = $('#task_item_' + taskName);
 
 		if (item.hasClass('running'))
 		{
-			this.terminalManager.stopTask(project_id, task_name);
+			this.terminalManager.stopTask(taskName);
 			item.removeClass('running error');
 		}
 		else
 		{
 			this.terminalManager.runTask(
-				project_id,
-				task_name,
+				taskName,
 				function()
 				{
 					//start event
@@ -319,7 +213,7 @@
 		{
 			this.terminal.destroy();
 		}
-		this.terminalManager.killWorkers();
+		this.terminalManager.killTasks();
 		this.close(true);
 	};
 

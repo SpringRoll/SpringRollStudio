@@ -113,11 +113,6 @@
 		this.onChangeAlias = this.onChangeAlias.bind(this);
 		this.onSelectAudioSrc = this.onSelectAudioSrc.bind(this);
 
-		if (WEB && DEBUG)
-		{
-			this.open('example');
-		}
-
 		var list = this.list.parent;
 		var self = this;
 
@@ -172,6 +167,10 @@
 
 			self.open(APP ? file.path : file.name);
 		});
+
+		// Check for an existing project and open it
+		var project = localStorage.getItem('project');
+		if (project) this.open(project);
 	};
 
 	// Reference to the prototype

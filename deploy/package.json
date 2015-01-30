@@ -1,7 +1,7 @@
 {
 	"name": "SpringRollStudio",
 	"description": "Application for SpringRoll projects",
-	"version": "0.2.0",
+	"version": "0.2.0-alpha",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SpringRoll/SpringRollStudio"
@@ -14,8 +14,8 @@
 		"toolbar": false,
 		"frame": true,
 		"position": "center",
-		"width": 300,
-		"height": 222,
+		"width": 340,
+		"height": 350,
 		"resizable": false
 	},
 	"webkit": {
@@ -27,7 +27,9 @@
 		"ansi2html": "~0.0.1",
 		"fs-extra": "~0.12.0",
 		"glob": "~4.0.6",
+		"grunt-cli": "^0.1.13",
 		"node-watch": "~0.3.4",
+		"npm": "^2.4.1",
 		"replace": "~0.3.0",
 		"request": "^2.48.0",
 		"semver": "~4.0.3",

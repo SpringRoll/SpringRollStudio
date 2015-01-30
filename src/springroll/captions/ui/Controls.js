@@ -30,8 +30,14 @@
 		*/
 		var waveform = this.waveform = Object.create(WaveSurfer);
 
+		/**
+		 * The container for the waveform
+		 * @property {jquery} wave
+		 */
+		this.wave = $('#wave');
+
 		this.waveform.init({
-			container: $('#wave')[0],
+			container: this.wave[0],
 			waveColor:  'rgba(0,0,0,0.2)',
 			progressColor: 'rgba(0,0,0,0)',
 			minPxPerSec: 100,

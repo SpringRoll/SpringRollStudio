@@ -1,8 +1,9 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.0",
+	"version": "0.2.0-alpha",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
+		"components/node-webkit-app/src/utils/Browser.js",
 		"components/node-webkit-app/src/NodeWebkitApp.js",
 		"src/springroll/ModuleButton.js",
 		"src/springroll/SpringRollStudio.js",
