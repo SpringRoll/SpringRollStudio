@@ -325,7 +325,7 @@
 		if (!this.templates)
 		{
 			// Default template path
-			var folder = path.resolve('.', 'assets', 'templates', 'default');
+			var folder = path.join('assets', 'templates', 'default');
 
 			this.templates = {};
 			this.templates[folder] = JSON.parse(
