@@ -52,9 +52,6 @@
 			$(".modules a").each(function(){
 				modules.push(new ModuleButton(this, app));
 			});
-
-			
-
 		}
 
 		// Bind reference to the open project handler
@@ -86,6 +83,19 @@
 		{
 			this.closeProject();
 		}
+
+		// Listen for a new project being created
+		$(window).on('storage', function(event){
+			if (event.key == 'project' && /new\.html/.test(event.url))
+			{
+				var project = event.newValue;
+				if (project)
+				{
+					console.log("New project created " + project);
+					this.openProject(project);
+				}
+			}
+		});
 	};
 
 	// Reference to the prototype

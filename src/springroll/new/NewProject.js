@@ -268,6 +268,7 @@
 	p._onCompleted = function()
 	{
 		alert(this.name.val() + " created successfully");
+		localStorage.setItem('project', this.folder.data('folder'));
 		localStorage.setItem('width', this.appWidth.val());
 		localStorage.setItem('height', this.appHeight.val());
 		localStorage.setItem('namespace', this.namespace.val());
