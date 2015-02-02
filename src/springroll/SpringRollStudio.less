@@ -19,6 +19,36 @@ body {
 	}
 }
 
+.project {
+	background:#363842;
+	padding:10px 0;
+	border-radius: 4px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	text-align: center;
+	margin:0 10px;
+	width:auto;
+	color:#fff;
+	border:0;
+	.name:before {
+		content:"Project:";
+		margin-right:5px;
+		color:#999;
+	}
+	.empty {
+		display:none;
+		color:#999;
+	}
+	&.empty {
+		.empty {
+			display:block;
+		}
+		.name {
+			display:none;
+		}
+	}
+}
+
 header {
 	.logo {
 		display:block;
@@ -35,10 +65,16 @@ input[type="file"] {
 
 nav {
 	.btn {
-		width:33.333%;
+		width:33.5%;
 		text-align:center;
 		.icon {
 			margin-right:5px;
+		}
+		&:first-child {
+			border-bottom-left-radius: 0;
+		}
+		&:last-child {
+			border-bottom-right-radius: 0;
 		}
 	}
 }

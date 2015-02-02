@@ -30,6 +30,18 @@
 		this.requiresProject = $(".requires-project")
 			.addClass('disabled');
 
+		/**
+		 * The current project name
+		 * @property {jquery} projectName
+		 */
+		this.projectName = $("#projectName");
+
+		/**
+		 * The current project name
+		 * @property {jquery} project
+		 */
+		this.project = $("#project");
+
 		if (APP)
 		{
 			this.menu = new gui.Menu({ type: 'menubar' });
@@ -125,7 +137,10 @@
 			alert("Folder is not a valid SpringRoll project");
 			return;
 		}
+		this.projectName.text(path.basename(project));
+		this.project.removeClass('empty');
 		this.closeButton.removeClass('disabled');
+
 		if (localStorage.getItem('project') != project)
 		{
 			localStorage.setItem('project', project);
@@ -139,6 +154,8 @@
 	 */
 	p.closeProject = function()
 	{
+		this.projectName.text('');
+		this.project.addClass('empty');
 		this.requiresProject.addClass('disabled');
 		this.closeButton.addClass('disabled');
 		localStorage.removeItem('project');
