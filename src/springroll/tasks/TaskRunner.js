@@ -83,11 +83,7 @@
 	{
 		this.projectManager.add(
 			projectPath,
-			this.addedProject.bind(this),
-			function(message)
-			{
-				alert(message);
-			}
+			this.addedProject.bind(this)
 		);
 	};
 
@@ -110,9 +106,7 @@
 	 * @method  refreshTasks
 	 */
 	p.refreshTasks = function()
-	{
-		this.tasks.addClass('loading');
-		
+	{		
 		// Stop any running tasks
 		this.terminalManager.killTasks();
 		this.terminalManager.tasks = {};
@@ -133,8 +127,6 @@
 	{
 		$(Utils.getTemplate('tasks', project))
 			.appendTo(this.tasks);
-
-		this.tasks.removeClass('loading');
 
 		this.watchProject(project.path);
 	};

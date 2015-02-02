@@ -86,6 +86,11 @@
 			"src/springroll/new/Installer.js",
 			"src/springroll/new/NewProject.js",
 			"src/springroll/new/NewProject.less"
+		],
+		"preview": [
+			"src/springroll/Module.js",
+			"src/springroll/preview/Preview.js",
+			"src/springroll/preview/Preview.less"
 		]
 	}
 }

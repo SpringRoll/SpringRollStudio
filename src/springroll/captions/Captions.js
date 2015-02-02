@@ -75,14 +75,6 @@
 			.hide();
 
 		/**
-		*  Quit the application
-		*  @property {jquery} quitButton
-		*/
-		this.quitButton = $("#quitButton")
-			.click(this.clear.bind(this))
-			.hide();
-
-		/**
 		*  The node webkit menu
 		*  @property {gui.Menu} menu The GUI menu
 		*/
@@ -117,9 +109,9 @@
 		var self = this;
 
 		$(document.body).on("dragover drop", function(e) {
-            e.preventDefault();
-            return false;
-       });
+			e.preventDefault();
+			return false;
+		});
 
 		list.on("dragenter", function(event){
 			event.preventDefault();
@@ -520,7 +512,6 @@
 			});
 
 			this.refreshButton.show();
-			this.quitButton.show();
 
 			$('body').removeClass('empty');
 
@@ -600,7 +591,6 @@
 		}
 		$('body').addClass('empty');
 
-		this.quitButton.hide();
 		this.refreshButton.hide();
 		this.project.close();
 		this.list.removeAll();

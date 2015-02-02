@@ -43,6 +43,18 @@
 		 * @property {string} npmBin
 		 */
 		this.npmBin = path.resolve('.','node_modules','npm','bin','npm-cli.js');
+
+		/**
+		 * The body dom
+		 * @property {jquery} body
+		 */
+		this.body = $(document.body);
+
+		/**
+		 * The dom for failed message display
+		 * @property {jquery} failedMessage
+		 */
+		this.failedMessage = $('#failedMessage');
 	};
 
 	// The reference to the prototype
@@ -53,10 +65,12 @@
 	*  @method add
 	*  @param {String} dir The directory of project file
 	*  @param {function} success The callback when added
-	*  @param {function} failed The fail callback
 	*/
-	p.add = function(dir, success, failed)
+	p.add = function(dir, success)
 	{
+		// Reset the classes
+		this.body.removeClass('installing failed loading');
+
 		var self = this, project;
 		var name = path.basename(dir);
 		this.project = project = {
@@ -68,25 +82,40 @@
 		// Check for grunt within project
 		if (!fs.existsSync(path.join(project.path, 'node_modules')))
 		{
+			this.body.addClass('installing');
 			exec('node ' + self.npmBin + ' install',
 				{ cwd : project.path },
 				function(error, stdout, stderr)
 				{
 					if (error)
 					{
-						failed('Install Error: ' + error);
+						this.failed('Install Error: ' + error);
 					}
 					else
 					{
-						this.proceed(success, failed);
+						this.body.removeClass('installing');
+						this.proceed(success);
 					}
 				}.bind(this)
 			);
 		}
 		else
 		{
-			this.proceed(success, failed);
+			this.proceed(success);
 		}
+	};
+
+	/**
+	 * The tasks loading or installing failed
+	 * @method failed
+	 * @param {string} msg The failed message
+	 */
+	p.failed = function(msg)
+	{
+		this.body.removeClass('loading installing')
+			.addClass('failed');
+
+		this.failedMessage.text(msg);
 	};
 
 	/**
@@ -94,25 +123,26 @@
 	*  @method proceed
 	*  @private
 	*  @param {Object} project
-	*  @param {function} failed
 	*  @param {function} success
 	*/
-	p.proceed = function(success, failed)
+	p.proceed = function(success)
 	{
+		this.body.addClass('loading');
+		
 		var self = this;
 		var project = this.project;
 
 		// Check for grunt within project
-		if (!fs.existsSync(path.join(project.path, 'node_modules/grunt')))
+		if (!fs.existsSync(path.join(project.path, 'node_modules', 'grunt')))
 		{
-			failed('Unable to find local grunt.');
+			this.failed('Unable to find local grunt.');
 			return;
 		}
 
 		// Check for grunt file
 		if (!fs.existsSync(path.join(project.path, 'Gruntfile.js')))
 		{
-			failed('Unable to find Gruntfile.js.');
+			this.failed('Unable to find Gruntfile.js.');
 			return;
 		}
 
@@ -124,7 +154,7 @@
 				{
 					if (error)
 					{
-						failed('Exec error: ' + error);
+						self.failed('Exec error: ' + error);
 						return;
 					}
 
@@ -135,7 +165,7 @@
 
 					if (index === -1)
 					{
-						failed("There was a problem fetching tasks");
+						self.failed("There was a problem fetching tasks");
 						return;
 					}
 
@@ -190,6 +220,7 @@
 							});
 						}						
 					});
+					self.body.removeClass('loading');
 					success(project);
 				}
 			);
@@ -217,6 +248,7 @@
 					console.error(e);
 				}
 				project.tasks = tasks;
+				self.body.removeClass('loading');
 				success(project);
 			}
 		);

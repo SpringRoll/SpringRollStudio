@@ -20,6 +20,10 @@
 	*/
 	var Interface = function(app)
 	{
+		$("#refreshTasks").click(function(){
+			app.refreshTasks();
+		});
+
 		var body = $('body').on(
 			'dblclick',
 			'.JS-Task-Toggle-Info',

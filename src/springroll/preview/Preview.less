@@ -1,0 +1,25 @@
+@import '../less/mixins';
+@import '../less/header';
+@import '../less/fonts';
+
+body {
+	overflow: hidden;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: normal;
+}
+
+#previewContainer {
+	position:absolute;
+	width:100%;
+	top:40px;
+	bottom:0;
+	iframe {
+		position:absolute;
+		width:100%;
+		height:100%;
+	}
+}
+
+#refreshButton {
+	right:40px;
+}

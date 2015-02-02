@@ -28,7 +28,7 @@
 		 * @property {jquery} requiresProject
 		 */
 		this.requiresProject = $(".requires-project")
-			.addClass('disabled active');
+			.addClass('disabled');
 
 		if (APP)
 		{
@@ -118,14 +118,14 @@
 	 */
 	p.openProject = function(project)
 	{
-		this.requiresProject.removeClass('disabled active');
+		this.requiresProject.removeClass('disabled');
 
 		if (!fs.existsSync(path.join(project, 'springroll.json')))
 		{
 			alert("Folder is not a valid SpringRoll project");
 			return;
 		}
-		this.closeButton.removeClass('disabled active');
+		this.closeButton.removeClass('disabled');
 		if (localStorage.getItem('project') != project)
 		{
 			localStorage.setItem('project', project);
@@ -139,8 +139,8 @@
 	 */
 	p.closeProject = function()
 	{
-		this.requiresProject.addClass('disabled active');
-		this.closeButton.addClass('disabled active');
+		this.requiresProject.addClass('disabled');
+		this.closeButton.addClass('disabled');
 		localStorage.removeItem('project');
 		this.closeModules();
 	};
