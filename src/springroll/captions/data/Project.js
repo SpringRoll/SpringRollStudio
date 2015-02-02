@@ -1,5 +1,12 @@
 (function(undefined){
 
+	if (APP)
+	{
+		var fs = require('fs');
+		var path = require('path');
+		var glob = require('glob');
+	}
+
 	/**
 	*  Class for managing the project data
 	*  @class Project
@@ -74,32 +81,34 @@
 	{
 		this.close();
 		this.dir = dir;
-		var self = this;
 
 		if (APP)
 		{
-			var path = require('path');
-			var fs = require('fs');
+			var data;
 
 			// Convert the old project file to the new format
 			var oldFile = path.join(dir, OLD_PROJECT_FILE);
 			var file = path.join(dir, PROJECT_FILE);
 
+			// backward compatibility with old project file
 			if (fs.existsSync(oldFile))
 			{
-				// Read in the project json
-				var data = JSON.parse(fs.readFileSync(oldFile));
+				data = parseJSON(oldFile);
+
+				if (!data)
+				{
+					callback(null);
+					return;
+				}
 
 				// Write the new project JSON file
-				fs.writeFileSync(
-					file, 
-					JSON.stringify({ captions: data }, null, "\t")
-				);
+				writeJSON(file, { captions: data });
 
 				// Remove the old project file
 				fs.unlinkSync(oldFile);
 			}
 
+			// Check for a project file that doesn't exist
 			if (!fs.existsSync(file))
 			{
 				if (DEBUG)
@@ -110,16 +119,15 @@
 				this.create(file, callback);
 				return;
 			}
-			fs.readFile(file, function(err, data){
 
-				if (err)
-				{
-					callback(null);
-					throw err;
-				}
-				// Finish the loading
-				self.onProjectLoaded(JSON.parse(data), callback);
-			});
+			data = parseJSON(file);
+
+			if (!data)
+			{
+				callback(null);
+				return;
+			}
+			this.onProjectLoaded(data, callback);
 		}
 		if (WEB)
 		{
@@ -128,10 +136,61 @@
 				dir + "/"+PROJECT_FILE+"?cb=" + Math.random() * 10000,
 				function(data)
 				{
-					self.onProjectLoaded(data, callback);
-				}
+					this.onProjectLoaded(data, callback);
+				}.bind(this)
 			);
 		}
+	};
+
+	/**
+	 * Handle the parse with an alert
+	 * @method parseJSON
+	 * @static
+	 * @private
+	 * @param {string} str The JSON string
+	 * @param {string} [create] Default contents if file doesn't exist
+	 * @return {object} The JSON object or null
+	 */
+	var parseJSON = function(file, create)
+	{
+		if (!fs.existsSync(file))
+		{
+			if (create)
+			{
+				fs.writeFileSync(file, create);
+			}
+			else
+			{
+				alert("File " + file + " does not exist. Manually create it.");
+				return;
+			}
+		}
+		var str = fs.readFileSync(file);
+		var data;
+		try 
+		{
+			data = JSON.parse(str);
+		}
+		catch(e)
+		{
+			alert("Unable to parse " + file + 
+				". Manually fix JSON errors and try again.");
+			return;
+		}
+		return data;
+	};
+
+	/**
+	 * Write the JSON
+	 * @method writeJSON
+	 * @static
+	 * @private
+	 * @param {string} file Output file location
+	 * @param {*} data The output data
+	 */
+	var writeJSON = function(file, data)
+	{
+		fs.writeFileSync(file, JSON.stringify(data, null, "\t"));
 	};
 
 	/**
@@ -164,10 +223,7 @@
 	 */
 	p.create = function(file, callback)
 	{
-		var fs = require('fs'),
-			path = require('path'),
-			glob = require('glob'),
-			self = this,
+		var self = this,
 			dir = path.dirname(file);
 
 		this.modal.open(dir, function(result){
@@ -226,7 +282,7 @@
 				};
 
 				// Write the project to file
-				fs.writeFileSync(file, JSON.stringify(data, null, "\t"));
+				writeJSON(file, data);
 
 				// Continue with loading the new created project
 				self.onProjectLoaded(data, callback);
@@ -259,10 +315,15 @@
 		var exportPath;
 		if (APP)
 		{
-			var path = require('path');
-			var fs = require('fs');
 			exportPath = path.join(this.dir, locale.export);
-			this.captions = JSON.parse(fs.readFileSync(exportPath) || '{}');
+
+			this.captions = parseJSON(exportPath, '{}');
+
+			if (!this.captions)
+			{
+				callback(null);
+				return;
+			}
 			callback(this);
 		}
 		if (WEB)
@@ -289,24 +350,26 @@
 
 		if (APP)
 		{
-			var fs = require('fs');
-			var path = require('path');
 			var projectFile = path.join(this.dir, PROJECT_FILE);
 			var exportFile = path.join(this.dir, locale.export);
 
 			// Re-export the captions file
-			fs.writeFileSync(
-				exportFile, 
-				JSON.stringify(this.captions, null, "\t")
-			);
+			writeJSON(exportFile, this.captions);
 
 			// Get the project JSON file and update it
-			var project = JSON.parse(fs.readFileSync(projectFile));
+			var project = parseJSON(projectFile);
+
+			// Ignore if invalid project JSON
+			if (!project)
+			{
+				return;
+			}
+
 			project.captions.locales = this.locales;
 			project.captions.assets = this.assets;
 
 			// Update the project file
-			fs.writeFileSync(projectFile, JSON.stringify(project, null, "\t"));
+			writeJSON(projectFile, project);
 		}
 
 		if (WEB && DEBUG)
