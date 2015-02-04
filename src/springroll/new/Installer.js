@@ -40,7 +40,7 @@
 	/**
 	*  The main execution point for creating a new project
 	*  @method run
-	*  @param {string} template The path to the template to use
+	*  @param {array} templates The path to the template to use
 	*  @param {object} options The collection of options
 	*  @param {int} options.width The width of the new game
 	*  @param {int} options.height The height of the new game
@@ -55,7 +55,7 @@
 	*  @param {object} options.bower The addition bower files to add
 	*  @param {function} complete The function to call when done
 	*/
-	p.run = function(template, options, complete)
+	p.run = function(templates, options, complete)
 	{
 		this.options = options;
 		var dest = options.destination;
@@ -65,29 +65,33 @@
 			console.log("Copy " + template + " to " + dest);
 		}
 
-		// Copy the files
-		fs.copySync(template, dest);
-
-		// Add hidden files		
-		var config = this.readJSON(TemplateManager.FILE);
-		options.templateVersion = config.version;
-		options.templateName = config.name;
-
-		// Rename any local files that should actually
-		// be hidden
-		if (config.rename)
+		// loop through the templates from back to front
+		for (var i = templates.length - 1; i >= 0; i--)
 		{
-			for(var file in config.rename)
-			{
-				fs.renameSync(
-					path.join(dest, file), 
-					path.join(dest, config.rename[file])
-				);
-			}
-		}
+			var template = templates[i];
 
-		// Remove the template file
-		fs.unlinkSync(path.join(dest, TemplateManager.FILE));
+			// Copy the files from the template to the destination
+			fs.copySync(template.path, dest);
+
+			// Add subsitution options for the version and name	
+			options.templateVersion = template.version;
+			options.templateName = template.name;
+
+			// Rename any local files that should actually
+			// be hidden
+			if (template.rename)
+			{
+				for(var file in template.rename)
+				{
+					fs.renameSync(
+						path.join(dest, file), 
+						path.join(dest, template.rename[file])
+					);
+				}
+			}
+			// Remove the template file
+			fs.unlinkSync(path.join(dest, TemplateManager.FILE));
+		}
 
 		if (Object.keys(options.bower).length > 0)
 		{

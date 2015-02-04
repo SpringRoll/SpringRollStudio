@@ -11,7 +11,8 @@
 		var AdmZip = require('adm-zip');
 	}
 
-	var Browser = cloudkid.Browser;
+	var Template = include('springroll.new.Template'),
+		Browser = include('cloudkid.Browser');
 
 	/**
 	*  Class for managing the templates
@@ -134,19 +135,19 @@
 	/**
 	*  Validate a template
 	*  @method  addTemplate
-	*  @param  {string} path The folder path to add
+	*  @param  {string} source The folder path to add
 	*/
-	p.addTemplate = function(folder)
+	p.addTemplate = function(source)
 	{
 		// Check that there's a template to add
-		if (!folder)
+		if (!source)
 		{
 			this.error("No template to add, drag-and-drop template folder.");
 			return;
 		}
 
-		var configFile = path.join(folder, TemplateManager.FILE);
-		if (!fs.existsSync(configFile))
+		var templateFile = path.join(source, TemplateManager.FILE);
+		if (!fs.existsSync(templateFile))
 		{
 			this.error("Not a valid template.");
 			return;
@@ -155,43 +156,61 @@
 		this.reset();
 		this.dropTemplate.addClass(FOLDER_CLASS)
 			.find('.folder')
-			.text(folder);
+			.text(source);
 
-		var config = JSON.parse(fs.readFileSync(configFile));
+		var template;
+		try 
+		{
+			template = JSON.parse(fs.readFileSync(templateFile));
+		}
+		catch(e)
+		{
+			this.error("Unable to parse the template file");
+			return;
+		}
+
+		if (!template.id || !template.name || !template.version)
+		{
+			this.error("The following fields are required for the template: 'id', 'name', 'version'");
+			return;
+		}
 
 		// Check for existing template
-		var dir = path.join(
+		var destination = path.join(
 			gui.App.dataPath, 
 			'Templates', 
-			config.id
+			template.id
 		);
 
 		// Check for existing
-		if (fs.existsSync(dir))
+		if (fs.existsSync(destination))
 		{
-			var temp = this.templates[dir] || {"version" : "0.0.1"};
-			var message = "Attempting to replace and older version of the template " + config.name + ". Continue?";
+			var temp = this.templates[template.id] || {"version" : "0.0.1"};
+			var message = "Attempting to replace and older version of the template " + template.name + ". Continue?";
 
 			// If the version being added is not greater than the existing one
 			// we should ask for a confirmation first
-			if (!semver.gt(config.version, temp.version) && !confirm(message))
+			if (!semver.gt(template.version, temp.version) && !confirm(message))
 			{
 				return;
 			}
 		}
 
 		// Create the folder
-		fs.mkdirpSync(dir);
+		fs.mkdirpSync(destination);
 		
-		// Copy the files
-		fs.copySync(folder, dir);
+		// Copy the files from the source to the destination
+		fs.copySync(source, destination);
+
+		// Add the path to the current template
+		template.path = destination;
 		
-		// Add template
-		this.templates[dir] = config;
+		// Add template and save it
+		this.templates[template.id] = new Template(template);
 		this.save();
 
 		// Add to the selection list
-		this.append(dir, config);
+		this.append(template);
 
 		// Dismiss the modal
 		this._modal.modal('hide');
@@ -229,34 +248,34 @@
 	/**
 	*  Add a template to the list of templates
 	*  @method append
-	*  @param {string} dir The path to the template
-	*  @param {object} config The template configuration
+	*  @param {springroll.new.Template} template The template configuration
 	*/
-	p.append = function(dir, config)
+	p.append = function(template)
 	{
 		// Add to the list of items
-		var template = $(this._listTemp);
+		var html = $(this._listTemp);
 
 		// Make some changes
-		if (config.name !== "Default")
+		if (template.name !== "Default")
 		{
-			template.find('button')
+			html.find('button')
 				.removeClass('disabled btn-default')
 				.addClass('btn-danger')
 				.prop('disabled', false)
-				.click(this.removeTemplate.bind(this, dir));
+				.click(this.removeTemplate.bind(this, template));
 
-			template.find('.name').text(config.name);
+			html.find('.name').text(template.name);
 		}
 		
 		// Add to the list of existing templates
-		this._list.append(template);
+		this._list.append(html);
 
 		// Deselect all items
 		this._select.find('option').removeProp('selected');
 
 		// Add the new option
-		var option= $('<option value="' + dir + '">').text(config.name);
+		var option = $('<option value="' + template.id + '">')
+			.text(template.name + " (v" + template.version + ")");
 
 		// Auto select new items
 		option.prop('selected', true);
@@ -264,10 +283,10 @@
 		this._select.append(option);
 
 		// Check for template updates!
-		if (config.github)
+		if (template.github)
 		{
-			var github = "https://api.github.com/repos/" + config.github + "/tags";
-			$.getJSON(github, this.getTemplateTags.bind(this, dir, config));
+			var github = "https://api.github.com/repos/" + template.github + "/tags";
+			$.getJSON(github, this.getTemplateTags.bind(this, template));
 		}
 	};
 
@@ -275,22 +294,22 @@
 	*  Remove a template
 	*  @method  removeTemplate
 	*  @private
+	*  @param  {springroll.new.Template} template The template to remove
 	*  @param  {event} e Click event
-	*  @param  {String} folder The path to the template
   	*/
-	p.removeTemplate = function(folder, e)
+	p.removeTemplate = function(template, e)
 	{
 		// Delete from the saved temlates
-		delete this.templates[folder];
+		delete this.templates[template.id];
 
 		// Remove the select option
-		this._select.find("option[value='" + folder + "']").remove();
+		this._select.find("option[value='" + template.id + "']").remove();
 
 		// Remove the template from list
 		$(e.currentTarget).closest(".template").remove();
 
 		// Remove the template
-		fs.removeSync(folder);
+		fs.removeSync(template.path);
 
 		// Save the saved templates
 		this.save();
@@ -302,7 +321,10 @@
 	*/
 	p.save = function()
 	{
-		localStorage.setItem('templates', JSON.stringify(this.templates));
+		localStorage.setItem(
+			'installedTemplates',
+			JSON.stringify(this.templates)
+		);
 	};
 
 	/**
@@ -311,57 +333,76 @@
 	*/
 	p.load = function()
 	{
-		if (DEBUG)
+		/*if (DEBUG)
 		{
-			localStorage.removeItem('templates');
-		}
+			localStorage.removeItem('installedTemplates');
+		}*/
 
 		try
 		{
-			this.templates = JSON.parse(localStorage.getItem('templates'));
+			this.templates = JSON.parse(
+				localStorage.getItem('installedTemplates'),
+				function(key, value)
+				{
+					if (value.__classname)
+					{
+						var _class = include(value.__classname);
+						return new _class(value);
+					}
+					return value;
+				}
+			);
 		}
 		catch(e){}
 
 		if (!this.templates)
 		{
+			var templatePath = path.join('assets', 'templates', 'default');
 			// Default template path
-			var folder = path.join('assets', 'templates', 'default');
-
-			this.templates = {};
-			this.templates[folder] = JSON.parse(
+			var json = JSON.parse(
 				fs.readFileSync(
-					path.join(folder, TemplateManager.FILE)
+					path.join(templatePath, TemplateManager.FILE)
 				)
 			);
+			// Create the default template
+			var template = new Template(json);
+			template.path = templatePath;
+
+			// Create the templates object
+			this.templates = {};
+			this.templates[template.id] = template;
 			this.save();
 		}
 
 		// Load the existing templates
-		for(var dir in this.templates)
+		for(var id in this.templates)
 		{
-			this.append(dir, this.templates[dir]);		
+			this.append(this.templates[id]);		
 		}
 	};
 
 	/**
 	*  Get a list of tags for template
 	*  @method  
-	*  @param {string} dir The output template directory
-	*  @param  {object} config The currently selected template config
+	*  @param {springroll.new.Template} template The template
 	*  @param  {array} tags List of github tag objects
 	*/
-	p.getTemplateTags = function(dir, config, tags)
+	p.getTemplateTags = function(template, tags)
 	{
-		var message = "A new version of " + config.name + " is available, update?";
+		var message = "A new version of " + template.name + " is available, update?";
 		for (var i = 0; i < tags.length; i++)
 		{
-			if (semver.gt(tags[i].name, config.version) && confirm(message))
+			if (semver.gt(tags[i].name, template.version) && confirm(message))
 			{
 				if (DEBUG)
 				{
 					console.info("Download ZIP : " + tags[i].zipball_url);
 				}
-				downloadZip(dir, config, tags[i].zipball_url, tags[i].commit.sha.substr(0,7));
+				downloadZip(
+					template,
+					tags[i].zipball_url, 
+					tags[i].commit.sha.substr(0,7)
+				);
 				break;
 			}
 		}
@@ -371,22 +412,21 @@
 	*  Download and unzip a new template 
 	*  @method  downloadZip
 	*  @private
-	*  @param {string} dir The output template directory
-	*  @param  {object} config The currently selected template config
+	*  @param {springroll.new.Template} template The template 
 	*  @param  {string} zipUrl The path to the zip to unpack
 	*  @param {string} sha The hash to get the folder
 	*/
-	var downloadZip = function(dir, config, zipUrl, sha)
+	var downloadZip = function(template, zipUrl, sha)
 	{
 		var zipFile = path.join(
 			gui.App.dataPath, 
 			'Templates', 
-			config.id + '.zip'
+			template.id + '.zip'
 		);		
 
 		if (DEBUG)
 		{
-			console.log("Downloaded zip for " + config.name + " to " + zipFile);
+			console.log("Downloaded zip for " + template.name + " to " + zipFile);
 		}
 		var out = fs.createWriteStream(zipFile);
 		var apiRequest = request({
@@ -405,19 +445,19 @@
 			var zip = new AdmZip(zipFile);
 		
 			// Remove the existing project
-			fs.removeSync(dir);
+			fs.removeSync(template.path);
 
 			// Extra the folder to the directory
-			zip.extractAllTo(path.dirname(dir), true);
+			zip.extractAllTo(path.dirname(template.path), true);
 
 			// Get the extraction path
 			var extractPath = path.join(
-				path.dirname(dir), 
+				path.dirname(template.path), 
 				// The zip contains a folder with the name of the repo
 				// and then the shortened name of the sha hash
-				config.github.replace("/", "-") + "-" + sha
+				template.github.replace("/", "-") + "-" + sha
 			);
-			fs.copySync(extractPath, dir);
+			fs.copySync(extractPath, template.path);
 
 			// Clean up extraction path
 			fs.removeSync(extractPath);
@@ -426,18 +466,27 @@
 			fs.unlinkSync(zipFile);
 
 			// Let the user know we're done
-			alert("Updated " + config.name + " template");
+			alert("Updated " + template.name + " template");
 		});
 	};
 
 	/**
 	*  Get the currently selected template
 	*  @method current
-	*  @return {string} Path to the source files
+	*  @return {array} The collection of templates to use, in order
 	*/
 	p.val = function()
 	{
-		return this._select.val();
+		var template = this.templates[this._select.val()];
+		var result = [template];
+
+		while(true)
+		{
+			template = this.templates[template.extend];
+			if (!template) break;
+			result.push(template);
+		}
+		return result;
 	};
 
 	// Assign to namespace

@@ -98,20 +98,21 @@
 
 		// Listen for a new project being created
 		$(window).on('storage', function(event){
-			if (event.key == 'project' && /new\.html/.test(event.url))
+			var origEvent = event.originalEvent;
+			if (origEvent.key == 'project' && /new\.html/.test(origEvent.url))
 			{
-				var project = event.newValue;
+				var project = origEvent.newValue;
 				if (project)
 				{
 					console.log("New project created " + project);
 					this.openProject(project);
 				}
 			}
-		});
+		}.bind(this));
 	};
 
 	// Reference to the prototype
-	var p = SpringRollStudio.prototype = Object.create(NodeWebkitApp.prototype);
+	var p = extend(SpringRollStudio, NodeWebkitApp);
 
 	/**
 	*  Re-add the menu on focus
