@@ -1,9 +1,8 @@
 {
 	"private": true,
+	"version": "_version_",
 	"dependencies": {
 		"grunt": "*",
-		"grunt-springroll": "*",
-		"load-grunt-config": "*",
-		"lodash": "*"
+		"grunt-springroll": "*"
 	}
 }

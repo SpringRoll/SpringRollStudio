@@ -67,7 +67,7 @@
 		}
 
 		// Bind reference to the open project handler
-			var openProject = this.openProject.bind(this);
+		var openProject = this.openProject.bind(this);
 
 		/**
 		 * Open button
@@ -136,6 +136,7 @@
 		if (!fs.existsSync(path.join(project, 'springroll.json')))
 		{
 			alert("Folder is not a valid SpringRoll project");
+			this.closeProject();
 			return;
 		}
 		this.projectName.text(path.basename(project));

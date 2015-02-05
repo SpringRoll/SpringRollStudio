@@ -18,5 +18,5 @@
 
 	// Assign to namespace
 	namespace('_namespace_')._className_ = _className_;
-
+	
 }());
