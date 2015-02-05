@@ -4,6 +4,124 @@
 	"version" : "1.2.0",
 	"rename" : {
 		"gitignore" : ".gitignore",
-		"bowerrc" : ".bowerrc"
+		"bowerrc" : ".bowerrc",
+		"springroll": ".springroll"
+	},
+	"modules": {
+		"springroll.Core": {
+			"name": "SpringRoll Core",
+			"required": true,
+			"bower": {
+				"springroll": "*"
+			},
+			"libraries": [
+				"components/preloadjs/lib/preload.min.js",
+				"components/springroll/core.min.js"
+			],
+			"librariesDebug": [
+				"components/preloadjs/lib/preload.combined.js",
+				"components/springroll/core.js"
+			]
+		},
+		"springroll.CreateJSDisplay": {
+			"name": "CreateJS Display Module",
+			"bower": {
+				"easeljs": "https://github.com/SpringRoll/EaselJS.git",
+				"tweenjs": "https://github.com/SpringRoll/TweenJS.git"
+			},
+			"libraries": [
+				"components/tweenjs/lib/tweenjs.min.js",
+				"components/easeljs/lib/easeljs.min.js",
+				"components/easeljs/lib/movieclip.min.js",
+				"components/springroll/dist/modules/display-createjs.min.js"
+			],
+			"librariesDebug": [
+				"components/tweenjs/lib/tweenjs.combined.js",
+				"components/easeljs/lib/easeljs.combined.js",
+				"components/easeljs/lib/movieclip.combined.js",
+				"components/springroll/dist/modules/display-createjs.js"
+			],
+			"depends": "springroll.Core"
+		},
+		"springroll.PixiDisplay": {
+			"name": "Pixi.js Display Module",
+			"bower": {
+				"pixi.js":"https://github.com/SpringRoll/pixi.js.git"
+			},
+			"libraries": [
+				"components/pixi.js/bin/pixi.js",
+				"components/springroll/dist/modules/display-pixi.min.js"
+			],
+			"librariesDebug": [
+				"components/pixi.js/bin/pixi.dev.js",
+				"components/springroll/dist/modules/display-pixi.js"
+			],
+			"depends": "springroll.Core"
+		},
+		"springroll.NativeDisplay": {
+			"name": "Native Display Module",
+			"libraries": "components/springroll/dist/modules/display-native.min.js",
+			"librariesDebug": "components/springroll/dist/modules/display-native.js",
+			"depends": "springroll.Core"
+		},
+		"springroll.Sound": {
+			"name": "Sound Module",
+			"bower": {
+				"soundjs": "https://github.com/SpringRoll/SoundJS.git"
+			},
+			"libraries": [
+				"components/soundjs/lib/soundjs.min.js",
+				"components/soundjs/lib/flashaudioplugin.min.js",
+				"components/springroll/dist/modules/sound.min.js"
+			],
+			"librariesDebug": [
+				"components/soundjs/lib/soundjs.min.js",
+				"components/soundjs/lib/flashaudioplugin.combined.js",
+				"components/springroll/dist/modules/sound.js"
+			],
+			"depends": "springroll.Core"
+		},
+		"springroll.Interface": {
+			"name": "Interface Module",
+			"libraries": "components/springroll/dist/modules/interface.min.js",
+			"librariesDebug": "components/springroll/dist/modules/interface.js",
+			"depends": [
+				"springroll.Core",
+				"springroll.CreateJSDisplay|springroll.PixiDisplay"
+			] 
+		},
+		"springroll.Captions": {
+			"name": "Captions Module",
+			"libraries": "components/springroll/dist/modules/captions.min.js",
+			"librariesDebug": "components/springroll/dist/modules/captions.js",
+			"depends": "springroll.Core"
+		},
+		"springroll.Game": {
+			"name": "Game Module",
+			"libraries": "components/springroll/dist/modules/game.min.js",
+			"librariesDebug": "components/springroll/dist/modules/game.js",
+			"depends": [
+				"springroll.Sound", 
+				"springroll.Core",
+				"springroll.CreateJSDisplay|springroll.PixiDisplay"
+			]
+		},
+		"springroll.Tasks": {
+			"name": "Tasks Module",
+			"libraries": "components/springroll/dist/modules/tasks.min.js",
+			"librariesDebug": "components/springroll/dist/modules/tasks.js",
+			"depends": "springroll.Core"
+		},
+		"springroll.Translate": {
+			"name": "Translate Module",
+			"libraries": "components/springroll/dist/modules/translate.min.js",
+			"librariesDebug": "components/springroll/dist/modules/translate.js",
+			"depends": "springroll.Core"
+		},
+		"springroll.Worker": {
+			"name": "Worker Module",
+			"libraries": "components/springroll/dist/modules/worker.min.js",
+			"librariesDebug": "components/springroll/dist/modules/worker.js"
+		}
 	}
 }

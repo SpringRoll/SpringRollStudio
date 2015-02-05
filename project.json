@@ -82,6 +82,7 @@
 		"new": [
 			"components/node-webkit-app/src/utils/Browser.js",
 			"src/springroll/Module.js",
+			"src/springroll/new/Module.js",
 			"src/springroll/new/Template.js",
 			"src/springroll/new/TemplateManager.js",
 			"src/springroll/new/Installer.js",

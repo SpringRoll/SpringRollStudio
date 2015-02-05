@@ -1,5 +1,7 @@
 (function(){
 	
+	var Module = include('springroll.new.Module');
+
 	/**
 	*  A single template
 	*  @class Template
@@ -52,29 +54,17 @@
 		 */
 		this.extend = null;
 
+		/**
+		 * The modules that define this template
+		 * @property {object} modules
+		 */
+		this.modules = {};
+
 		this.fromJSON(json);
 	};
 
 	// reference to the prototype
 	var p = Template.prototype;
-
-	/**
-	 * Convert to JSON
-	 * @method toJSON
-	 * @return {object} JSON ready object
-	 */
-	p.toJSON = function()
-	{
-		return {
-			path: this.path,
-			name: this.name,
-			id: this.id,
-			extend: this.extend,
-			rename: this.rename,
-			remove: this.remove,
-			__classname: 'springroll.new.Template'
-		};
-	};
 
 	/**
 	 * Convert from JSON
@@ -85,7 +75,16 @@
 	{
 		for(var prop in data)
 		{
-			if (this.hasOwnProperty(prop))
+			// Convert the modules into Module object
+			if (prop == "modules")
+			{
+				for(var id in data.modules)
+				{
+					this.modules[id] = new Module(id, data.modules[id]);
+				}
+			}
+			// Other files just straight convert
+			else if (this.hasOwnProperty(prop))
 			{
 				this[prop] = data[prop];
 			}

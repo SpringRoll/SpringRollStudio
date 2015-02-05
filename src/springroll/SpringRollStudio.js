@@ -89,7 +89,7 @@
 		var project = localStorage.getItem('project');
 		if (project)
 		{
-			this.openProject(project);
+			this.openProject(project, false);
 		}
 		else
 		{
@@ -128,14 +128,17 @@
 	 * Open a project file
 	 * @method  openProject
 	 * @param  {string} project Path to the folder
+	 * @param {boolean} [alertError=true] If an alert should show on error
 	 */
-	p.openProject = function(project)
+	p.openProject = function(project, alertError)
 	{
+		alertError = alertError === undefined ? true : !!alertError;
 		this.requiresProject.removeClass('disabled');
 
 		if (!fs.existsSync(path.join(project, 'springroll.json')))
 		{
-			alert("Folder is not a valid SpringRoll project");
+			if (alertError) 
+				alert("Folder is not a valid SpringRoll project");
 			this.closeProject();
 			return;
 		}

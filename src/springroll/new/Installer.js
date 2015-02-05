@@ -65,10 +65,12 @@
 			console.log("Copy " + template + " to " + dest);
 		}
 
-		// loop through the templates from back to front
-		for (var i = templates.length - 1; i >= 0; i--)
+		// loop through the templates from back to front,
+		// that is from parent (general) to child (specific)
+		var template, file, j, i;
+		for (i = templates.length - 1; i >= 0; i--)
 		{
-			var template = templates[i];
+			template = templates[i];
 
 			// Copy the files from the template to the destination
 			fs.copySync(template.path, dest);
@@ -76,12 +78,13 @@
 			// Add subsitution options for the version and name	
 			options.templateVersion = template.version;
 			options.templateName = template.name;
+			options.templateId = template.id;
 
 			// Rename any local files that should actually
 			// be hidden
 			if (template.rename)
 			{
-				for(var file in template.rename)
+				for(file in template.rename)
 				{
 					fs.renameSync(
 						path.join(dest, file), 
@@ -89,6 +92,17 @@
 					);
 				}
 			}
+
+			// Any files to remove, this can be if we're overriding
+			// another template, we can delete things in the parent
+			if (template.remove)
+			{
+				for (j = 0; j < template.remove.length; i++)
+				{
+					fs.unlinkSync(path.join(dest, template.remove[i]));
+				}
+			}
+
 			// Remove the template file
 			fs.unlinkSync(path.join(dest, TemplateManager.FILE));
 		}

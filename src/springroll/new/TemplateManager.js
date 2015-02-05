@@ -12,6 +12,7 @@
 	}
 
 	var Template = include('springroll.new.Template'),
+		JSONUtils = include('springroll.new.JSONUtils'),
 		Browser = include('cloudkid.Browser');
 
 	/**
@@ -161,7 +162,7 @@
 		var template;
 		try 
 		{
-			template = JSON.parse(fs.readFileSync(templateFile));
+			template = JSONUtils.read(templateFile);
 		}
 		catch(e)
 		{
@@ -172,6 +173,14 @@
 		if (!template.id || !template.name || !template.version)
 		{
 			this.error("The following fields are required for the template: 'id', 'name', 'version'");
+			return;
+		}
+
+		// Check for the base template
+		if (template.extend && !this.templates[template.extend])
+		{
+			this.error("This template extends '" + template.extend + "' but no matching template"+
+				" is found with that ID. Please install the base template before using this template.");
 			return;
 		}
 
@@ -321,9 +330,14 @@
 	*/
 	p.save = function()
 	{
+		var installedTemplates = {};
+		for(var id in this.templates)
+		{
+			installedTemplates[id] = this.templates[id].path;
+		}
 		localStorage.setItem(
 			'installedTemplates',
-			JSON.stringify(this.templates)
+			JSON.stringify(installedTemplates)
 		);
 	};
 
@@ -333,37 +347,37 @@
 	*/
 	p.load = function()
 	{
-		/*if (DEBUG)
-		{
-			localStorage.removeItem('installedTemplates');
-		}*/
-
 		try
 		{
 			this.templates = JSON.parse(
 				localStorage.getItem('installedTemplates'),
 				function(key, value)
 				{
-					if (value.__classname)
+					if (/\.json$/.test(value))
 					{
-						var _class = include(value.__classname);
-						return new _class(value);
+						return new Template(JSONUtils.read(value));
 					}
 					return value;
 				}
 			);
 		}
-		catch(e){}
+		catch(e)
+		{
+			if (DEBUG)
+			{
+				console.error(e.stack);
+			}
+		}
 
 		if (!this.templates)
 		{
 			var templatePath = path.join('assets', 'templates', 'default');
+
 			// Default template path
-			var json = JSON.parse(
-				fs.readFileSync(
-					path.join(templatePath, TemplateManager.FILE)
-				)
+			var json = JSONUtils.read(
+				path.join(templatePath, TemplateManager.FILE)
 			);
+
 			// Create the default template
 			var template = new Template(json);
 			template.path = templatePath;
@@ -482,8 +496,16 @@
 
 		while(true)
 		{
+			// No extending, we'll ignore this
+			if (!template.extend) break;
+
+			// Check for a template
 			template = this.templates[template.extend];
-			if (!template) break;
+
+			if (!template)
+			{
+				throw "The base template doesn't exist, please install '" + template.extend + "' first.";
+			}
 			result.push(template);
 		}
 		return result;
