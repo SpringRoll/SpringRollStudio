@@ -144,7 +144,14 @@
 	*/
 	var onFocus = function()
 	{
-		this.window.module.focus();
+		if (this.window.appModule)
+		{
+			this.window.appModule.focus();
+		}
+		else
+		{
+			console.error("Unable to find appModule on window");
+		}
 	};
 
 	/**

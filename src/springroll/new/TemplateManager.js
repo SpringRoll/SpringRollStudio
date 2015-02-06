@@ -27,7 +27,8 @@
 		*  @property {jquery} _select
 		*  @private
 		*/
-		this._select = $("#templates");
+		this._select = $("#templates")
+			.change(this.updateModules.bind(this));
 
 		/**
 		*  The select element
@@ -43,8 +44,22 @@
 		*/
 		this._listTemp = this._list.html().trim();
 
+		/**
+		*  The module checkbox markup
+		*  @property {string} _moduleTemplate
+		*  @private
+		*/
+		this._moduleTemplate = $("#moduleTemplate").html().trim();
+
+		/**
+		*  The modules display element
+		*  @property {jquery} _modules
+		*  @private
+		*/
+		this._modules = $("#modules");
+
 		// Empty the list
-		this._list.html('');
+		this._list.empty();
 
 		/**
 		*  The modal element
@@ -126,12 +141,46 @@
 	var ERROR_CLASS = "has-error";
 
 	/**
-	*  The template metadata file
-	*  @property {string} FILE
-	*  @static
-	*  @default "springroll-template.json"
-	*/
-	TemplateManager.FILE = "springroll-template.json";
+	 * Update the modules for the current template
+	 * @method updateModules
+	 * @private
+	 */
+	p.updateModules = function()
+	{
+		// Clear the current modules
+		this._modules.empty();
+
+		// The currently selected templates
+		var template = this.val(),
+			modules = template.modules,
+			required = template.required,
+			checkbox,
+			id, 
+			input, 
+			module;
+	
+		// Loop through all modules
+		for(id in modules)
+		{
+			module = modules[id];
+			checkbox = $(this._moduleTemplate);
+			checkbox.find('.name').text(module.name);
+			input = checkbox.find('.module').val(id);
+
+			// Give the jquery node a reference to the 
+			// template module
+			input.data('module', module);
+
+			// Either the module is required
+			// or the template requires the plugin
+			if (module.required || required.indexOf(module.id) > -1)
+			{
+				input.attr('disabled', true)
+					.prop('checked', true);
+			}
+			this._modules.append(checkbox);
+		}
+	};
 
 	/**
 	*  Validate a template
@@ -147,13 +196,6 @@
 			return;
 		}
 
-		var templateFile = path.join(source, TemplateManager.FILE);
-		if (!fs.existsSync(templateFile))
-		{
-			this.error("Not a valid template.");
-			return;
-		}
-
 		this.reset();
 		this.dropTemplate.addClass(FOLDER_CLASS)
 			.find('.folder')
@@ -162,40 +204,26 @@
 		var template;
 		try 
 		{
-			template = JSONUtils.read(templateFile);
+			template = new Template(source);
+
+			// Add the parent template
+			this.addParent(template);
 		}
 		catch(e)
 		{
-			this.error("Unable to parse the template file");
-			return;
-		}
-
-		if (!template.id || !template.name || !template.version)
-		{
-			this.error("The following fields are required for the template: 'id', 'name', 'version'");
-			return;
-		}
-
-		// Check for the base template
-		if (template.extend && !this.templates[template.extend])
-		{
-			this.error("This template extends '" + template.extend + "' but no matching template"+
-				" is found with that ID. Please install the base template before using this template.");
+			this.error(e);
 			return;
 		}
 
 		// Check for existing template
-		var destination = path.join(
-			gui.App.dataPath, 
-			'Templates', 
-			template.id
-		);
+		var destination = path.join(gui.App.dataPath, 'Templates', template.id);
 
 		// Check for existing
 		if (fs.existsSync(destination))
 		{
 			var temp = this.templates[template.id] || {"version" : "0.0.1"};
-			var message = "Attempting to replace and older version of the template " + template.name + ". Continue?";
+			var message = "Attempting to replace and older version of the "+
+				"template " + template.name + ". Continue?";
 
 			// If the version being added is not greater than the existing one
 			// we should ask for a confirmation first
@@ -211,15 +239,14 @@
 		// Copy the files from the source to the destination
 		fs.copySync(source, destination);
 
-		// Add the path to the current template
+		// Update the path destination
 		template.path = destination;
-		
-		// Add template and save it
-		this.templates[template.id] = new Template(template);
-		this.save();
 
-		// Add to the selection list
+		// Add template and save it
+		this.templates[template.id] = template;
+		this.save();
 		this.append(template);
+		this.updateModules();
 
 		// Dismiss the modal
 		this._modal.modal('hide');
@@ -335,6 +362,7 @@
 		{
 			installedTemplates[id] = this.templates[id].path;
 		}
+		console.log("installedTemplates: ", installedTemplates);
 		localStorage.setItem(
 			'installedTemplates',
 			JSON.stringify(installedTemplates)
@@ -347,19 +375,16 @@
 	*/
 	p.load = function()
 	{
+		var id; 
 		try
 		{
 			this.templates = JSON.parse(
-				localStorage.getItem('installedTemplates'),
-				function(key, value)
-				{
-					if (/\.json$/.test(value))
-					{
-						return new Template(JSONUtils.read(value));
-					}
-					return value;
-				}
+				localStorage.getItem('installedTemplates')
 			);
+			for (id in this.templates)
+			{
+				this.templates[id] = new Template(this.templates[id]);
+			}
 		}
 		catch(e)
 		{
@@ -371,16 +396,8 @@
 
 		if (!this.templates)
 		{
-			var templatePath = path.join('assets', 'templates', 'default');
-
-			// Default template path
-			var json = JSONUtils.read(
-				path.join(templatePath, TemplateManager.FILE)
-			);
-
 			// Create the default template
-			var template = new Template(json);
-			template.path = templatePath;
+			var template = new Template(path.join('assets','templates','default'));
 
 			// Create the templates object
 			this.templates = {};
@@ -389,9 +406,44 @@
 		}
 
 		// Load the existing templates
-		for(var id in this.templates)
+		for(id in this.templates)
 		{
+			try
+			{
+				// Add the parent template
+				this.addParent(this.templates[id]);
+			}
+			catch(e)
+			{
+				alert(e);
+			}		
+
+			// Add to the select list
 			this.append(this.templates[id]);		
+		}
+
+		// Populate with modules
+		this.updateModules();
+	};
+
+	/**
+	 * Add the parent template to the child 
+	 * @method addParent 
+	 * @param {springroll.new.Template} template [description]
+	 */
+	p.addParent = function(template)
+	{
+		// Check for the base template
+		if (template.extend)
+		{
+			if (!this.templates[template.extend])
+			{
+				throw "This template extends '" + template.extend + "' "+
+					"but no matching template is found with that ID. Please "+
+					"install the base template before using this template.";
+			}
+			// Add the parent
+			template.parent = this.templates[template.extend];
 		}
 	};
 
@@ -487,28 +539,11 @@
 	/**
 	*  Get the currently selected template
 	*  @method current
-	*  @return {array} The collection of templates to use, in order
+	*  @return {springroll.new.Template} The template to use
 	*/
 	p.val = function()
 	{
-		var template = this.templates[this._select.val()];
-		var result = [template];
-
-		while(true)
-		{
-			// No extending, we'll ignore this
-			if (!template.extend) break;
-
-			// Check for a template
-			template = this.templates[template.extend];
-
-			if (!template)
-			{
-				throw "The base template doesn't exist, please install '" + template.extend + "' first.";
-			}
-			result.push(template);
-		}
-		return result;
+		return this.templates[this._select.val()];
 	};
 
 	// Assign to namespace

@@ -7,10 +7,10 @@
 	}
 
 	// Import classes
-	var Module = springroll.Module,
-		Browser = cloudkid.Browser,
-		TemplateManager = springroll.new.TemplateManager,
-		Installer = springroll.new.Installer;
+	var Module = include('springroll.Module'),
+		Browser = include('cloudkid.Browser'),
+		TemplateManager = include('springroll.new.TemplateManager'),
+		Installer = include('springroll.new.Installer');
 
 	/**
 	*  Create a new project

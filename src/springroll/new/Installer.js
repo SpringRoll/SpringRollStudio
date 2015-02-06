@@ -9,7 +9,8 @@
 		var glob = require("glob");
 	}
 
-	var TemplateManager = springroll.new.TemplateManager;
+	// Import classes
+	var JSONUtils = include('springroll.new.JSONUtils');
 
 	/**
 	*  Script to install the new springroll project
@@ -38,9 +39,18 @@
 	Installer.FILE = 'springroll.json';
 
 	/**
+	*  The meta project file
+	*  @property {String} META_FILE
+	*  @readOnly
+	*  @static
+	*  @default  ".springroll"
+	*/
+	Installer.META_FILE = '.springroll';
+
+	/**
 	*  The main execution point for creating a new project
 	*  @method run
-	*  @param {array} templates The path to the template to use
+	*  @param {springroll.new.Template} template The path to the template to use
 	*  @param {object} options The collection of options
 	*  @param {int} options.width The width of the new game
 	*  @param {int} options.height The height of the new game
@@ -55,57 +65,18 @@
 	*  @param {object} options.bower The addition bower files to add
 	*  @param {function} complete The function to call when done
 	*/
-	p.run = function(templates, options, complete)
+	p.run = function(template, options, complete)
 	{
 		this.options = options;
 		var dest = options.destination;
 
-		if (DEBUG)
-		{
-			console.log("Copy " + template + " to " + dest);
-		}
+		// Copy the template files
+		template.copyTo(dest);
 
-		// loop through the templates from back to front,
-		// that is from parent (general) to child (specific)
-		var template, file, j, i;
-		for (i = templates.length - 1; i >= 0; i--)
-		{
-			template = templates[i];
-
-			// Copy the files from the template to the destination
-			fs.copySync(template.path, dest);
-
-			// Add subsitution options for the version and name	
-			options.templateVersion = template.version;
-			options.templateName = template.name;
-			options.templateId = template.id;
-
-			// Rename any local files that should actually
-			// be hidden
-			if (template.rename)
-			{
-				for(file in template.rename)
-				{
-					fs.renameSync(
-						path.join(dest, file), 
-						path.join(dest, template.rename[file])
-					);
-				}
-			}
-
-			// Any files to remove, this can be if we're overriding
-			// another template, we can delete things in the parent
-			if (template.remove)
-			{
-				for (j = 0; j < template.remove.length; i++)
-				{
-					fs.unlinkSync(path.join(dest, template.remove[i]));
-				}
-			}
-
-			// Remove the template file
-			fs.unlinkSync(path.join(dest, TemplateManager.FILE));
-		}
+		// Add subsitution options for the version and name	
+		options.templateVersion = template.version;
+		options.templateName = template.name;
+		options.templateId = template.id;
 
 		if (Object.keys(options.bower).length > 0)
 		{
@@ -117,6 +88,11 @@
 
 		// Update the build file with libraries and modules
 		var build = this.readJSON(Installer.FILE);
+
+		// Save the template we're using
+		this.writeJSON(Installer.META_FILE, {
+			"template": template.toJSON()
+		});
 		
 		// Replace tokens with the list of depdendencies
 		insertAt(
@@ -198,8 +174,12 @@
 	*/
 	p.readJSON = function(file)
 	{
-		var filePath = path.join(this.options.destination, file);
-		return JSON.parse(fs.readFileSync(filePath));
+		return JSONUtils.read(
+			path.join(
+				this.options.destination, 
+				file
+			)
+		);  
 	};
 
 	/**
@@ -210,8 +190,13 @@
 	*/
 	p.writeJSON = function(file, obj)
 	{
-		var filePath = path.join(this.options.destination, file);
-		fs.writeFileSync(filePath, JSON.stringify(obj, null, "\t"));
+		JSONUtils.write(
+			path.join(
+				this.options.destination,
+				file
+			), 
+			obj
+		);
 	};
 
 	/**

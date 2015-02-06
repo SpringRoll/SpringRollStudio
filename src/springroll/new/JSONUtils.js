@@ -1,5 +1,10 @@
 (function(){
 	
+	if (APP)
+	{
+		var fs = require('fs');
+	}
+	
 	/**
 	 * JSON utiltities for interacting with JSON objects
 	 * @class JSONUtils
@@ -14,7 +19,7 @@
 	*  @param {string} filePath The file name
 	*  @return {obj} The JSON object
 	*/
-	JSONUtils.readJSON = function(filePath)
+	JSONUtils.read = function(filePath)
 	{
 		return JSON.parse(fs.readFileSync(filePath));
 	};
@@ -26,7 +31,7 @@
 	*  @param {string} file The file name
 	*  @param {object} obj The object to update
 	*/
-	JSONUtils.writeJSON = function(filePath, obj)
+	JSONUtils.write = function(filePath, obj)
 	{
 		fs.writeFileSync(filePath, JSON.stringify(obj, null, "\t"));
 	};

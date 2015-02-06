@@ -1,14 +1,16 @@
 (function(){
 	
+	var _ = include('_');
+
 	/**
 	*  A module attached to a template
-	*  @class Module
+	*  @class TemplateModule
 	*  @namespace springroll.new
 	*  @constructor
 	*  @param {string} id The unique module ID
-	*  @param {object} json JSON data to construct
+	*  @param {object} data JSON data to construct
 	*/
-	var Module = function(id, json)
+	var TemplateModule = function(id, data)
 	{
 		/**
 		 * The bundle id for this template
@@ -20,50 +22,55 @@
 		 * The human-readable name
 		 * @property {string} name
 		 */
-		this.name = null;
+		this.name = data.name;
+
+		/**
+		 * The list of release module files
+		 * @property {array} main
+		 */
+		this.main = toArray(data.main);
+
+		/**
+		 * The list of debug module files
+		 * @property {array} mainDebug
+		 */
+		this.mainDebug = toArray(data.mainDebug) || this.main;
 
 		/**
 		 * The list of release library files
 		 * @property {array} libraries
 		 */
-		this.libraries = null;
+		this.libraries = toArray(data.libraries);
 
 		/**
 		 * The list of debug library files
 		 * @property {array} librariesDebug
 		 */
-		this.librariesDebug = null;
+		this.librariesDebug = toArray(data.librariesDebug) || this.libraries;
 
 		/**
 		 * The Bower dependencies
 		 * @property {object} bower
 		 */
-		this.bower = null;
+		this.bower = data.bower || null;
+
+		/**
+		 * The files to copy from the libraries
+		 * @property {object} librariesCopy
+		 */
+		this.librariesCopy = data.librariesCopy || null;
 
 		/**
 		 * The other modules this depends on
 		 * @property {Array} depends
 		 */
-		this.depends = null;
-
-		this.fromJSON(json);
-	};
-
-	// reference to the prototype
-	var p = Module.prototype;
-
-	/**
-	 * Convert from JSON
-	 * @method fromJSON
-	 * @param {object} data The raw JSON data
-	 */
-	p.fromJSON = function(data)
-	{
-		this.name = data.name;
-		this.libraries = toArray(data.libraries);
-		this.librariesDebug = toArray(data.librariesDebug) || this.libraries;
 		this.depends = toArray(data.depends);
-		this.bower = data.bower;
+
+		/**
+		 * If the module is required
+		 * @property {boolean} required
+		 */
+		this.required = _.isUndefined(data.required) ? false : data.required;
 	};
 
 	/**
@@ -75,11 +82,11 @@
 	 */
 	var toArray = function(obj)
 	{
-		if (!obj) return;
+		if (!obj) return null;
 		return !Array.isArray(obj) ? [obj] : obj;
 	};
 
 	// Assign to namespace
-	namespace('springroll.new').Module = Module;
+	namespace('springroll.new').TemplateModule = TemplateModule;
 
 }());

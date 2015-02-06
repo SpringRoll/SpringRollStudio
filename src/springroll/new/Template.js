@@ -1,94 +1,212 @@
 (function(){
 	
-	var Module = include('springroll.new.Module');
+	if (APP)
+	{
+		var fs = require('fs-extra');
+		var path = require('path');
+	}
+
+	var TemplateModule = include('springroll.new.TemplateModule'),
+		JSONUtils = include('springroll.new.JSONUtils'),
+		$ = include('jQuery');
 
 	/**
 	*  A single template
 	*  @class Template
 	*  @namespace springroll.new
 	*  @constructor
-	*  @param {object} json JSON data to construct
+	*  @param {string} templatePath The path to the template
 	*/
-	var Template = function(json)
+	var Template = function(templatePath)
 	{
+		var templateFile = path.join(templatePath, Template.MAIN);
+		if (!fs.existsSync(templateFile))
+		{
+			throw "Not a valid template.";
+		}
+
+		// Get the JSON data
+		var data = JSONUtils.read(templateFile);
+
+		// Data validation
+		if (!data.id || !data.name || !data.version)
+		{
+			throw "The following fields are required for the template: 'id', 'name', 'version'";
+		}
+
 		/**
 		 * The path to the source directory
 		 * @property {string} path
 		 */
-		this.path = null;
+		this.path = templatePath;
 
 		/**
 		 * The human-readable name
 		 * @property {string} name
 		 */
-		this.name = null;
+		this.name = data.name;
 
 		/**
 		 * The bundle id for this template
 		 * @property {string} id
 		 */
-		this.id = null;
+		this.id = data.id;
 
 		/**
 		 * The semver version of this template
 		 * @property {string} version
 		 */
-		this.version = null;
+		this.version = data.version;
 
 		/**
 		 * The array of local files to remove
 		 * @property {array} remove
 		 */
-		this.remove = null;
+		this.remove = data.remove || null;
 
 		/**
 		 * Files to rename where key is the original and value
 		 * is the output (renamed) file
 		 * @property {object} rename
 		 */
-		this.rename = null;
+		this.rename = data.rename || null;
+
+		/**
+		 * The collection of parent modules that are required
+		 * @property {array} _required
+		 * @private
+		 */
+		this._required = data.required || [];
 
 		/**
 		 * Template to extend to
 		 * @property {string} extend
 		 */
-		this.extend = null;
+		this.extend = data.extend || null;
+
+		/**
+		 * The parent template
+		 * @property {springroll.new.Template} parent
+		 */
+		this.parent = null;
 
 		/**
 		 * The modules that define this template
-		 * @property {object} modules
+		 * @property {object} _modules
+		 * @private
 		 */
-		this.modules = {};
+		this._modules = {};
 
-		this.fromJSON(json);
+		// Create modules
+		for(var id in data.modules)
+		{
+			this._modules[id] = new TemplateModule(id, data.modules[id]);
+		}
 	};
 
-	// reference to the prototype
+	/**
+	 * The main template file
+	 * @property {string} MAIN
+	 * @static
+	 * @default "springroll-template.json"
+	 * @readOnly
+	 */
+	Template.MAIN = "springroll-template.json";
+
+	// Reference to the prototype
 	var p = Template.prototype;
 
 	/**
-	 * Convert from JSON
-	 * @method fromJSON
-	 * @param {object} data The raw JSON data
+	 * Copy a template to a destination
+	 * @method  copyTo
+	 * @param  {string} dest The destination location
 	 */
-	p.fromJSON = function(data)
+	p.copyTo = function(dest)
 	{
-		for(var prop in data)
+		// Copy the parent first
+		if (this.parent)
 		{
-			// Convert the modules into Module object
-			if (prop == "modules")
+			this.parent.copyTo(dest);
+		}
+
+		if (DEBUG)
+		{
+			console.log("Copy " + this.path + " to " + dest);
+		}
+
+		// Copy the files from the template to the destination
+		fs.copySync(this.path, dest);
+
+		// Rename any local files that should actually
+		// be hidden
+		if (this.rename)
+		{
+			for(var file in this.rename)
 			{
-				for(var id in data.modules)
-				{
-					this.modules[id] = new Module(id, data.modules[id]);
-				}
-			}
-			// Other files just straight convert
-			else if (this.hasOwnProperty(prop))
-			{
-				this[prop] = data[prop];
+				fs.renameSync(
+					path.join(dest, file), 
+					path.join(dest, this.rename[file])
+				);
 			}
 		}
+
+		// Any files to remove, this can be if we're overriding
+		// another template, we can delete things in the parent
+		if (this.remove)
+		{
+			for (var i = 0; i < this.remove.length; i++)
+			{
+				fs.unlinkSync(path.join(dest, this.remove[i]));
+			}
+		}
+
+		// Remove the template file
+		fs.unlinkSync(path.join(dest, Template.MAIN));
+	};
+
+	/**
+	 * Get the map of modules
+	 * @property {object} modules
+	 */
+	Object.defineProperty(p, "modules", {
+		get: function()
+		{
+			var modules = {};
+			if (this.parent)
+			{
+				modules = this.parent.modules;
+			}
+			return $.extend(modules, this._modules);
+		}
+	});
+
+	/**
+	 * Get the list of required module ids
+	 * @property {object} required
+	 */
+	Object.defineProperty(p, "required", {
+		get: function()
+		{
+			var required = [];
+			if (this.parent)
+			{
+				required = required.concat(this.parent.required);
+			}
+			return required.concat(this._required);
+		}
+	});
+
+	/**
+	 * Convert the template to JSON
+	 * @method  toJSON
+	 * @return {object} the output json
+	 */
+	p.toJSON = function()
+	{
+		return {
+			"version": this.version,
+			"id": this.id
+		};
 	};
 
 	// Assign to namespace

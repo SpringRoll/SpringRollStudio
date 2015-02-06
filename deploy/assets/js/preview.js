@@ -43,9 +43,9 @@
 	*  @static
 	*  @param {funtion} func The module to create
 	*/
-	Module.create = function(func)
+	Module.create = function(classRef)
 	{
-		$(function(){ window.module = new func(); });
+		$(function(){ window.appModule = new classRef(); });
 	};
 
 	// Reference to the prototype
