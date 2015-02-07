@@ -160,12 +160,16 @@
 			module;
 	
 		// Loop through all modules
-		for(id in modules)
+		for (var i = 0; i < modules.length; i++)
 		{
-			module = modules[id];
+			module = modules[i];
+			id = module.id;
 			checkbox = $(this._moduleTemplate);
 			checkbox.find('.name').text(module.name);
-			input = checkbox.find('.module').val(id);
+			checkbox.find('.id').text(module.id);
+			input = checkbox.find('.module')
+				.prop('checked', module.default)
+				.val(id);
 
 			// Give the jquery node a reference to the 
 			// template module
@@ -173,10 +177,14 @@
 
 			// Either the module is required
 			// or the template requires the plugin
-			if (module.required || required.indexOf(module.id) > -1)
+			if (required.indexOf(module.id) > -1)
 			{
 				input.attr('disabled', true)
 					.prop('checked', true);
+			}
+			if (module.display)
+			{
+				input.data('display', module.display);
 			}
 			this._modules.append(checkbox);
 		}
@@ -362,7 +370,6 @@
 		{
 			installedTemplates[id] = this.templates[id].path;
 		}
-		console.log("installedTemplates: ", installedTemplates);
 		localStorage.setItem(
 			'installedTemplates',
 			JSON.stringify(installedTemplates)
@@ -544,6 +551,20 @@
 	p.val = function()
 	{
 		return this.templates[this._select.val()];
+	};
+
+	/**
+	* Get the list of displays
+	* @method displays
+	* @return {array} Array of display classes
+	*/
+	p.displays = function()
+	{
+		var displays = [];
+		$(".module:data(display):checked").each(function(){
+			displays.push($(this).data('display'));
+		});
+		return displays;
 	};
 
 	// Assign to namespace

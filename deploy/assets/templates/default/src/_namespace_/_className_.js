@@ -8,15 +8,26 @@
 	*  @class _className_
 	*  @extends springroll.Application
 	*/
-	var _className_ = function(options)
+	var _className_ = function()
 	{
-		Application.call(this, options);
+		Application.call(this, {
+			resizeElement: window,
+			canvasId: "stage",
+			display: _displayClass_,
+			framerate: "framerate",
+			debug: DEBUG,
+			cacheBust: DEBUG,
+			parseQueryString: DEBUG,
+			displayOptions:	{
+				clearView: true,
+			}
+		});
 	};
 
 	// Extend the base game class
-	var p = _className_.prototype = Object.create(Application.prototype);
+	var p = extend(_className_, Application);
 
-	// Assign to namespace
-	namespace('_namespace_')._className_ = _className_;
+	// Create instance
+	window.app = new _className_();
 	
 }());

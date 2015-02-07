@@ -126,10 +126,10 @@
 		});
 
 		// Hide the unsupported modules for native display
-		var noNative = $('.no-native input');
-		var optional = $('.optional input');
+		/*var noNative = $('.no-native input');
+		var optional = $('.optional input');*/
 
-		this.displays = $(".display:checkbox").change(function(){
+		/*this.displays = $(".display:checkbox").change(function(){
 
 			// Get the selected displays
 			var displays = this.getDisplays();
@@ -154,7 +154,7 @@
 					.parent()
 						.addClass('disabled');
 			}
-		}.bind(this));
+		}.bind(this));*/
 	};
 
 	// Reference to the prototype
@@ -177,16 +177,26 @@
 	});
 
 	/**
-	*  Get the list of displays
-	*  @method getDisplays
-	*/
-	p.getDisplays = function()
+	 * Utility to merge objects or merge arrays
+	 * @method concat
+	 * @private
+	 * @param {object|array} target The target object
+	 * @param {object|array} source The source to add
+	 */
+	var concat = function(target, source)
 	{
-		var displays = [];
-		this.displays.filter(":checked").each(function(){
-			displays.push(this.value);
-		});
-		return displays;
+		if (source)
+		{
+			if (Array.isArray(target))
+			{
+				target = target.concat(source);
+			}
+			else
+			{
+				$.extend(target, source);
+			}
+		}
+		return target;
 	};
 
 	/**
@@ -196,68 +206,79 @@
 	p.create = function()
 	{
 		this.enabled = false;
-
-		// Get the list of displays to show
-		var displays = this.getDisplays();
-
-		if (!displays.length)
-		{
-			alert("Please select a renderer to use.");
-			this.enabled = true;
-			return;
-		}
-
-		// The colection of modules
-		var modules = [],
-			modulesDebug = [],
-			libraries = [],
-			librariesDebug = [],
-			bower = {};
-
-		$(".module:checkbox:checked").each(function(){
-			modules.push(this.value + ".min.js");
-			modulesDebug.push(this.value + ".js");
-
-			// Get the depdencencies
-			var module = $(this);
-			$.extend(bower, module.data('bower'));
-			libraries.push.apply(libraries, module.data('libraries'));
-			librariesDebug.push.apply(librariesDebug, module.data('libraries-debug'));
-		});
 		
-		if (APP)
+		try
 		{
-			try
-			{
-				this.validate(this.folder);
-				this.installer.run(
-					this.templates.val(),
-					{
-						name: this.validate(this.name),
-						className: this.validate(this.className),
-						namespace: this.validate(this.namespace),
-						width: this.validate(this.appWidth),
-						height: this.validate(this.appHeight),
-						destination: this.folder.data('folder'),
-						version: this.validate(this.version),
-						libraries: libraries.concat(modules),
-						librariesDebug: librariesDebug.concat(modulesDebug),
-						displayClass: this.displays.filter(':checked:first').data('display-class'),
-						bower: bower
-					},
-					this._onCompleted.bind(this)
-				);
-			}
-			catch(e)
-			{
-				alert(e);
+			// Get the list of displays to show
+			var displays = this.templates.displays();
+			var template = this.templates.val();
 
-				if (DEBUG)
+			if (!displays.length)
+			{
+				throw "Please select a renderer to use.";
+			}
+
+			// Create a collection of selected modules
+			var modules = [];
+			var checkboxes = $(".module:checkbox:checked")
+				.each(function(){
+					modules.push(this.value);
+				});
+
+			// The colection of modules
+			var main = [],
+				mainDebug = [],
+				libraries = [],
+				librariesDebug = [],
+				librariesCopy = {},
+				bower = {};
+
+			$(".module:checkbox:checked").each(function(){
+				var module = $(this).data('module');
+
+				// Validate against all selections
+				module.validate(modules);
+
+				main = concat(main, module.main);
+				mainDebug = concat(mainDebug, module.mainDebug);
+				bower = concat(bower, module.bower);
+				libraries = concat(libraries, module.libraries);
+				librariesDebug = concat(librariesDebug, module.librariesDebug);
+				librariesCopy = concat(librariesCopy, module.librariesCopy);
+			});
+
+			this.validate(this.folder);
+			this.installer.run(
+				template,
 				{
+					name: this.validate(this.name),
+					className: this.validate(this.className),
+					namespace: this.validate(this.namespace),
+					width: this.validate(this.appWidth),
+					height: this.validate(this.appHeight),
+					destination: this.folder.data('folder'),
+					version: this.validate(this.version),
+					libraries: libraries.concat(main),
+					librariesDebug: librariesDebug.concat(mainDebug),
+					librariesCopy: librariesCopy,
+					displayClass: displays[0],
+					bower: bower
+				},
+				this._onCompleted.bind(this)
+			);
+		}
+		catch(e)
+		{
+			alert(e);
+
+			if (DEBUG)
+			{
+				console.error(e);
+				if (e.stack)
 					console.error(e.stack);
-				}
 			}
 		}
+		
 		this.enabled = true;
 	};
 

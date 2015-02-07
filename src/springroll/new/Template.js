@@ -92,15 +92,15 @@
 
 		/**
 		 * The modules that define this template
-		 * @property {object} _modules
+		 * @property {array} _modules
 		 * @private
 		 */
-		this._modules = {};
+		this._modules = data.modules || [];
 
 		// Create modules
-		for(var id in data.modules)
+		for(var i = 0; i < this._modules.length; i++)
 		{
-			this._modules[id] = new TemplateModule(id, data.modules[id]);
+			this._modules[i] = new TemplateModule(this._modules[i]);
 		}
 	};
 
@@ -166,17 +166,17 @@
 
 	/**
 	 * Get the map of modules
-	 * @property {object} modules
+	 * @property {array} modules
 	 */
 	Object.defineProperty(p, "modules", {
 		get: function()
 		{
-			var modules = {};
+			var modules = [];
 			if (this.parent)
 			{
-				modules = this.parent.modules;
+				modules = modules.concat(this.parent.modules);
 			}
-			return $.extend(modules, this._modules);
+			return modules.concat(this._modules);
 		}
 	});
 

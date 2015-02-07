@@ -105,6 +105,7 @@
 			build.librariesDebug, 
 			options.librariesDebug
 		);
+
 		this.writeJSON(Installer.FILE, build);
 		
 		// Replace text in the files
@@ -159,9 +160,9 @@
 	var insertAt = function(key, source, items)
 	{
 		var i = source.indexOf(key);
+		source.splice(i, 1);
 		if (items.length)
-		{
-			source.splice(i, 1);
+		{	
 			source.splice.apply(source, [i, 0].concat(items));
 		}
 		return source;
