@@ -2,9 +2,12 @@
 	"name" : "Default",
 	"id" : "io.springroll.default",
 	"version" : "1.2.0",
+	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
-		"bowerrc" : ".bowerrc"
+		"bowerrc" : ".bowerrc",
+		"project.md": "README.md",
+		"bower": "bower.json"
 	},
 	"required": ["springroll.Core"],
 	"modules": [

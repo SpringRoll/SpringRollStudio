@@ -401,15 +401,13 @@
 			}
 		}
 
+		// First-Time run, copy the default template
+		// to the setting folder
 		if (!this.templates)
 		{
-			// Create the default template
-			var template = new Template(path.join('assets','templates','default'));
-
-			// Create the templates object
 			this.templates = {};
-			this.templates[template.id] = template;
-			this.save();
+			this.addTemplate(path.join('assets','templates','default'));
+			return;
 		}
 
 		// Load the existing templates
@@ -461,7 +459,7 @@
 	*  @param  {array} tags List of github tag objects
 	*/
 	p.getTemplateTags = function(template, tags)
-	{
+	{		
 		var message = "A new version of " + template.name + " is available, update?";
 		for (var i = 0; i < tags.length; i++)
 		{

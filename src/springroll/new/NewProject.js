@@ -113,7 +113,7 @@
 		this.namespace.val(localStorage.getItem('namespace') || "");
 
 		// Restrict the input
-		$('input[data-restrict]').keyup(function(e){
+		$('input:data(restrict)').keyup(function(e){
 			var input = $(this),
 				restrict = new RegExp("[^" + input.data('restrict') + "]"),
 				value = input.val(),
@@ -124,41 +124,10 @@
 				input.val(newValue);
 			}
 		});
-
-		// Hide the unsupported modules for native display
-		/*var noNative = $('.no-native input');
-		var optional = $('.optional input');*/
-
-		/*this.displays = $(".display:checkbox").change(function(){
-
-			// Get the selected displays
-			var displays = this.getDisplays();
-
-			optional.removeAttr('disabled')
-				.prop('checked', true)
-				.parent()
-					.removeClass('disabled');
-
-			// Display modules if only the native display is selected
-			if (displays.length === 1 && $("#native").prop('checked'))
-			{
-				noNative.prop('checked', false)
-					.attr('disabled', true)
-					.parent()
-						.addClass('disabled');
-			} 
-			else if (displays.length === 0)
-			{
-				optional.attr('disabled', true)
-					.prop('checked', false)
-					.parent()
-						.addClass('disabled');
-			}
-		}.bind(this));*/
 	};
 
 	// Reference to the prototype
-	var p = NewProject.prototype = Object.create(Module.prototype);
+	var p = extend(NewProject, Module);
 
 	Object.defineProperty(p, 'enabled', {
 		set : function(enabled)

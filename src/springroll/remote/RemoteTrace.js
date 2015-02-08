@@ -138,7 +138,7 @@
 	};
 
 	// Reference to the prototype
-	var p = RemoteTrace.prototype = Object.create(Module.prototype);
+	var p = extend(RemoteTrace, Module);
 
 	// The collection of all themes
 	var allFilters = ['general','debug','info','warning','error'];

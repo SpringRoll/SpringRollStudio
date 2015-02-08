@@ -72,7 +72,7 @@
 	};
 
 	// Reference to the prototype
-	var p = TaskRunner.prototype = Object.create(Module.prototype);
+	var p = extend(TaskRunner, Module);
 
 	/**
 	*  Add a project to the list of projects

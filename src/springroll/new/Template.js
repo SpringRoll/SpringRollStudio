@@ -85,6 +85,12 @@
 		this.extend = data.extend || null;
 
 		/**
+		 * The username/repo for github
+		 * @property {string} github
+		 */
+		this.github = data.github || null;
+
+		/**
 		 * The parent template
 		 * @property {springroll.new.Template} parent
 		 */

@@ -12,6 +12,7 @@ module.exports = function(grunt)
 			'less:release',
 			'moduleAppTasks',
 			'libs',
+			'copy:defaultTemplate',
 			'exec:appModules',
 			'nodewebkit:' + (platform || 'all')
 		);
@@ -29,6 +30,7 @@ module.exports = function(grunt)
 			'less:development',
 			'moduleAppTasksDebug',
 			'libs-debug',
+			'copy:defaultTemplate',
 			'exec:appModules',
 			'nodewebkit:' + (platform || 'all')
 		);
@@ -69,4 +71,10 @@ module.exports = function(grunt)
 		}
 		grunt.task.run('exec:open' + platform);
 	});
+
+	// Template copy
+	grunt.registerTask('default-template', 'Copy the default template', [
+		'bower:install',
+		'copy:defaultTemplate'
+	]);
 };

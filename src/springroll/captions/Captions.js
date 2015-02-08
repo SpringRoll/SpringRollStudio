@@ -166,7 +166,7 @@
 	};
 
 	// Reference to the prototype
-	var p = Captions.prototype = Object.create(Module.prototype);
+	var p = extend(Captions, Module);
 
 	/**
 	*  The default width of a new caption in ms
