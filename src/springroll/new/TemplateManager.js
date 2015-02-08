@@ -67,7 +67,7 @@
 		*  @private
 		*/
 		this._modal = $("#templateModal")
-			.on('hidden.bs.modal', this.reset.bind(this));
+			.on('hidden.bs.modal', this.onModalClose.bind(this));
 
 		// Turn off all file dragging
 		$(document.body).on("dragover drop", function(e){
@@ -261,6 +261,17 @@
 
 		// Clear everything
 		this.reset();
+	};
+
+	/**
+	 * Handler when the modal becomes hidden
+	 * @private
+	 * @method onModalClose
+	 */
+	p.onModalClose = function()
+	{
+		this.reset();
+		this.updateModules();
 	};
 
 	/**

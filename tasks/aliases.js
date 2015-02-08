@@ -11,6 +11,7 @@ module.exports = function(grunt)
 			'clean:css',
 			'less:release',
 			'moduleAppTasks',
+			'clean:defaultTemplate',
 			'libs',
 			'copy:defaultTemplate',
 			'exec:appModules',
