@@ -194,7 +194,7 @@
 	 */
 	p._onHide = function()
 	{
-		if (!this._confirmed)
+		if (!this._confirmed && this._callback)
 		{
 			this.close(false);
 		}	

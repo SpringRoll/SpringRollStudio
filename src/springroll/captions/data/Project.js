@@ -122,11 +122,20 @@
 
 			data = parseJSON(file);
 
+			// Make sure we have some data
 			if (!data)
 			{
 				callback(null);
 				return;
 			}
+
+			// Check that there's a captions object
+			if (!data.captions)
+			{
+				this.create(file, callback);
+				return;
+			}
+
 			this.onProjectLoaded(data, callback);
 		}
 		if (WEB)
@@ -202,12 +211,6 @@
 	 */
 	p.onProjectLoaded = function(data, callback)
 	{
-		// No projects file!
-		if (!data || !data.captions)
-		{
-			callback(null);
-			return;
-		}
 		this.locales = data.captions.locales;
 		this.assets = data.captions.assets;
 		this.setLocale('default', function(project){
@@ -223,70 +226,92 @@
 	 */
 	p.create = function(file, callback)
 	{
-		var self = this,
-			dir = path.dirname(file);
+		var dir = path.dirname(file);
+		this.modal.open(dir, 
+			this.onModalClosed.bind(this, file, dir, callback)
+		);
+	};
 
-		this.modal.open(dir, function(result){
+	/**
+	 * When the modal project dialog is closed
+	 * @method onModalClosed
+	 * @private
+	 * @param {string} file The project file to save
+	 * @param {string} dir Project main path
+	 * @param {function} callback The result when we're done
+	 * @param {object} result 
+	 */
+	p.onModalClosed = function(file, dir, callback, result)
+	{		
+		// Failed!
+		if (!result)
+		{
+			callback(null);
+			return;
+		}
 
-			// Failed!
-			if (!result)
+		var audioPath = result.audioPath,
+			exportPath = result.exportPath,
+			cwd = path.join(dir, audioPath),
+			self = this;
+
+		// Select all OGG file from the audio folder
+		glob('**/*.ogg', {cwd:cwd}, function(err, files) {
+
+			if (err)
 			{
 				callback(null);
-				return;
+				throw err;
 			}
 
-			var audioPath = result.audioPath,
-				exportPath = result.exportPath,
-				cwd = path.join(dir, audioPath);
+			var assets = [];
 
-			// Select all OGG file from the audio folder
-			glob('**/*.ogg', {cwd:cwd}, function(err, files) {
-
-				if (err)
-				{
-					callback(null);
-					throw err;
-				}
-
-				var assets = [];
-
-				_.each(files, function(file){
-					assets.push({
-						id : path.basename(file, '.ogg'),
-						src : file
-					});
+			_.each(files, function(file){
+				assets.push({
+					id : path.basename(file, '.ogg'),
+					src : file
 				});
+			});
 
-				// Add an empty export file if there isn't one
-				var exportFile = path.join(dir, exportPath);
-				if (!fs.existsSync(exportFile))
+			// Add an empty export file if there isn't one
+			var exportFile = path.join(dir, exportPath);
+			if (!fs.existsSync(exportFile))
+			{
+				if (DEBUG)
 				{
-					if (DEBUG)
-					{
-						console.log("Save empty captions file " + exportFile);
-					}
-					fs.writeFileSync(exportFile, "{}");
+					console.log("Save empty captions file " + exportFile);
 				}
+				fs.writeFileSync(exportFile, "{}");
+			}
 
-				// Dummy project file
-				var data = {
-					"captions" : {
-						"assets" : assets,
-						"locales" : {
-							"default" : {
-								"path" : audioPath,
-								"export" : exportPath
-							}
+			// Dummy project file
+			var data = {
+				"captions" : {
+					"assets" : assets,
+					"locales" : {
+						"default" : {
+							"path" : audioPath,
+							"export" : exportPath
 						}
 					}
-				};
+				}
+			};
 
+			// File already exists, but no captions data
+			if (fs.existsSync(file))
+			{
+				var projectData = parseJSON(file);
+				projectData.captions = data.captions;
+				writeJSON(file, projectData);
+			}
+			else
+			{
 				// Write the project to file
 				writeJSON(file, data);
+			}
 
-				// Continue with loading the new created project
-				self.onProjectLoaded(data, callback);
-			});
+			// Continue with loading the new created project
+			self.onProjectLoaded(data, callback);
 		});
 	};
 
