@@ -1,7 +1,7 @@
 {
 	"name": "SpringRollStudio",
 	"private": true,
-	"version": "0.2.0-alpha.5",
+	"version": "0.2.0-alpha.6",
 	"dependencies": {
 		"grunt": "~0.4.5",
 		"grunt-contrib-copy": "^0.7.0",

@@ -59,7 +59,7 @@
 		if (APP)
 		{
 			// Create the menu
-			this.initMenubar(true, true);
+			this.initMenubar(false, true);
 		}
 
 		// Load the project

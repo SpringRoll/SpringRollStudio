@@ -5,6 +5,8 @@
 		var gui = require('nw.gui');
 	}
 
+	var Browser = include('cloudkid.Browser');
+
 	/**
 	*  The module is a sub-section of the app
 	*  @class Module
@@ -34,7 +36,10 @@
 			{
 				this.main.showDevTools();
 			}
-		}		
+		}
+
+		// Initialize the browser utility
+		Browser.init();	
 	};
 
 	/**

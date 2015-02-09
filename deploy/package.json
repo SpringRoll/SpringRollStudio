@@ -1,7 +1,7 @@
 {
 	"name": "SpringRollStudio",
 	"description": "Application for SpringRoll projects",
-	"version": "0.2.0-alpha.5",
+	"version": "0.2.0-alpha.6",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SpringRoll/SpringRollStudio"
@@ -14,8 +14,8 @@
 		"toolbar": false,
 		"frame": true,
 		"position": "center",
-		"width": 340,
-		"height": 435,
+		"width": 300,
+		"height": 430,
 		"resizable": false
 	},
 	"webkit": {

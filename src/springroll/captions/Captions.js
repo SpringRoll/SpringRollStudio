@@ -1,15 +1,15 @@
 (function(){
 
 	// Import classes
-	var Module = springroll.Module,
-		Browser = cloudkid.Browser,
-		Controls = springroll.captions.Controls,
-		Timeline = springroll.captions.Timeline,
-		List = springroll.captions.List,
-		Project = springroll.captions.Project,
-		Menu = springroll.captions.Menu,
-		XMLFormat = springroll.captions.formats.XMLFormat,
-		SBVFormat = springroll.captions.formats.SBVFormat;
+	var Module = include('springroll.Module'),
+		Browser = include('cloudkid.Browser'),
+		Controls = include('springroll.captions.Controls'),
+		Timeline = include('springroll.captions.Timeline'),
+		List = include('springroll.captions.List'),
+		Project = include('springroll.captions.Project'),
+		Menu = include('springroll.captions.Menu'),
+		XMLFormat = include('springroll.captions.formats.XMLFormat'),
+		SBVFormat = include('springroll.captions.formats.SBVFormat');
 
 	/**
 	*  The main application
@@ -91,9 +91,6 @@
 			);
 		}
 
-		// Initialize the browser utility
-		Browser.init();
-
 		// Turn off the site
 		this.enabled = false;
 
@@ -113,7 +110,7 @@
 			return false;
 		});
 
-		list.on("dragenter", function(event){
+		/*list.on("dragenter", function(event){
 			event.preventDefault();
 			list.addClass("dragover");
 		})
@@ -158,11 +155,9 @@
 			}
 
 			self.open(APP ? file.path : file.name);
-		});
+		});*/
 
-		// Check for an existing project and open it
-		var project = localStorage.getItem('project');
-		if (project) this.open(project);
+		this.open(localStorage.getItem('project'));
 	};
 
 	// Reference to the prototype
@@ -231,16 +226,6 @@
 		{
 			switch(item)
 			{
-				case this.menu.open :
-				{
-					Browser.folder(this.open.bind(this));
-					break;
-				}
-				case this.menu.close :
-				{
-					this.clear();
-					break;
-				}
 				case this.menu.reload :
 				{
 					this.refresh();

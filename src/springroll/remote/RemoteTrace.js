@@ -8,8 +8,8 @@
 	}
 
 	// Import classes
-	var Module = springroll.Module,
-		Browser = cloudkid.Browser;
+	var Module = include('springroll.Module'),
+		Browser = include('cloudkid.Browser');
 
 	/**
 	*  The application for receiving WebSocket messages from other applications
@@ -18,9 +18,6 @@
 	var RemoteTrace = function()
 	{
 		Module.call(this);
-
-		// Initialize the browser utility
-		Browser.init();
 
 		if (APP)
 		{

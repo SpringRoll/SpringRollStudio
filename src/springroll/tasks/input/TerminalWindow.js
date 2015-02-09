@@ -127,7 +127,8 @@
 		this.output = document.getElementById('console_' + taskName);
 		
 		// Update the title
-		this.main.title = this.taskName;
+		//this.main.title = this.taskName;
+		this.main.window.document.getElementById('title').innerHTML = taskName;
 
 		// define what element should be observed by the observer
 		// and what types of mutations trigger the callback

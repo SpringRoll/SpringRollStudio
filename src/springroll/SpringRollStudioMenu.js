@@ -16,16 +16,23 @@
 	*  @namespace springroll.captions 
 	*  @constructor
 	*  @param {nw.gui.Window} main Reference to the window
-	*  @param {nw.gui.Menu} menubar The main menubar
 	*  @param {function} callback Handler for menu item clicks
 	*/
-	var Menu = function(main, menubar, callback)
+	var Menu = function(main, callback)
 	{
+		// Create the new menu
+		var parent = new gui.Menu({ type: 'menubar' });
+
+		if (isOSX)
+		{
+			parent.createMacBuiltin("SpringRoll Studio");
+		}
+
 		/**
 		*  The root menu
 		*  @property {gui.Menu} parent
 		*/
-		this.parent = menubar;
+		this.parent = parent;
 
 		/**
 		*  Handler for the menu click callback
@@ -43,44 +50,19 @@
 		*  The file export menu
 		*  @property {gui.Menu} export
 		*/
-		this.exportMenu = new SubMenu();
+		this.view = new SubMenu();
 
-		// Create the file menu
-		this.createFileMenu(this.file, this.exportMenu);
-
-		// Add menu access to dev tools
-		if (DEBUG)
-		{
-			// mac already has the windows menu
-			if (isOSX)
-			{
-				var items = this.parent.items;
-				this.winMenu = items[items.length - 1].submenu;
-				this.addSeparator(this.winMenu);
-			}
-			else
-			{
-				this.winMenu = new SubMenu();
-				this.parent.append(new MenuItem({
-					label: 'Window',
-					submenu: this.winMenu
-				}));
-			}
-
-			// Add menu access for the dev console
-			this.addItem({
-				label: "Show Developer Tools",
-				key: "j",
-				modifiers: "cmd-alt",
-				click: function()
-				{
-					main.showDevTools();
-				}
-			}, this.winMenu);
-		}
+		// Create menus
+		this.createFileMenu(this.file);
+		this.createViewMenu(this.view);
 
 		// Assign the new menu to the window
-		main.menu = this.parent;
+		main.menu = parent;
+
+		// Listen for focus and re-assign menu
+		main.on('focus', function(){
+			main.menu = parent;
+		});
 
 		this.enabled = false;
 	};
@@ -109,9 +91,8 @@
 	*  Construct the file menu
 	*  @method createFileMenu
 	*  @param {gui.Menu} file The root file menu
-	*  @
 	*/
-	p.createFileMenu = function(file, exportMenu)
+	p.createFileMenu = function(file)
 	{
 		// add after the app menu
 		this.parent.insert(new MenuItem({
@@ -119,29 +100,76 @@
 			submenu: file
 		}), (isOSX ? 1 : 0));
 
-		this.save = this.addItem({
-			label:"Save Project",
-			key: "s",
+		this.new = this.addItem({
+			label:"New Project",
+			key: "n",
 			modifiers: "cmd"
 		}, file);
 
-		this.reload = this.addItem({
-			label:"Reload Project",
+		this.open = this.addItem({
+			label:"Open...",
+			key: "o",
+			modifiers: "cmd"
+		}, file);
+
+		this.addSeparator(file);
+
+		this.close = this.addItem({
+			label:"Close Project",
+			key: "w",
+			modifiers: "cmd"
+		}, file);
+	};
+
+	/**
+	*  Construct the view menu
+	*  @method createViewMenu
+	*  @param {gui.Menu} view The root view menu
+	*/
+	p.createViewMenu = function(view)
+	{
+		// add after the app menu
+		this.parent.insert(new MenuItem({
+			label: 'View',
+			submenu: view
+		}), (isOSX ? 3 : 1));
+
+		this.captions = this.addItem({
+			label:"Captions",
+			key: "c",
+			modifiers: "cmd-alt"
+		}, view);
+
+		this.tasks = this.addItem({
+			label:"Tasks",
+			key: "t",
+			modifiers: "cmd-alt"
+		}, view);
+
+		this.preview = this.addItem({
+			label:"Preview",
+			key: "p",
+			modifiers: "cmd-alt"
+		}, view);
+
+		this.remote = this.addItem({
+			label:"Remote Trace",
 			key: "r",
-			modifiers: "cmd-shift"
-		}, file);
+			modifiers: "cmd-alt"
+		}, view);
 
-		this.addSeparator(file);
-		this.sync = this.addItem({label:"Sync Audio Files"}, file);
-		this.addSeparator(file);
+		// Add menu access to dev tools
+		if (DEBUG)
+		{
+			this.addSeparator(view);
 
-		this.exports = this.addItem({
-			label:"Export",
-			submenu: exportMenu
-		}, file);
-
-		this.exportXML = this.addItem({label:"Export XML..."}, exportMenu);
-		this.exportSBV = this.addItem({label:"Export SBV..."}, exportMenu);
+			// Add menu access for the dev console
+			this.tools = this.addItem({
+				label: "Show Developer Tools",
+				key: "j",
+				modifiers: "cmd-alt"
+			}, view);
+		}
 	};
 
 	/**
@@ -177,14 +205,14 @@
 		set: function(enabled)
 		{
 			this._enabled = enabled;
-			this.exports.enabled = enabled;
-			this.save.enabled = enabled;
-			this.sync.enabled = enabled;
-			this.reload.enabled = enabled;
+			this.close.enabled = enabled;
+			this.captions.enabled = enabled;
+			this.preview.enabled = enabled;
+			this.tasks.enabled = enabled;
 		}
 	});
 
 	// Assign to namespace
-	namespace('springroll.captions').Menu = Menu;
+	namespace('springroll').SpringRollStudioMenu = Menu;
 
 }());

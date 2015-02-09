@@ -1,11 +1,12 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.0-alpha.5",
+	"version": "0.2.0-alpha.6",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
 		"components/node-webkit-app/src/NodeWebkitApp.js",
 		"src/springroll/ModuleButton.js",
+		"src/springroll/SpringRollStudioMenu.js",
 		"src/springroll/SpringRollStudio.js",
 		"src/springroll/SpringRollStudio.less"
 	],
@@ -48,9 +49,12 @@
 		"components/wavesurfer.js/src/drawer.*.js"
 	],
 	"modules": {
-		"captions": [
+		"shared": [
 			"components/node-webkit-app/src/utils/Browser.js",
 			"src/springroll/Module.js",
+			"src/springroll/Module.less"
+		],
+		"captions": [
 			"src/springroll/captions/ui/ContextMenu.js",
 			"src/springroll/captions/formats/*.js",
 			"src/springroll/captions/ui/ProjectModal.js",
@@ -63,13 +67,10 @@
 			"src/springroll/captions/Captions.less"
 		],
 		"remote": [
-			"components/node-webkit-app/src/utils/Browser.js",
-			"src/springroll/Module.js",
 			"src/springroll/remote/RemoteTrace.js",
 			"src/springroll/remote/RemoteTrace.less"
 		],
 		"tasks": [
-			"src/springroll/Module.js",
 			"src/springroll/tasks/utils/Utils.js",
 			"src/springroll/tasks/utils/Settings.js",
 			"src/springroll/tasks/input/TerminalWindow.js",
@@ -80,8 +81,6 @@
 			"src/springroll/tasks/TaskRunner.less"
 		],
 		"new": [
-			"components/node-webkit-app/src/utils/Browser.js",
-			"src/springroll/Module.js",
 			"src/springroll/new/JSONUtils.js",
 			"src/springroll/new/TemplateModule.js",
 			"src/springroll/new/Template.js",
@@ -91,7 +90,6 @@
 			"src/springroll/new/NewProject.less"
 		],
 		"preview": [
-			"src/springroll/Module.js",
 			"src/springroll/preview/Preview.js",
 			"src/springroll/preview/Preview.less"
 		]

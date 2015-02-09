@@ -20,8 +20,6 @@
 	{
 		Module.call(this);
 
-		Browser.init();
-
 		if (APP)
 		{
 			this.initMenubar(false, true);

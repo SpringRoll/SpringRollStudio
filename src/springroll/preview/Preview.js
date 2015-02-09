@@ -19,20 +19,11 @@
 	{
 		Module.call(this);
 
-		var app = connect();
-
-		var project = localStorage.getItem('project');
-
-		app.use(serveStatic(
-			path.join(project, 'deploy'),
-			{'index': ['index.html']}
-		));
-
 		/**
 		 * The web server
 		 * @property {Server} server
 		 */
-		this.server = app.listen(3000);
+		this.server = null;
 
 		/**
 		 * The local location for the iframe
@@ -46,11 +37,26 @@
 		 */
 		this.iframe = $("#preview");
 
+		var project = localStorage.getItem('project');
+
 		$("#refreshButton").click(this.refresh.bind(this));
 		$("#devToolsButton").click(this.toggleDevTools.bind(this));
 
 		// Set the project title
 		$("#title").text(path.basename(project));
+
+		if (APP)
+		{
+			var app = connect();
+			this.server = app.listen(3000);
+			app.use(serveStatic(
+				path.join(project, 'deploy'),
+				{'index': ['index.html']}
+			));
+
+			// Initialize the menu
+			this.initMenubar(false, true);
+		}
 
 		this.refresh();
 	};

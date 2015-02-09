@@ -8,9 +8,10 @@
 	}
 
 	// Import classes
-	var NodeWebkitApp = cloudkid.NodeWebkitApp,
-		ModuleButton = springroll.ModuleButton,
-		Browser = cloudkid.Browser;
+	var NodeWebkitApp = include('cloudkid.NodeWebkitApp'),
+		Menu = include('springroll.SpringRollStudioMenu'),
+		ModuleButton = include('springroll.ModuleButton'),
+		Browser = include('cloudkid.Browser');
 
 	/**
 	*  Node Webkit Application
@@ -44,18 +45,11 @@
 
 		if (APP)
 		{
-			this.menu = new gui.Menu({ type: 'menubar' });
-
-			if (process.platform === "darwin")
-			{
-				this.menu.createMacBuiltin("SpringRoll Studio", {
-					hideEdit: true,
-					hideWindow: true
-				});
-			}
-
-			this.main.on('focus', this.focus.bind(this));
-			this.focus();
+			// Create the menu
+			this.menu = new Menu(
+				this.main,
+				this._menuHandler.bind(this)
+			);
 
 			// Local cache of instance
 			var app = this;
@@ -85,17 +79,6 @@
 		this.closeButton = $("#closeButton")
 			.click(this.closeProject.bind(this));
 
-		// Set the current project state based on the project
-		var project = localStorage.getItem('project');
-		if (project)
-		{
-			this.openProject(project, false);
-		}
-		else
-		{
-			this.closeProject();
-		}
-
 		// Listen for a new project being created
 		$(window).on('storage', function(event){
 			var origEvent = event.originalEvent;
@@ -109,20 +92,85 @@
 				}
 			}
 		}.bind(this));
+
+		// Set the current project state based on the project
+		var project = localStorage.getItem('project');
+		if (project)
+		{
+			this.openProject(project, false);
+		}
+		else
+		{
+			this.closeProject();
+		}
 	};
 
 	// Reference to the prototype
 	var p = extend(SpringRollStudio, NodeWebkitApp);
 
 	/**
+	*  Handle when an item is clicked on in the system menu
+	*  @method _menuHandler
+	*  @private
+	*  @param {nw.gui.MenuItem} item The selected menu item
+	*/
+	p._menuHandler = function(item)
+	{
+		var menu = this.menu;
+		switch(item)
+		{
+			case menu.close: 
+			{
+				this.closeButton.click();
+				break;
+			}
+			case menu.open: 
+			{
+				this.openButton.click();
+				break;
+			}
+			case menu.new:
+			{
+				$("#new").click();
+				break;
+			}
+			case menu.captions:
+			{
+				$("#captions").click();
+				break;
+			}
+			case menu.tasks:
+			{
+				$("#tasks").click();
+				break;
+			}
+			case menu.preview:
+			{
+				$("#preview").click();
+				break;
+			}
+			case menu.remote:
+			{
+				$("#remote").click();
+				break;
+			}
+			case menu.tools: 
+			{
+				this.main.showDevTools();
+				break;
+			}
+		}
+	};
+
+	/**
 	*  Re-add the menu on focus
 	*  @method focus
 	*  @private
 	*/
-	p.focus = function()
-	{
-		this.main.menu = this.menu;
-	};
+	// p.focus = function()
+	// {
+	// 	this.main.menu = this.menu.parent;
+	// };
 
 	/**
 	 * Open a project file
@@ -142,6 +190,7 @@
 			this.closeProject();
 			return;
 		}
+		this.menu.enabled = true;
 		this.projectName.text(path.basename(project));
 		this.project.removeClass('empty');
 		this.closeButton.removeClass('disabled');
@@ -159,6 +208,7 @@
 	 */
 	p.closeProject = function()
 	{
+		this.menu.enabled = false;
 		this.projectName.text('');
 		this.project.addClass('empty');
 		this.requiresProject.addClass('disabled');
