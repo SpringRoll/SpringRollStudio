@@ -313,46 +313,55 @@
 			atBottom = scrollTop + height >= scrollHeight;
 
 		result = JSON.parse(result);
-		var level = result.level || "GENERAL";
-		var now = (new Date()).toLocaleString();
 
-		// This is a hack we should fix the framework
-		if (level === "true" || level === true)
-		{
-			level = "DE"+"BUG";
-		}
+		var level = (result.level || "GENERAL").toLowerCase();
+		var now = (new Date()).toLocaleString();
 
 		this.saveButton.removeClass('disabled');
 		this.clearButton.removeClass('disabled');
 
-		var log = $("<div class='log'></div>")
-			.addClass(level.toLowerCase());
-
 		if (level === "session")
 		{
-			if (this.clearOnNewSession)
-			{
-				this.clear();
-			}
-			log.text("New Session Began at " + now);
+			this.logSession(now);
 		}
-		else
+		else if (Array.isArray(result.message))
 		{
-			var message = result.message;
+			var message, i, j, tokens, token, sub;
 
-			if (typeof message === "object")
+			for (i = 0; i < result.message.length; i++)
 			{
-				message = JSON.stringify(message, null, "\t");
-			}
-			log.append(
-				$("<span class='type'></span>").text(level),
-				$("<span class='timestamp'></span>").text(now),
-				$("<span class='message'></span>").text(message)
-			);
-		}
+				message = result.message[i];
 
-		// Add a new log
-		this.output.append(log);
+				// Ignore non-strings
+				if (typeof message == "string")
+				{
+					tokens = message.match(/%[sdifoObxec]/g);
+
+					if (tokens)
+					{
+						for (j = 0; j < tokens.length; j++)
+						{
+							token = tokens[j];
+							sub = result.message[++i];
+
+							// CSS substitution check
+							if (token == "%c")
+							{
+								sub = '<span style="'+ sub + '">';
+								message += '</span>';
+							}
+							// Do object substitution
+							else if (token  == "%o" || token == "%O")
+							{
+								sub = JSON.stringify(sub, null, "\t");
+							}
+							message = message.replace(token, String(sub));
+						}
+					}
+				}
+				this.logMessage(now, message, level);
+			}
+		}
 
 		if (this.maxLogs)
 		{
@@ -364,6 +373,47 @@
 		{
 			this.output.scrollTop(this.output[0].scrollHeight);
 		}
+	};
+
+	/**
+	 * Log a new message
+	 * @method logMessage
+	 * @param {string} now The current time name
+	 * @param {string} message The message to log
+	 * @param {string} level The level to use
+	 */
+	p.logMessage = function(now, message, level)
+	{
+		if (typeof message === "object")
+		{
+			message = JSON.stringify(message, null, "\t");
+		}
+		this.output.append(
+			$("<div class='log'></div>")
+				.addClass(level)
+				.append(
+					$("<span class='type'></span>").text(level.toUpperCase()),
+					$("<span class='timestamp'></span>").text(now),
+					$("<span class='message'></span>").html(message)
+				)
+			);
+	};
+
+	/**
+	 * Log a new session
+	 * @method logSession
+	 * @param {string} now The current time name
+	 */
+	p.logSession = function(now)
+	{
+		if (this.clearOnNewSession)
+		{
+			this.clear();
+		}
+		this.output.append(
+			$("<div class='log session'></div>")
+				.text("New Session Began at " + now)
+		);
 	};
 
 	/**
