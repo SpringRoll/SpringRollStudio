@@ -68,6 +68,13 @@
 			"default": false
 		},
 		{
+			"id": "springroll.Tasks",
+			"name": "Tasks",
+			"main": "components/springroll/dist/modules/tasks.min.js",
+			"mainDebug": "components/springroll/dist/modules/tasks.js",
+			"depends": ["springroll.Core"]
+		},
+		{
 			"id": "springroll.Sound",
 			"name": "Sound",
 			"bower": {
@@ -115,13 +122,6 @@
 				"springroll.Core",
 				["springroll.CreateJSDisplay","springroll.PixiDisplay"]
 			]
-		},
-		{
-			"id": "springroll.Tasks",
-			"name": "Tasks",
-			"main": "components/springroll/dist/modules/tasks.min.js",
-			"mainDebug": "components/springroll/dist/modules/tasks.js",
-			"depends": ["springroll.Core"]
 		},
 		{
 			"id": "springroll.Translate",
