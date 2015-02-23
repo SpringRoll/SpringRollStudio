@@ -1,6 +1,6 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
@@ -23,11 +23,7 @@
 		"components/bootstrap/less/theme.less",
 		"components/bootstrap-confirmation/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
-		"components/wavesurfer.js/src/wavesurfer.js",
-		"components/wavesurfer.js/src/webaudio.js",
-		"components/wavesurfer.js/src/audioelement.js",
-		"components/wavesurfer.js/src/drawer.js",
-		"components/wavesurfer.js/src/drawer.*.js"
+		"components/wavesurfer.js/build/wavesurfer.min.js"
 	],
 	"librariesDebug": [
 		"components/jquery/dist/jquery.js",
@@ -42,11 +38,7 @@
 		"components/bootstrap/less/theme.less",
 		"components/bootstrap-confirmation/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
-		"components/wavesurfer.js/src/wavesurfer.js",
-		"components/wavesurfer.js/src/webaudio.js",
-		"components/wavesurfer.js/src/audioelement.js",
-		"components/wavesurfer.js/src/drawer.js",
-		"components/wavesurfer.js/src/drawer.*.js"
+		"components/wavesurfer.js/build/wavesurfer.min.js"
 	],
 	"modules": {
 		"shared": [
