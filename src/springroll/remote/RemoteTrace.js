@@ -65,7 +65,7 @@
 				!(code >= 96 && code <= 106) && // keypad
 				!(code >= 37 && code <= 40) && //toggle keys
 				code != 8 && //backspace
-				code != 46 // del 
+				code != 46 // del
 			){
 				e.preventDefault();
 				return false;
@@ -123,7 +123,7 @@
 
 		/**
 		*  The color scheme, the name of the CSS class
-		*  @property {string} theme
+		*  @property {String} theme
 		*/
 		this.setTheme(localStorage.getItem('theme') || "default");
 
@@ -201,7 +201,7 @@
 			{
 				f.addClass('selected');
 				this.output.addClass('show-'+filters[i]);
-			}		
+			}
 		}
 		localStorage.setItem('filters', filters);
 	};
@@ -221,7 +221,7 @@
 	/**
 	*  Set the current theme
 	*  @method  setTheme
-	*  @param {string} theme The theme name, CSS class name
+	*  @param {String} theme The theme name, CSS class name
 	*/
 	p.setTheme = function(theme)
 	{
@@ -287,8 +287,8 @@
 					}
 					localStorage.setItem('workingDir', path.dirname(file));
 					fs.writeFileSync(file, output);
-				}, 
-				(new Date()).toUTCString() + ".txt", 
+				},
+				(new Date()).toUTCString() + ".txt",
 				localStorage.getItem('workingDir') || undefined
 			);
 		}
@@ -302,7 +302,7 @@
 	*  Callback when a message is received by the server
 	*  @method _onMessage
 	*  @private
-	*  @param  {string} result The result object to be parsed as JSON
+	*  @param  {String} result The result object to be parsed as JSON
 	*/
 	p._onMessage = function(result)
 	{
@@ -351,9 +351,13 @@
 								message += '</span>';
 							}
 							// Do object substitution
-							else if (token  == "%o" || token == "%O")
+							else if (token == "%o" || token == "%O")
 							{
 								sub = JSON.stringify(sub, null, "\t");
+							}
+							else if(token == "%d" || token == "%i")
+							{
+								sub = parseInt(sub);
 							}
 							message = message.replace(token, String(sub));
 						}
@@ -378,9 +382,9 @@
 	/**
 	 * Log a new message
 	 * @method logMessage
-	 * @param {string} now The current time name
-	 * @param {string} message The message to log
-	 * @param {string} level The level to use
+	 * @param {String} now The current time name
+	 * @param {String} message The message to log
+	 * @param {String} level The level to use
 	 */
 	p.logMessage = function(now, message, level)
 	{
@@ -402,7 +406,7 @@
 	/**
 	 * Log a new session
 	 * @method logSession
-	 * @param {string} now The current time name
+	 * @param {String} now The current time name
 	 */
 	p.logSession = function(now)
 	{
