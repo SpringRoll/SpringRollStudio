@@ -1,3 +1,11 @@
+.user-deselect() {
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	-o-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+
 #trace {
 	overflow: auto;
 	position:absolute;
@@ -7,9 +15,9 @@
 	right:0;
 	padding:10px;
 
-	.error, 
+	.error,
 	.warning,
-	.info, 
+	.info,
 	.debug,
 	.general {
 		display:none;
@@ -21,6 +29,12 @@
 	&.show-debug .debug,
 	&.show-general .general {
 		display: block;
+	}
+	
+	.group {
+		padding-left:20px;
+		display: block;
+		overflow: hidden;
 	}
 
 	.log {
@@ -47,6 +61,18 @@
 			font-size: 10px;
 		}
 		.message {
+		}
+		
+		.groupToggle {
+			.user-deselect();
+			cursor:pointer;
+			padding-right: 5px;
+			.down { display:inline }
+			.right { display:none }
+			&.collapsed {
+				.down { display:none}
+				.right { display:inline }
+			}
 		}
 	}
 	// Options for the trace

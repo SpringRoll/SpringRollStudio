@@ -39,6 +39,19 @@
 		*  @property {jquery} output
 		*/
 		this.output = $("#trace");
+		
+		/**
+		 * A stack of jquery elements representing log groups, so that logs can be
+		 * added to the proper groups.
+		 * @property {Array} groupStack
+		 */
+		this.groupStack = [];
+		
+		/**
+		 * The next id for a group to ensure unique ids for each one.
+		 * @property {Number} nextGroupId
+		 */
+		this.nextGroupId = 0;
 
 		/**
 		*  Clear the output on a new session
@@ -132,6 +145,9 @@
 		this.setFilters(filters ? filters.split(',') : allFilters);
 
 		this.clear();
+		
+		if(DEBUG)
+			window.RemoteTrace = this;
 	};
 
 	// Reference to the prototype
@@ -245,6 +261,7 @@
 	p.clear = function()
 	{
 		this.output.empty();
+		this.groupStack.length = 0;
 		this.saveButton.addClass('disabled');
 		this.clearButton.addClass('disabled');
 	};
@@ -314,8 +331,13 @@
 
 		result = JSON.parse(result);
 
-		var level = (result.level || "GENERAL").toLowerCase();
-		var now = (new Date()).toLocaleString();
+		var level = (result.level || "GENERAL").toLowerCase(),
+			stack = result.stack;
+		
+		var now = new Date();
+		if(result.time)
+			now.setTime(result.time);
+		now = now.toLocaleString();
 
 		this.saveButton.removeClass('disabled');
 		this.clearButton.removeClass('disabled');
@@ -326,57 +348,36 @@
 		}
 		else if(level == "clear")
 		{
+			this.clear();
 		}
-		else if(level == "group")
+		else if(level == "group" || level == "groupcollapsed")
 		{
+			var log = this.prepareAndLogMessage(now, result.message, "general", stack),
+				groupId = "group_" + this.nextGroupId++;
+			var chevron = $("<span class='groupToggle' data-toggle='collapse' data-target='#" + groupId + "'></span>");
+			chevron.append(
+				$("<span class='glyphicon glyphicon-chevron-right right'></span>"),
+				$("<span class='glyphicon glyphicon-chevron-down down'></span>")
+			);
+			log.prepend(chevron);
+			
+			var group = $("<div class='group log collapse in' id='" + groupId + "'></div>");
+			this.getLogParent().append(group);
+			this.groupStack.push(group);
+			
+			if(level == "groupcollapsed")
+			{
+				chevron.addClass("collapsed");
+				group.collapse("hide");//.removeClass("in");
+			}
 		}
-		else if(level == "groupCollapsed")
+		else if(level == "groupend")
 		{
-		}
-		else if(level == "groupEnd")
-		{
+			this.groupStack.pop();
 		}
 		else if (Array.isArray(result.message))
 		{
-			var message, i, j, tokens, token, sub;
-
-			for (i = 0; i < result.message.length; i++)
-			{
-				message = result.message[i];
-
-				// Ignore non-strings
-				if (typeof message == "string")
-				{
-					tokens = message.match(/%[sdifoObxec]/g);
-
-					if (tokens)
-					{
-						for (j = 0; j < tokens.length; j++)
-						{
-							token = tokens[j];
-							sub = result.message[++i];
-
-							// CSS substitution check
-							if (token == "%c")
-							{
-								sub = '<span style="'+ sub + '">';
-								message += '</span>';
-							}
-							// Do object substitution
-							else if (token == "%o" || token == "%O")
-							{
-								sub = JSON.stringify(sub, null, "\t");
-							}
-							else if(token == "%d" || token == "%i")
-							{
-								sub = parseInt(sub);
-							}
-							message = message.replace(token, String(sub));
-						}
-					}
-				}
-				this.logMessage(now, message, level);
-			}
+			this.prepareAndLogMessage(now, result.message, level, stack);
 		}
 
 		if (this.maxLogs)
@@ -390,29 +391,98 @@
 			this.output.scrollTop(this.output[0].scrollHeight);
 		}
 	};
+	
+	p.prepareAndLogMessage = function(now, messages, level, stack)
+	{
+		if(!messages || !messages.length)
+		{
+			return this.logMessage(now, [""], level, stack);
+		}
+		
+		var message, j, tokens, token, sub;
+
+		message = messages[0];
+
+		//if the first message is a string, then check it for string formatting tokens
+		if (typeof message == "string")
+		{
+			tokens = message.match(/%[sdifoObxec]/g);
+
+			if (tokens)
+			{
+				for (j = 0; j < tokens.length; j++)
+				{
+					token = tokens[j];
+					sub = messages[1];
+
+					// CSS substitution check
+					if (token == "%c")
+					{
+						sub = '<span style="'+ sub + '">';
+						message += '</span>';
+					}
+					// Do object substitution
+					else if (token == "%o" || token == "%O")
+					{
+						sub = JSON.stringify(sub, null, "\t");
+					}
+					else if(token == "%d" || token == "%i")
+					{
+						sub = parseInt(sub);
+					}
+					message = message.replace(token, String(sub));
+					
+					messages.splice(1, 1);
+				}
+			}
+			messages[0] = message;
+		}
+		return this.logMessage(now, messages, level, stack);
+	};
 
 	/**
 	 * Log a new message
 	 * @method logMessage
 	 * @param {String} now The current time name
-	 * @param {String} message The message to log
+	 * @param {Array} messages The message to log
 	 * @param {String} level The level to use
+	 * @param {Array} [stack] The stack trace for the log.
 	 */
-	p.logMessage = function(now, message, level)
+	p.logMessage = function(now, messages, level, stack)
 	{
-		if (typeof message === "object")
+		var message = "";
+		for(var i = 0; i < messages.length; ++i)
 		{
-			message = JSON.stringify(message, null, "\t");
+			if(i > 0)
+				message += " ";
+			if (typeof message === "object")
+			{
+				message += JSON.stringify(messages[i], null, "\t");
+			}
+			else
+				message += messages[i];
 		}
-		this.output.append(
-			$("<div class='log'></div>")
-				.addClass(level)
-				.append(
-					$("<span class='type'></span>").text(level.toUpperCase()),
-					$("<span class='timestamp'></span>").text(now),
-					$("<span class='message'></span>").html(message)
-				)
+		var log = $("<div class='log'></div>")
+			.addClass(level)
+			.append(
+				$("<span class='type'></span>").text(level.toUpperCase()),
+				$("<span class='timestamp'></span>").text(now),
+				$("<span class='message'></span>").html(message)
 			);
+		this.getLogParent().append(log);
+		return log;
+	};
+	
+	/**
+	 * Gets the JQuery element that logs should be added to.
+	 * @method getLogParent
+	 * @return {jquery} The div to add logs to.
+	 */
+	p.getLogParent = function()
+	{
+		if(this.groupStack.length)
+			return this.groupStack[this.groupStack.length - 1];
+		return this.output;
 	};
 
 	/**
