@@ -324,6 +324,18 @@
 		{
 			this.logSession(now);
 		}
+		else if(level == "clear")
+		{
+		}
+		else if(level == "group")
+		{
+		}
+		else if(level == "groupCollapsed")
+		{
+		}
+		else if(level == "groupEnd")
+		{
+		}
 		else if (Array.isArray(result.message))
 		{
 			var message, i, j, tokens, token, sub;
