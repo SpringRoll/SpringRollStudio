@@ -67,11 +67,19 @@
 			.user-deselect();
 			cursor:pointer;
 			padding-right: 5px;
-			.down { display:inline }
-			.right { display:none }
+			.down { display:inline; }
+			.right { display:none; }
 			&.collapsed {
-				.down { display:none}
-				.right { display:inline }
+				.down { display:none; }
+				.right { display:inline; }
+			}
+		}
+		
+		.object {
+			display: inline-block;
+			vertical-align: top;
+			.line {
+				display: block;
 			}
 		}
 	}

@@ -368,7 +368,7 @@
 			if(level == "groupcollapsed")
 			{
 				chevron.addClass("collapsed");
-				group.collapse("hide");//.removeClass("in");
+				group.collapse("hide");
 			}
 		}
 		else if(level == "groupend")
@@ -399,9 +399,7 @@
 			return this.logMessage(now, [""], level, stack);
 		}
 		
-		var message, j, tokens, token, sub;
-
-		message = messages[0];
+		var message = messages[0], j, tokens, token, sub;
 
 		//if the first message is a string, then check it for string formatting tokens
 		if (typeof message == "string")
@@ -424,7 +422,7 @@
 					// Do object substitution
 					else if (token == "%o" || token == "%O")
 					{
-						sub = JSON.stringify(sub, null, "\t");
+						sub = this.prepareObject(sub)[0].outerHTML;
 					}
 					else if(token == "%d" || token == "%i")
 					{
@@ -455,9 +453,9 @@
 		{
 			if(i > 0)
 				message += " ";
-			if (typeof message === "object")
+			if (typeof messages[i] === "object")
 			{
-				message += JSON.stringify(messages[i], null, "\t");
+				message += this.prepareObject(messages[i])[0].outerHTML;
 			}
 			else
 				message += messages[i];
@@ -471,6 +469,46 @@
 			);
 		this.getLogParent().append(log);
 		return log;
+	};
+	
+	/**
+	 * Turns an object into an HTML element suitable for display.
+	 * @method prepareObject
+	 * @param {Object} input The input object.
+	 * @return {jquery} The jquery element for the object
+	 */
+	p.prepareObject = function(input)
+	{
+		var output = $("<div class='object'>" + (Array.isArray(input) ? "Array [" : "Object {") + "</div>");
+		
+		var group = $("<div class='group log collapse in'></div>");
+		for(var key in input)
+		{
+			var line = $("<div class='line'></div>");
+			if(typeof input[key] == "object")
+			{
+				line.append(key + ": ", this.prepareObject(input[key]));
+			}
+			else
+			{
+				line.append(key + ": " + input[key]);
+			}
+			group.append(line);
+		}
+		if(group.children().length)
+		{
+			var groupId = "group_" + this.nextGroupId++;
+			group.attr("id", groupId);
+			var chevron = $("<span class='groupToggle' data-toggle='collapse' data-target='#" + groupId + "'></span>");
+			chevron.append(
+				$("<span class='glyphicon glyphicon-chevron-right right'></span>"),
+				$("<span class='glyphicon glyphicon-chevron-down down'></span>")
+			);
+			output.prepend(chevron);
+			output.append(group);
+		}
+		output.append(Array.isArray(input) ? "]" : "}");
+		return output;
 	};
 	
 	/**
