@@ -147,7 +147,91 @@
 		this.clear();
 		
 		if(DEBUG)
+		{
 			window.RemoteTrace = this;
+			this.testStack = function()
+			{
+				this._onMessage(JSON.stringify({
+					time: 7,
+					level: "GENERAL",
+					message: ["I am a message with an %o object", {foo:"bar", blah:true}],
+					stack: [
+						{
+							function: "pretendObject.doesNotExist",
+							file: "http://www.google.com/nonExistantFile.js",
+							lineLocation: "3:40"
+						},
+						{
+							function: "<anonymous>",
+							file: "http://www.google.com/nonExistantFile.js",
+							lineLocation: "7"
+						},
+						{
+							function: "this.testStack",
+							file: "http://localhost:8080/assets/js/../../../src/springroll/remote/RemoteTrace.js",
+							lineLocation: "154:10"
+						}
+					]
+				}));
+			};
+			this.testGroups = function()
+			{
+				this._onMessage(JSON.stringify({
+					time: 3,
+					level: "group",
+					message: ["Group start!"],
+					stack: [
+						{
+							function: "pretendObject.doesNotExist",
+							file: "http://www.google.com/nonExistantFile.js",
+							lineLocation: "3:40"
+						}
+					]
+				}));
+				this._onMessage(JSON.stringify({
+					time: 3,
+					level: "GENERAL",
+					message: ["item in a group #1!"],
+					stack: [
+						{
+							function: "pretendObject.doesNotExist",
+							file: "http://www.google.com/nonExistantFile.js",
+							lineLocation: "3:40"
+						}
+					]
+				}));
+				this._onMessage(JSON.stringify({
+					time: 3,
+					level: "GENERAL",
+					message: ["item in a group #2!"],
+					stack: [
+						{
+							function: "pretendObject.doesNotExist",
+							file: "http://www.google.com/nonExistantFile.js",
+							lineLocation: "3:40"
+						}
+					]
+				}));
+				this._onMessage(JSON.stringify({
+					level: "groupEnd"
+				}));
+			};
+		}
+		
+		output.on("click", ".message", function(e)
+			{
+				var target = $(e.target);
+				//block object toggles from affecting stack visibility toggles
+				if(target.hasClass("objectToggle") || target.parent().hasClass("objectToggle"))
+				{
+					//stop the event
+					e.stopPropagation();
+					var targetId = target.hasClass("objectToggle") ?
+											target.data("target") : target.parent().data("target");
+					//we have to handle the event ourselves
+					$(targetId).collapse("toggle");
+				}
+			});
 	};
 
 	// Reference to the prototype
@@ -314,6 +398,14 @@
 			console.log(output);
 		}
 	};
+	
+	function extendNumber(input, length)
+	{
+		var output = input.toString();
+		while(output.length < length)
+			output = "0" + output;
+		return output;
+	}
 
 	/**
 	*  Callback when a message is received by the server
@@ -332,12 +424,13 @@
 		result = JSON.parse(result);
 
 		var level = (result.level || "GENERAL").toLowerCase(),
-			stack = result.stack;
-		
-		var now = new Date();
+			stack = result.stack,
+			now = new Date();
 		if(result.time)
 			now.setTime(result.time);
-		now = now.toLocaleString();
+		now = now.toDateString() + " " + extendNumber(now.getHours(), 2) + ":" +
+				extendNumber(now.getMinutes(), 2) + ":" + extendNumber(now.getSeconds(), 2) +
+				"." + extendNumber(now.getMilliseconds(), 3);
 
 		this.saveButton.removeClass('disabled');
 		this.clearButton.removeClass('disabled');
@@ -448,8 +541,8 @@
 	 */
 	p.logMessage = function(now, messages, level, stack)
 	{
-		var message = "";
-		for(var i = 0; i < messages.length; ++i)
+		var message = "", i, length, messageDom;
+		for(i = 0, length = messages.length; i < length; ++i)
 		{
 			if(i > 0)
 				message += " ";
@@ -464,9 +557,41 @@
 			.addClass(level)
 			.append(
 				$("<span class='type'></span>").text(level.toUpperCase()),
-				$("<span class='timestamp'></span>").text(now),
-				$("<span class='message'></span>").html(message)
+				$("<span class='timestamp'></span>").text(now)
 			);
+		messageDom = $("<span class='message'></span>").html(message);
+		if(stack)
+		{
+			var stackLinkText = stack[0].file;
+			if(stackLinkText.indexOf("/") >= 0)
+				stackLinkText = stackLinkText.substring(stackLinkText.lastIndexOf("/") + 1);
+			stackLinkText += ":" + stack[0].lineLocation;
+			log.append($("<span class='stackLink'></span>").text(stackLinkText))
+				.append(messageDom);
+			var groupId = "group_" + this.nextGroupId++;
+			var group = $("<div class='group stack collapse in' id='" + groupId + "'></div>");
+			for(i = 0, length = stack.length; i < length; ++i)
+			{
+				stackLinkText = stack[i].file;
+				if(stackLinkText.indexOf("/") >= 0)
+					stackLinkText = stackLinkText.substring(stackLinkText.lastIndexOf("/") + 1);
+				stackLinkText += ":" + stack[i].lineLocation;
+				var line = $("<div class='line'></div>");
+				line.text(stack[i].function)
+					.append($("<span class='stackLink'></span>").text(stackLinkText));
+				group.append(line);
+			}
+			log.append(group);
+			
+			messageDom.attr("data-toggle", "collapse").attr("data-target", "#" + groupId);
+			if(level != "error")
+			{
+				messageDom.addClass("collapsed");
+				group.collapse("hide");
+			}
+		}
+		else
+			log.append(messageDom);
 		this.getLogParent().append(log);
 		return log;
 	};
@@ -479,7 +604,7 @@
 	 */
 	p.prepareObject = function(input)
 	{
-		var output = $("<div class='object'>" + (Array.isArray(input) ? "Array [" : "Object {") + "</div>");
+		var output = $("<div class='object'></div>");
 		
 		var group = $("<div class='group log collapse in'></div>");
 		for(var key in input)
@@ -499,15 +624,17 @@
 		{
 			var groupId = "group_" + this.nextGroupId++;
 			group.attr("id", groupId);
-			var chevron = $("<span class='groupToggle' data-toggle='collapse' data-target='#" + groupId + "'></span>");
-			chevron.append(
+			var chevron = $("<span class='objectToggle' data-toggle='collapse' data-target='#" + groupId + "'> " + (Array.isArray(input) ? "Array [" : "Object {") + "</span>");
+			chevron.prepend(
 				$("<span class='glyphicon glyphicon-chevron-right right'></span>"),
 				$("<span class='glyphicon glyphicon-chevron-down down'></span>")
 			);
 			output.prepend(chevron);
 			output.append(group);
+			group.append(Array.isArray(input) ? "]" : "}");
 		}
-		output.append(Array.isArray(input) ? "]" : "}");
+		else
+			group.append(Array.isArray(input) ? "Array []" : "Object {}");
 		return output;
 	};
 	

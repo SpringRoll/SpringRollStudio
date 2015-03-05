@@ -52,20 +52,38 @@
 		.type {
 			font-weight:bold;
 			padding-right: 10px;
-			display:inline-block;
+			display:block;
+			float: left;
 		}
 		.timestamp {
 			display: none;
 			opacity: 0.8;
 			padding-right: 10px;
 			font-size: 10px;
+			float: left;
 		}
 		.message {
+			margin: 0 auto;
+			display: block;
+			width: 100%;
 		}
 		
-		.groupToggle {
+		.stackLink {
+			float: right;
+			cursor: pointer;
+			text-decoration: underline;
+		}
+		
+		.stack {
+			.line {
+				display: block;
+			}
+		}
+		
+		.groupToggle,
+		.objectToggle {
 			.user-deselect();
-			cursor:pointer;
+			cursor: pointer;
 			padding-right: 5px;
 			.down { display:inline; }
 			.right { display:none; }
@@ -73,6 +91,11 @@
 				.down { display:none; }
 				.right { display:inline; }
 			}
+		}
+		
+		.groupToggle {
+			display: block;
+			float: left;
 		}
 		
 		.object {
@@ -88,7 +111,7 @@
 		white-space:pre;
 	}
 	&.timestamps .timestamp {
-		display: inline-block;
+		display: block;
 	}
 
 	// Default color scheme
@@ -100,6 +123,7 @@
 		.debug { color: #0066CC;}
 		.warning {color: #FF9900;}
 		.error {color: #CC0000;}
+		.stack .line:hover { background:#ddd; }
 	}
 	&.solarizedDark {
 		background:#002B36;
@@ -109,6 +133,7 @@
 		.debug {color: #859900;}
 		.warning {color: #DC322F;}
 		.error {color: #D33682;}
+		.stack .line:hover { background:#ddd; }
 	}
 	&.solarizedLight {
 		background:#FDF6E3;
@@ -118,5 +143,6 @@
 		.debug {color: #859900;}
 		.warning {color: #DC322F;}
 		.error {color: #D33682;}
+		.stack .line:hover { background:#ddd; }
 	}
 }
