@@ -356,6 +356,7 @@
 			{
 				// Update the button's data source
 				button.data('src', src);
+				this.list.setStatus(button, this.project.captions[alias] ? 1 : 0);
 
 				// Make sure we clear the current button
 				if (this.list.deselect(alias))

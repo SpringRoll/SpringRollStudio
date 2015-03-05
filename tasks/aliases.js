@@ -42,7 +42,7 @@ module.exports = function(grunt)
 	// on the user's platform
 	grunt.registerTask('package', function(platform)
 	{
-		var tasks = ['clean:installers'];
+		var tasks = [];
 
 		// Package a single platform
 		if (platform)

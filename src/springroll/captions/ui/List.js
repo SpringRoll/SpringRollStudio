@@ -189,7 +189,12 @@
 		// check that file exists!
 		var button = $("<button></button>")
 			.addClass("btn btn-sm")
-			.html(alias)
+			.text(alias)
+			.attr('title', alias)
+			.tooltip({ 
+				container: 'body', 
+				delay: { show: 1000, hide: 100 } 
+			})
 			.attr('data-alias', alias)
 			.data('alias', alias)
 			.data('status', status)
@@ -259,7 +264,11 @@
 
 			if (confirm(message))
 			{
-				this.parent.trigger('selectAudioSrc', [alias, status == -2]);
+				this.parent.trigger('selectAudioSrc', [
+					alias, 
+					status == -2, 
+					button
+				]);
 			}
 			return;
 		}

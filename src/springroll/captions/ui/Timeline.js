@@ -91,13 +91,15 @@
 
 		// Add to the list of captions
 		this.captions.append(textarea);
-
-		if (!!focus)
-		{
-			textarea.trigger('focus');
-		}
+		
 		this._captions.push(textarea[0]);
 		this._captions.sort(sortCaptions);
+
+		if (focus)
+		{
+			textarea.trigger('focus');
+			this._onResizeCurrent();
+		}
 
 		return textarea;
 	};
@@ -359,7 +361,7 @@
 			for (var i = 0; i < this._captions.length; i++)
 			{
 				var textarea = $(this._captions[i]);
-				var content = textarea.val().trim().replace('/\n|\r/', '');
+				var content = textarea.val().trim().replace(/\n|\r/g, '');
 
 				// Block adding empty captions
 				if (!content) continue;
@@ -414,16 +416,16 @@
 	p.removeCurrent = function()
 	{
 		var currentCaption = this.currentCaption;
-		this.blur();
 		if (currentCaption)
 		{
 			currentCaption.off('keyup focus').remove();
 			var i = this._captions.indexOf(currentCaption[0]);
-			if (i < -1)
+			if (i > -1)
 			{
 				this._captions.splice(i, 1);
 			}
 		}
+		this.blur();
 	};
 
 	// Assign to namespace

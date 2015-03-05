@@ -1,6 +1,6 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
@@ -20,7 +20,6 @@
 		"components/bootstrap/dist/js/bootstrap.min.js",
 		"components/cloudkid-namespace/dist/namespace.min.js",
 		"components/bootstrap/less/bootstrap.less",
-		"components/bootstrap/less/theme.less",
 		"components/bootstrap-confirmation/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
 		"components/wavesurfer.js/build/wavesurfer.min.js"
@@ -35,7 +34,6 @@
 		"components/bootstrap/dist/js/bootstrap.js",
 		"components/cloudkid-namespace/dist/namespace.js",
 		"components/bootstrap/less/bootstrap.less",
-		"components/bootstrap/less/theme.less",
 		"components/bootstrap-confirmation/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
 		"components/wavesurfer.js/build/wavesurfer.min.js"
