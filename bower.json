@@ -12,6 +12,7 @@
 		"underscore": "~1.7.0",
 		"node-webkit-app": "*",
 		"sortable": "farhadi/html5sortable",
-		"default": "https://github.com/SpringRoll/SpringRollTemplate.git"
+		"default": "https://github.com/SpringRoll/SpringRollTemplate.git",
+		"sunlight": "https://github.com/CloudKidStudio/sunlight.git#master"
 	}
 }

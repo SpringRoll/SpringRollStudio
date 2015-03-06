@@ -146,3 +146,20 @@
 		.stack .line:hover { background:#ddd; }
 	}
 }
+
+.sunlight-code-container {
+	overflow-y: auto;
+	height: 500px;
+	border-width: 1px;
+	border-style: solid;
+}
+
+.sunlight-highlight-javascript {
+	//no standard <pre> padding because that messes with the line numbers
+	padding: 0px;
+}
+
+.sunlight-container {
+	//display fully on top of the other remote trace ui
+	z-index: 4;
+}

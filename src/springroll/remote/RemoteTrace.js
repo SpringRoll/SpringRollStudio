@@ -153,7 +153,7 @@
 			{
 				this._onMessage(JSON.stringify({
 					time: 7,
-					level: "GENERAL",
+					level: "ERROR",
 					message: ["I am a message with an %o object", {foo:"bar", blah:true}],
 					stack: [
 						{
@@ -168,8 +168,8 @@
 						},
 						{
 							function: "this.testStack",
-							file: "http://localhost:8080/assets/js/../../../src/springroll/remote/RemoteTrace.js",
-							lineLocation: "154:10"
+							file: "http://andrew.cloudkid.net/Tools/SpringRollStudio/src/springroll/remote/RemoteTrace.js",
+							lineLocation: "152:18"
 						}
 					]
 				}));
@@ -218,10 +218,11 @@
 			};
 		}
 		
+		//block object toggles from affecting stack visibility toggles
 		output.on("click", ".message", function(e)
 			{
 				var target = $(e.target);
-				//block object toggles from affecting stack visibility toggles
+				//only need to block object toggles, as they are part of the message
 				if(target.hasClass("objectToggle") || target.parent().hasClass("objectToggle"))
 				{
 					//stop the event
@@ -231,6 +232,84 @@
 					//we have to handle the event ourselves
 					$(targetId).collapse("toggle");
 				}
+			});
+		
+		//http://sunlightjs.com/docs.html
+		
+		//get clicks on any link to a page in the stack view
+		output.on("click", ".stackLink", function(e)
+			{
+				//TODO: Remove
+				if(RELEASE)
+					return;
+				var target = $(e.target);
+				var location = target.data("location");
+				var colonIndex = location.indexOf(":");
+				var line = parseInt(colonIndex > 0 ? location.substring(0, colonIndex) : location),
+					column = colonIndex > 0 ? parseInt(location.substring(colonIndex + 1)) : 0;
+				$.ajax({
+					url : target.data("file"),
+					dataType: "text",
+					success : function (data) {
+						//make a text box to display the JS file
+						//TODO: Actual location for this
+						//Note: Sunlight makes a <div> with a class of "sunlight-container" where
+						//the pre created by this code is placed
+						$("#frame").prepend($("<pre class='sunlight-highlight-javascript' contentEditable='true'></pre>").text(data));
+						//format Javascript syntax
+						Sunlight.highlightAll();
+						var codeBlock = $(".sunlight-javascript");
+						//select the line/column
+						//figure out how many characters in that line/column is
+						var text = codeBlock.text(),
+							characterCount = 0,
+							lastNewLine = 0;
+						for(var lineIndex = 1; lineIndex < line; ++lineIndex)
+						{
+							//get the newline character at the end of line #lineIndex
+							lastNewLine = text.indexOf("\n", lastNewLine + 1);
+							characterCount = lastNewLine;
+						}
+						characterCount += column;
+						
+						//figure out which node has the character we are looking for
+						//the parsed document is filled with <span> elements for syntax
+						//highlighting
+						var childNodes = codeBlock[0].childNodes;
+						for(var i = 0, length = childNodes.length; i < length; ++i)
+						{
+							var node = childNodes[i];
+							//anything that's not a text node is a span with text inside
+							if(node.nodeType != 3)
+								node = node.childNodes[0];
+							//get the amount of text inside the text node
+							characterCount -= node.length;
+							//if we've run out of our character count, that's the node that we want
+							if(characterCount <= 0)
+							{
+								var scroller = $(".sunlight-code-container");
+								//get the position of the text node relative to the scroller
+								//the text has to be wrapped in a span first, as TextNodes don't
+								//have offsetTop
+								var nodePos = $(node).wrap("<span></span>").parent().offset().top -
+												codeBlock.offset().top;
+								//center the text in the scrolling window
+								scroller.scrollTop(Math.max(nodePos - scroller.height() * 0.5, 0));
+								//remove the text wrapping that we added
+								$(node).unwrap();
+								
+								//put the text caret in the correct location
+								var range = document.createRange(),
+									sel = window.getSelection();
+								range.setStart(node, -characterCount + 1);
+								range.collapse(true);
+								sel.removeAllRanges();
+								sel.addRange(range);
+								break;
+							}
+						}
+					}
+				});
 			});
 	};
 
@@ -577,8 +656,12 @@
 					stackLinkText = stackLinkText.substring(stackLinkText.lastIndexOf("/") + 1);
 				stackLinkText += ":" + stack[i].lineLocation;
 				var line = $("<div class='line'></div>");
+				var stackLink = $("<span class='stackLink'></span>")
+					.text(stackLinkText)
+					.attr("data-file", stack[i].file)
+					.attr("data-location", stack[i].lineLocation);
 				line.text(stack[i].function)
-					.append($("<span class='stackLink'></span>").text(stackLinkText));
+					.append(stackLink);
 				group.append(line);
 			}
 			log.append(group);
