@@ -24,6 +24,12 @@
 		this.name = data.name;
 
 		/**
+		 * The human-readable description
+		 * @property {string} description
+		 */
+		this.description = data.description || null;
+
+		/**
 		 * The list of release module files
 		 * @property {array} main
 		 */

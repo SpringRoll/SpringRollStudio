@@ -1,0 +1,85 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title New Project
+		include partials/libraries
+		include partials/shared
+		link(href='assets/css/new.css', rel='stylesheet')
+		script(src='assets/js/new.js')
+	body
+		#templateModal.modal.fade
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(type='button', data-dismiss='modal')
+							span(aria-hidden='true') ×
+							span.sr-only Close
+						h4.modal-title Manage Templates
+					.modal-body
+						#dropTemplate
+							.instructions.center-vertical
+								span.glyphicon.glyphicon-hand-up
+								|  Drag template here.
+							.folder.center-vertical
+							.error.center-vertical
+						#listTemplates.templates
+							.template
+								span.name Default
+								button.btn.btn-default.disabled.pull-right(disabled='') ×
+		.form-horizontal(role='form')
+			header
+				h1 Create New Project
+			.modal-body.main
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='folder') Template
+					.col-sm-8.col-xs-6
+						select#templates.form-control
+					.col-sm-2.col-xs-2
+						button.btn.btn-default.form-control(data-toggle='modal', data-target='#templateModal')
+							span.glyphicon.glyphicon-cog
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='folder') Folder
+					.col-sm-10.col-xs-8
+						.input-group
+							span.input-group-btn
+								button#folderBrowse.btn.btn-default Browse…
+							input#folder.form-control(type='text', disabled='')
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='name') Display Name
+					.col-sm-10.col-xs-8
+						input#name.form-control(type='text', data-restrict='a-zA-Z0-9 ', placeholder='My Project')
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='className') Class Name
+					.col-sm-10.col-xs-8
+						input#className.form-control(type='text', data-restrict='a-zA-Z0-9_', placeholder='MyProject')
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='namespace') Namespace
+					.col-sm-10.col-xs-8
+						input#namespace.form-control(type='text', data-restrict='a-zA-Z0-9\.', placeholder='company')
+				.form-group
+					label.col-sm-2.col-xs-4.control-label Dimensions
+					.col-sm-5.col-xs-4
+						input#width.form-control(type='text', data-restrict='0-9', placeholder='Width')
+					.col-sm-5.col-xs-4
+						input#height.form-control(type='text', data-restrict='0-9', placeholder='Height')
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='version') Version
+					.col-sm-10.col-xs-8
+						input#version.form-control(type='text', data-restrict='0-9\.', value='0.0.1')
+				.form-group
+					label.col-sm-2.col-xs-4.control-label(for='output') Modules
+					.col-sm-10.col-xs-8
+						#modules
+					script#moduleTemplate(type='text/html').
+						<div class="checkbox">
+						<label>
+						<input type="checkbox" class="module" checked="checked">
+						<span class="name"></span>
+						<span class="id"></span>
+						<span class="description"></span>
+						</label>
+						</div>
+			.modal-footer
+				button#closeButton.btn.btn-default(type='button') Close
+				button#createButton.btn.btn-primary(type='button') Create Project

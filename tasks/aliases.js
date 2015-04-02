@@ -5,6 +5,7 @@ module.exports = function(grunt)
 	grunt.registerTask('app', 'Build the Application', function(platform)
 	{
 		grunt.task.run(
+			'jade:release',
 			'clean:main',
 			'jshint:main',
 			'uglify:app',
@@ -23,6 +24,7 @@ module.exports = function(grunt)
 	grunt.registerTask('app-debug', 'Build the Application in debug mode', function(platform)
 	{
 		grunt.task.run(
+			'jade:debug',
 			'clean:main',
 			'jshint:main',
 			'concat:main',

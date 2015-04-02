@@ -1,0 +1,58 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title Task Runner
+		include partials/libraries
+		link(href='assets/css/tasks.css', rel='stylesheet')
+		script(src='assets/js/tasks.js')
+	body
+		header.fixed
+			h1 Task Runner
+		#tasks
+			#tasks_default.tasks.container-fluid(data-id='default')
+				#task_item_default_default.running.tasks-item.row.JS-Task-Toggle-Info(title='Default task')
+					.tasks-actions.btn-group.pull-right
+						button.btn.btn-default.JS-Task-Run(data-project-id='default', data-task-name='default', title='Run')
+							span.play.glyphicon.glyphicon-play
+							span.stop.glyphicon.glyphicon-stop
+						button.btn.btn-default.JS-Task-Terminal(data-project-id='default', data-task-name='default', title='Terminal')
+							span.glyphicon.glyphicon-align-left
+					.name default
+				pre#console_default_default.JS-Console.console.
+				#task_item_dev_dev.tasks-item.error.row.JS-Task-Toggle-Info(title='Default task')
+					.tasks-actions.btn-group.pull-right
+						button.btn.btn-default.run.JS-Task-Run(data-project-id='dev', data-task-name='dev', title='Run')
+							span.play.glyphicon.glyphicon-play
+							span.stop.glyphicon.glyphicon-stop
+						button.btn.btn-default.terminal.JS-Task-Terminal(data-project-id='dev', data-task-name='dev', title='Terminal')
+							span.glyphicon.glyphicon-align-left
+					.name dev
+				pre#console_dev_dev.JS-Console.console.
+				#task_item_dev_dev.tasks-item.row.JS-Task-Toggle-Info(title='Default task')
+					.tasks-actions.btn-group.pull-right
+						button.btn.btn-default.run.JS-Task-Run(data-project-id='dev', data-task-name='dev', title='Run')
+							span.play.glyphicon.glyphicon-play
+							span.stop.glyphicon.glyphicon-stop
+						button.btn.btn-default.terminal.JS-Task-Terminal(data-project-id='dev', data-task-name='dev', title='Terminal')
+							span.glyphicon.glyphicon-align-left
+					.name dev
+				pre#console_dev_dev.JS-Console.console.
+				#task_item_dev_dev.tasks-item.row.JS-Task-Toggle-Info(title='Default task')
+					.tasks-actions.btn-group.pull-right
+						button.btn.btn-default.run.JS-Task-Run(data-project-id='dev', data-task-name='dev', title='Run')
+							span.play.glyphicon.glyphicon-play
+							span.stop.glyphicon.glyphicon-stop
+						button.btn.btn-default.terminal.JS-Task-Terminal(data-project-id='dev', data-task-name='dev', title='Terminal')
+							span.glyphicon.glyphicon-align-left
+					.name dev
+				pre#console_dev_dev.JS-Console.console.
+				#task_item_dev_dev.tasks-item.row.JS-Task-Toggle-Info(title='Default task')
+					.tasks-actions.btn-group.pull-right
+						button.btn.btn-default.run.JS-Task-Run(data-project-id='dev', data-task-name='dev', title='Run')
+							span.play.glyphicon.glyphicon-play
+							span.stop.glyphicon.glyphicon-stop
+						button.btn.btn-default.terminal.JS-Task-Terminal(data-project-id='dev', data-task-name='dev', title='Terminal')
+							span.glyphicon.glyphicon-align-left
+					.name dev
+				pre#console_dev_dev.JS-Console.console.

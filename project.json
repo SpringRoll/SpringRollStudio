@@ -1,14 +1,14 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
 		"components/node-webkit-app/src/NodeWebkitApp.js",
-		"src/springroll/ModuleButton.js",
-		"src/springroll/SpringRollStudioMenu.js",
-		"src/springroll/SpringRollStudio.js",
-		"src/springroll/SpringRollStudio.less"
+		"src/js/ModuleButton.js",
+		"src/js/SpringRollStudioMenu.js",
+		"src/js/SpringRollStudio.js",
+		"src/less/SpringRollStudio.less"
 	],
 	"libraries": [
 		"components/jquery/dist/jquery.min.js",
@@ -47,47 +47,47 @@
 	"modules": {
 		"shared": [
 			"components/node-webkit-app/src/utils/Browser.js",
-			"src/springroll/Module.js",
-			"src/springroll/Module.less"
+			"src/js/Module.js",
+			"src/less/Module.less"
 		],
 		"captions": [
-			"src/springroll/captions/ui/ContextMenu.js",
-			"src/springroll/captions/formats/*.js",
-			"src/springroll/captions/ui/ProjectModal.js",
-			"src/springroll/captions/ui/Menu.js",
-			"src/springroll/captions/data/Project.js",
-			"src/springroll/captions/ui/List.js",
-			"src/springroll/captions/ui/Controls.js",
-			"src/springroll/captions/ui/Timeline.js",
-			"src/springroll/captions/Captions.js",
-			"src/springroll/captions/Captions.less"
+			"src/js/captions/ui/ContextMenu.js",
+			"src/js/captions/formats/*.js",
+			"src/js/captions/ui/ProjectModal.js",
+			"src/js/captions/ui/Menu.js",
+			"src/js/captions/data/Project.js",
+			"src/js/captions/ui/List.js",
+			"src/js/captions/ui/Controls.js",
+			"src/js/captions/ui/Timeline.js",
+			"src/js/captions/Captions.js",
+			"src/less/captions/Captions.less"
 		],
 		"remote": [
-			"src/springroll/remote/RemoteTrace.js",
-			"src/springroll/remote/RemoteTrace.less"
+			"src/js/remote/RemoteTrace.js",
+			"src/less/remote/RemoteTrace.less"
 		],
 		"tasks": [
-			"src/springroll/tasks/utils/Utils.js",
-			"src/springroll/tasks/utils/Settings.js",
-			"src/springroll/tasks/input/TerminalWindow.js",
-			"src/springroll/tasks/ui/Interface.js",
-			"src/springroll/tasks/input/ProjectManager.js",
-			"src/springroll/tasks/input/TerminalManager.js",
-			"src/springroll/tasks/TaskRunner.js",
-			"src/springroll/tasks/TaskRunner.less"
+			"src/js/tasks/utils/Utils.js",
+			"src/js/tasks/utils/Settings.js",
+			"src/js/tasks/input/TerminalWindow.js",
+			"src/js/tasks/ui/Interface.js",
+			"src/js/tasks/input/ProjectManager.js",
+			"src/js/tasks/input/TerminalManager.js",
+			"src/js/tasks/TaskRunner.js",
+			"src/less/tasks/TaskRunner.less"
 		],
 		"new": [
-			"src/springroll/new/JSONUtils.js",
-			"src/springroll/new/TemplateModule.js",
-			"src/springroll/new/Template.js",
-			"src/springroll/new/TemplateManager.js",
-			"src/springroll/new/Installer.js",
-			"src/springroll/new/NewProject.js",
-			"src/springroll/new/NewProject.less"
+			"src/js/new/JSONUtils.js",
+			"src/js/new/TemplateModule.js",
+			"src/js/new/Template.js",
+			"src/js/new/TemplateManager.js",
+			"src/js/new/Installer.js",
+			"src/js/new/NewProject.js",
+			"src/less/new/NewProject.less"
 		],
 		"preview": [
-			"src/springroll/preview/Preview.js",
-			"src/springroll/preview/Preview.less"
+			"src/js/preview/Preview.js",
+			"src/less/preview/Preview.less"
 		]
 	}
 }

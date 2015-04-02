@@ -1,4 +1,4 @@
-@import '../less/mixins';
+@import '../mixins';
 
 body {
 	overflow: hidden;
@@ -15,6 +15,7 @@ label.disabled {
 }
 
 label {
+	display:block;
 	.on { display:none }
 	.off { display:inline-block }
 	&.active {
@@ -24,20 +25,42 @@ label {
 }
 
 #modules {
-	height:170px;
+	height:220px;
 	border:1px solid #ccc;
 	border-radius:4px;
 	overflow-y: scroll;
 	-webkit-user-select: none;
 	.checkbox {
-		padding: 7px 10px 0;
+		border-bottom: 1px solid #ddd;
+		padding: 5px 10px 5px;
+		position: relative;
+		&:last-child {
+			border: 0;
+		}
 		.name {
 			font-size:85%;
+			font-weight:bold;
 		}
 		.id {
-			font-size:80%;
-			color:#999;
-			padding-left: 5px;
+			font-size: 11px;
+			margin-left: 5px;
+			color: #999;
+			border: 1px solid #ddd;
+			border-top: 0;
+			padding: 2px 8px;
+			border-radius: 4px;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+		.description {
+			display: block;
+			font-size: 85%;
+			color: #666;
+			padding-top: 5px;
 		}
 	}
 }

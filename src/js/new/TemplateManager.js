@@ -157,7 +157,8 @@
 			checkbox,
 			id, 
 			input, 
-			module;
+			module,
+			description;
 	
 		// Loop through all modules
 		for (var i = 0; i < modules.length; i++)
@@ -167,6 +168,11 @@
 			checkbox = $(this._moduleTemplate);
 			checkbox.find('.name').text(module.name);
 			checkbox.find('.id').text(module.id);
+			description = checkbox.find('.description');
+			if (module.description)
+				description.text(module.description);
+			else
+				description.remove();
 			input = checkbox.find('.module')
 				.prop('checked', module.default)
 				.val(id);

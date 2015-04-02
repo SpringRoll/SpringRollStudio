@@ -1,0 +1,99 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title Captions
+		include partials/libraries
+		include partials/shared
+		link(href='assets/css/captions.css', rel='stylesheet')
+		script(src='assets/js/captions.js')
+	body.empty
+		#frame
+			header
+				h1 Captions
+				button#refreshButton.btn.btn-md
+					span.glyphicon.glyphicon-refresh
+			#instructions.row
+				.text
+					span.glyphicon.glyphicon-hand-up
+					| 					Drag project folder here.
+			#list.row
+			#timeline.row
+				a#resizeLeft.btn.btn-sm
+				a#resizeRight.btn.btn-sm
+				button#removeButton.btn.btn-xs.btn-danger
+					span.glyphicon.glyphicon-remove
+				#captions
+				#wave
+			#controls.row
+				.main.col-xs-offset-0.col-xs-10.col-sm-offset-2.col-sm-8.text-center
+					.btn-group
+						button#addButton.btn.btn-lg.btn-primary(type='button')
+							span.glyphicon.glyphicon-plus
+						button#backwardButton.btn.btn-lg.btn-default(type='button')
+							span.glyphicon.glyphicon-step-backward
+						button#playButton.btn.btn-lg.btn-default.toggle(type='button')
+							span.glyphicon.glyphicon-play.off
+							span.glyphicon.glyphicon-pause.on
+						button#stopButton.btn.btn-lg.btn-default(type='button')
+							span.glyphicon.glyphicon-stop
+						button#forwardButton.btn.btn-lg.btn-default(type='button')
+							span.glyphicon.glyphicon-step-forward
+						button#volumeButton.btn.btn-lg.btn-default.toggle(type='button')
+							span.glyphicon.glyphicon-volume-down.on
+							span.glyphicon.glyphicon-volume-up.off
+						button#saveButton.btn.btn-lg.btn-success(type='button')
+							span.glyphicon.glyphicon-ok
+				.sub.col-xs-2.text-right
+					button#deleteButton.btn.btn-lg.btn-danger(type='button', data-toggle='confirmation', data-placement='left', data-popout='true', data-singleton='true', data-title='Remove this caption?', data-container='body')
+						span.glyphicon.glyphicon-trash
+		ul#aliasMenu.dropdown-menu(role='menu')
+			li(role='presentation')
+				a(role='menuitem', tabindex='-1') Rename
+			li(role='presentation')
+				a(role='menuitem', tabindex='-1') Delete
+			li.divider(role='presentation')
+			li#filename.dropdown-header(role='presentation')
+			li(role='presentation')
+				a(role='menuitem', tabindex='-1') Choose Audio...
+		#saveDialog.modal.fade(tabindex='-1', role='dialog')
+			.modal-dialog.modal-sm
+				.modal-content
+					.modal-header
+						button.close(type='button', data-dismiss='modal')
+							span(aria-hidden='true') ×
+							span.sr-only Close
+						h4.modal-title Save Changes
+					.modal-body.text-center
+						p#dialogMessage You have unsaved changes. Would you like to save?
+					.modal-footer
+						button#save.btn.btn-primary(data-action='save') Save
+						button#doNotSave.btn.btn-default(data-action='doNotSave') Don't Save
+						button#cancel.btn.btn-default(data-dismiss='modal') Cancel
+		#newProject.modal.fade(tabindex='-1', role='dialog')
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(type='button', data-dismiss='modal')
+							span(aria-hidden='true') ×
+							span.sr-only Close
+						h4.modal-title New Caption Project
+					.modal-body
+						.row
+							.col-lg-12
+								#projectPath.form-row ...
+								.form-row
+									.input-group
+										span.input-group-addon Audio Files
+										input#audioPath.form-control(type='text')
+										span.input-group-btn
+											button#audioPathBrowse.btn.btn-default(type='button') Browse...
+								.form-row
+									.input-group
+										span.input-group-addon Export File
+										input#exportPath.form-control(type='text')
+										span.input-group-btn
+											button#exportPathBrowse.btn.btn-default(type='button') Browse...
+					.modal-footer
+						button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+						button#createButton.btn.btn-primary(type='button') Create

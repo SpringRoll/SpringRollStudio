@@ -1,0 +1,81 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title Remote Trace
+		include partials/libraries
+		include partials/shared
+		link(href='assets/css/remote.css', rel='stylesheet')
+		script(src='assets/js/remote.js')
+	body
+		#frame
+			header
+				h1 Remote Trace
+			.controls
+				.btn-group.buttons
+					button#wrapButton.btn.btn-default.btn-md(data-toggle='tooltip', data-placement='top', title='Wrap Text')
+						span.glyphicon.glyphicon-align-left
+					button#timestampButton.btn.btn-default.btn-md(data-toggle='tooltip', data-placement='top', title='Show Timestamps')
+						span.glyphicon.glyphicon-time
+					button#clearButton.btn.btn-default.btn-md(data-toggle='tooltip', data-placement='top', title='Clear')
+						span.glyphicon.glyphicon-trash
+					button#saveButton.btn.btn-default.btn-md(data-toggle='tooltip', data-placement='top', title='Save Logs')
+						span.glyphicon.glyphicon-floppy-disk
+					.btn-group.dropdown
+						button#filterButton.btn.btn-default.btn-md.dropdown-toggle(data-toggle='dropdown', data-placement='top', title='Filter Logs')
+							span.glyphicon.glyphicon-filter
+							span.caret
+						ul.dropdown-menu.filters
+							li(role='presentation')
+								a(role='menuitem', data-filter='general', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  General
+							li(role='presentation')
+								a(role='menuitem', data-filter='debug', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Debug
+							li(role='presentation')
+								a(role='menuitem', data-filter='info', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Info
+							li(role='presentation')
+								a(role='menuitem', data-filter='warning', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Warning
+							li(role='presentation')
+								a(role='menuitem', data-filter='error', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Error
+							li.divider(role='presentation')
+							li(role='presentation')
+								a(role='menuitem', tabindex='-1', data-toggle-all='true', href='#') All
+					.btn-group.dropdown.themes
+						button#themeButton.btn.btn-default.btn-md.dropdown-toggle(data-toggle='dropdown', data-placement='top', title='Choose Theme')
+							span.glyphicon.glyphicon-cog
+							span.caret
+						ul.dropdown-menu
+							li(role='presentation')
+								a(role='menuitem', data-theme='default', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Default
+							li(role='presentation')
+								a(role='menuitem', data-theme='solarizedLight', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Solarized Light
+							li(role='presentation')
+								a(role='menuitem', data-theme='solarizedDark', tabindex='-1', href='#')
+									span.glyphicon.glyphicon-check.on
+									span.glyphicon.glyphicon-unchecked.off
+									|  Solarized Dark
+				.maxLogs
+					.input-group
+						span.unselectable.input-group-addon Max logs
+						input#maxLogs.form-control(type='text', value='500')
+			#trace

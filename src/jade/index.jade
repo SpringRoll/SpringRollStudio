@@ -1,0 +1,42 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title=name
+		include partials/libraries
+		link(href='assets/css/main.css', rel='stylesheet')
+		script(src='assets/js/main.js')
+	body
+		header
+			img.logo(src='assets/images/icon.png')
+		nav.modules.btn-group
+			a#new.btn.btn-sm.btn-primary(href='new.html', target='_blank', title='New Project', data-width='550', data-height='720', data-resizable='false')
+				span.icon.glyphicon.glyphicon-file
+				|  New
+			button#openButton.btn.btn-sm.btn-primary(title='Open Project')
+				span.icon.glyphicon.glyphicon-folder-open
+				|  Open
+			button#closeButton.btn.btn-sm.btn-primary(title='Close Project')
+				span.icon.glyphicon.glyphicon-remove
+				|  Close
+		#project.project.empty
+			#projectName.name
+			.empty No project opened
+		.modules.btn-group-vertical
+			a#captions.btn.btn-primary.btn-lg.requires-project(href='captions.html', target='_blank', title='Caption Creator', data-width='640', data-height='480', data-min-width='510', data-min-height='400')
+				span.icon.glyphicon.glyphicon-subtitles
+				|  Captions
+			a#tasks.btn.btn-primary.btn-lg.requires-project(href='tasks.html', target='_blank', title='Task Runner', data-width='480', data-height='400', data-min-height='275', data-min-width='280')
+				span.icon.glyphicon.glyphicon-fire
+				|  Tasks
+			a#preview.btn.btn-primary.btn-lg.requires-project(href='preview.html', target='_blank', title='Preview', data-width='800', data-height='550', data-min-height='200', data-min-width='400')
+				span.icon.glyphicon.glyphicon-search
+				|  Preview
+		.modules.hidden
+			a#remote.btn.btn-primary.btn-lg.hidden(href='remote.html', target='_blank', title='Remote Trace', data-width='480', data-height='400', data-min-height='275', data-min-width='400')
+				span.icon.glyphicon.glyphicon-send
+				|  Remote Trace
+		footer.version
+			| Version 
+			span#version=version
+		

@@ -1,7 +1,7 @@
 {
 	"name" : "Default",
 	"id" : "io.springroll.default",
-	"version" : "1.2.0",
+	"version" : "1.3.0",
 	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
@@ -9,10 +9,10 @@
 		"project.md": "README.md",
 		"bower": "bower.json"
 	},
-	"required": ["springroll.Core"],
+	"required": ["core"],
 	"modules": [
 		{
-			"id": "springroll.Core",
+			"id": "core",
 			"name": "SpringRoll Core",
 			"main": "components/springroll/dist/core.min.js",
 			"mainDebug": "components/springroll/dist/core.js",
@@ -23,60 +23,133 @@
 			"librariesDebug": "components/preloadjs/lib/preloadjs.combined.js"
 		},
 		{
-			"id": "springroll.CreateJSDisplay",
-			"name": "CreateJS Display",
-			"main": "components/springroll/dist/modules/display-createjs.min.js",
-			"mainDebug": "components/springroll/dist/modules/display-createjs.js",
+			"id": "easeljs-display",
+			"name": "EaselJS Display",
+			"description": "Display plugin which uses EaselJS to render the canvas",
+			"main": "components/springroll/dist/modules/easeljs-display.min.js",
+			"mainDebug": "components/springroll/dist/modules/easeljs-display.js",
 			"bower": {
-				"easeljs": "https://github.com/SpringRoll/EaselJS.git",
+				"easeljs": "https://github.com/SpringRoll/EaselJS.git"
+			},
+			"libraries": [
+				"components/easeljs/lib/easeljs.min.js"
+			],
+			"librariesDebug": [
+				"components/easeljs/lib/easeljs.combined.js"
+			],
+			"depends": ["core"],
+			"display": "springroll.easeljs.EaselJSDisplay"
+		},
+		{
+			"id": "easeljs-animation",
+			"name": "EaselJS Animation",
+			"description": "Special animation tools for streaming audio and playing Bitmap MovieClips",
+			"main": "components/springroll/dist/modules/easeljs-animation.min.js",
+			"mainDebug": "components/springroll/dist/modules/easeljs-animation.js",
+			"bower": {
 				"tweenjs": "https://github.com/SpringRoll/TweenJS.git"
 			},
 			"libraries": [
 				"components/tweenjs/lib/tweenjs.min.js",
-				"components/easeljs/lib/easeljs.min.js",
 				"components/easeljs/lib/movieclip.min.js"
 			],
 			"librariesDebug": [
 				"components/tweenjs/lib/tweenjs.combined.js",
-				"components/easeljs/lib/easeljs.combined.js",
 				"components/easeljs/lib/movieclip.combined.js"
 			],
-			"depends": ["springroll.Core"],
-			"display": "springroll.createjs.CreateJSDisplay"
+			"depends": ["easeljs-display"]
 		},
 		{
-			"id": "springroll.PixiDisplay",
+			"id": "easeljs-interface",
+			"name": "EaselJS Animation",
+			"description": "Drag management and basic buttons for EaselJS",
+			"main": "components/springroll/dist/modules/easeljs-interface.min.js",
+			"mainDebug": "components/springroll/dist/modules/easeljs-interface.js",
+			"depends": ["easeljs-display"]
+		},
+		{
+			"id": "easeljs-utils",
+			"name": "EaselJS Utilities",
+			"description": "Contains bitmap utilities for managing, loading and formatting bitmaps",
+			"main": "components/springroll/dist/modules/easeljs-utils.min.js",
+			"mainDebug": "components/springroll/dist/modules/easeljs-utils.js",
+			"depends": ["easeljs-display"]
+		},
+		{
+			"id": "easeljs-cutscene",
+			"name": "EaselJS Cutscene",
+			"description": "Module for playing a cinematic scene (audio and timeline) with EaselJS",
+			"main": "components/springroll/dist/modules/easeljs-cutscene.min.js",
+			"mainDebug": "components/springroll/dist/modules/easeljs-cutscene.js",
+			"depends": [
+				"easeljs-display",
+				"easeljs-animation",
+				"easeljs-utils",
+				"tasks"
+			]
+		},
+		{
+			"id": "pixi-display",
 			"name": "Pixi.js Display",
-			"main": "components/springroll/dist/modules/display-pixi.min.js",
-			"mainDebug": "components/springroll/dist/modules/display-pixi.js",
+			"description": "Display plugin which uses Pixi.js to render the canvas",
+			"main": "components/springroll/dist/modules/pixi-display.min.js",
+			"mainDebug": "components/springroll/dist/modules/pixi-display.js",
 			"bower": {
 				"pixi.js":"https://github.com/SpringRoll/pixi.js.git"
 			},
 			"libraries": "components/pixi.js/bin/pixi.js",
 			"librariesDebug": "components/pixi.js/bin/pixi.dev.js",
-			"depends": ["springroll.Core"],
+			"depends": ["core"],
 			"display": "springroll.pixi.PixiDisplay",
 			"default": false
 		},
 		{
-			"id": "springroll.NativeDisplay",
+			"id": "pixi-animation",
+			"name": "Pixi.js Animation",
+			"description": "Manage animation playback with sprites or Spine animations",
+			"main": "components/springroll/dist/modules/pixi-animation.min.js",
+			"mainDebug": "components/springroll/dist/modules/pixi-animation.js",
+			"depends": ["pixi-display"],
+			"default": false
+		},
+		{
+			"id": "pixi-interface",
+			"name": "Pixi.js Interface",
+			"description": "Drag management and basic buttons for Pixi.js",
+			"main": "components/springroll/dist/modules/pixi-interface.min.js",
+			"mainDebug": "components/springroll/dist/modules/pixi-interface.js",
+			"depends": ["pixi-display"],
+			"default": false
+		},
+		{
+			"id": "native-display",
 			"name": "Native Display",
-			"main": "components/springroll/dist/modules/display-native.min.js",
-			"mainDebug": "components/springroll/dist/modules/display-native.js",
-			"depends": ["springroll.Core"],
+			"description": "Display plugin which uses Context2d to render the canvas",
+			"main": "components/springroll/dist/modules/native-display.min.js",
+			"mainDebug": "components/springroll/dist/modules/native-display.js",
+			"depends": ["core"],
 			"display": "springroll.native.NativeDisplay",
 			"default": false
 		},
 		{
-			"id": "springroll.Tasks",
-			"name": "Tasks",
-			"main": "components/springroll/dist/modules/tasks.min.js",
-			"mainDebug": "components/springroll/dist/modules/tasks.js",
-			"depends": ["springroll.Core"]
+			"id": "debug",
+			"name": "Debug",
+			"description": "Feature parity with window.console but with support remote debugging and colored logs",
+			"mainDebug": "components/springroll/dist/modules/debug.js",
+			"depends": ["core"]
 		},
 		{
-			"id": "springroll.Sound",
+			"id": "tasks",
+			"name": "Tasks",
+			"description": "Manager for asynchronous tasks, like loading multiple assets",
+			"main": "components/springroll/dist/modules/tasks.min.js",
+			"mainDebug": "components/springroll/dist/modules/tasks.js",
+			"depends": ["core"]
+		},
+		{
+			"id": "sound",
 			"name": "Sound",
+			"description": "Middleware for SoundJS which support a simplified API and VOPlayer",
 			"bower": {
 				"soundjs": "https://github.com/SpringRoll/SoundJS.git"
 			},
@@ -93,48 +166,120 @@
 			"librariesCopy": {
 				"components/soundjs/lib/FlashAudioPlugin.swf": "deploy/assets/swfs/"
 			},
-			"depends": ["springroll.Core"]
+			"depends": ["core"]
 		},
 		{
-			"id": "springroll.Interface",
+			"id": "interface",
 			"name": "Interface",
+			"description": "Rendering of responive interfaces with UIScaler",
 			"main": "components/springroll/dist/modules/interface.min.js",
 			"mainDebug": "components/springroll/dist/modules/interface.js",
 			"depends": [
-				"springroll.Core",
-				["springroll.CreateJSDisplay", "springroll.PixiDisplay"]
+				"core",
+				["easeljs-display", "pixi-display"]
 			]
 		},
 		{
-			"id": "springroll.Captions",
+			"id": "captions",
 			"name": "Captions",
+			"description": "Playback of closed-captioning",
 			"main": "components/springroll/dist/modules/captions.min.js",
 			"mainDebug": "components/springroll/dist/modules/captions.js",
-			"depends": ["springroll.Core"]
+			"depends": ["core"]
 		},
 		{
-			"id": "springroll.Game",
+			"id": "game",
 			"name": "Game",
+			"description": "Special Application that supports automatic sound and captions integration",
 			"main": "components/springroll/dist/modules/game.min.js",
 			"mainDebug": "components/springroll/dist/modules/game.js",
 			"depends": [
-				"springroll.Sound", 
-				"springroll.Core",
-				["springroll.CreateJSDisplay","springroll.PixiDisplay"]
+				"sound", 
+				"core",
+				["easeljs-display","pixi-display"]
 			]
 		},
 		{
-			"id": "springroll.Translate",
+			"id": "translate",
 			"name": "Translate",
+			"description": "Simple language translation for dynamic asset loading based on locale",
 			"main": "components/springroll/dist/modules/translate.min.js",
 			"mainDebug": "components/springroll/dist/modules/translate.js",
-			"depends": ["springroll.Core"]
+			"depends": ["core"]
 		},
 		{
-			"id": "springroll.Worker",
-			"name": "Worker",
-			"main": "components/springroll/dist/modules/worker.min.js",
-			"mainDebug": "components/springroll/dist/modules/worker.js",
+			"id": "progress-tracker",
+			"name": "Progress Tracker",
+			"description": "Integration for sending events with the Progress Tracker",
+			"main": "components/springroll/dist/modules/progress-tracker.min.js",
+			"mainDebug": [
+				"components/springroll/dist/modules/progress-tracker.js",
+				"components/springroll/dist/modules/progress-tracker.css"
+			],
+			"depends": ["core"]
+		},
+		{
+			"id": "tracking-game",
+			"name": "Tracking Game",
+			"description": "Special game application which can use hinting or progress-tracker",
+			"main": "components/springroll/dist/modules/tracking-game.min.js",
+			"mainDebug": "components/springroll/dist/modules/tracking-game.js",
+			"bower": {
+				"bellhop": "*"
+			},
+			"libraries":[ 
+				"components/bellhop/dist/bellhop.min.js"
+			],
+			"librariesDebug": [
+				"components/bellhop/dist/bellhop.js"
+			],
+			"depends": [
+				"game",
+				"tasks",
+				"interface"
+			]
+		},
+		{
+			"id": "easeljs-tracking-game",
+			"name": "EaselJS Tracking Game",
+			"description": "Special EaselJS flavor of the tracking game module",
+			"main": "components/springroll/dist/modules/easeljs-tracking-game.min.js",
+			"mainDebug": "components/springroll/dist/modules/easeljs-tracking-game.js",
+			"depends": [
+				"tracking-game",
+				"easeljs-display"
+			]
+		},
+		{
+			"id": "hinting",
+			"name": "Hinting",
+			"description": "Management of hinting using either animation or VO playback",
+			"main": "components/springroll/dist/modules/hinting.min.js",
+			"mainDebug": "components/springroll/dist/modules/hinting.js",
+			"depends": [
+				"sound",
+				["pixi-animation", "easeljs-animation"]
+			]
+		},
+		{
+			"id": "container",
+			"name": "Tracking Game Container",
+			"description": "The container for interacting with Tracking Games that are iframed",
+			"main": "components/springroll/dist/modules/container.min.js",
+			"mainDebug": "components/springroll/dist/modules/container.js",
+			"bower": {
+				"bellhop": "*",
+				"jquery": "*"
+			},
+			"libraries":[ 
+				"components/bellhop/dist/bellhop.min.js",
+				"components/jquery/dist/jquery.min.js"
+			],
+			"librariesDebug": [
+				"components/bellhop/dist/bellhop.js",
+				"components/jquery/dist/jquery.js"
+			],
+			"depends": ["core"],
 			"default": false
 		}
 	]
