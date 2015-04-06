@@ -23,10 +23,12 @@ html
 								|  Drag template here.
 							.folder.center-vertical
 							.error.center-vertical
+						script#templateTemplate(type='text/html')
+							<div class="template">
+							<span class="name"></span>
+							<button class="btn btn-danger pull-right">&times;</button>
+							</div>
 						#listTemplates.templates
-							.template
-								span.name Default
-								button.btn.btn-default.disabled.pull-right(disabled='') ×
 		.form-horizontal(role='form')
 			header
 				h1 Create New Project

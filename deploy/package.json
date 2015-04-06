@@ -1,7 +1,7 @@
 {
 	"name": "SpringRollStudio",
 	"description": "Application for SpringRoll projects",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SpringRoll/SpringRollStudio"
@@ -23,7 +23,6 @@
 	},
 	"dependencies": {
 		"MD5": "~1.2.0",
-		"adm-zip": "~0.4.4",
 		"ansi2html": "~0.0.1",
 		"connect": "^3.3.4",
 		"fs-extra": "~0.12.0",
@@ -35,6 +34,7 @@
 		"request": "^2.48.0",
 		"semver": "~4.0.3",
 		"serve-static": "^1.8.1",
+		"unzip": "^0.1.11",
 		"ws": "~0.4.32"
 	}
 }

@@ -8,11 +8,11 @@
 		var semver = require('semver');
 		var http = require('http');
 		var request = require('request');
-		var AdmZip = require('adm-zip');
 	}
 
 	var Template = include('springroll.new.Template'),
 		JSONUtils = include('springroll.new.JSONUtils'),
+		Extract = include('springroll.new.Extract'),
 		Browser = include('cloudkid.Browser');
 
 	/**
@@ -42,7 +42,7 @@
 		*  @property {string} _listTemp
 		*  @private
 		*/
-		this._listTemp = this._list.html().trim();
+		this._listTemp = $("#templateTemplate").html().trim();
 
 		/**
 		*  The module checkbox markup
@@ -60,6 +60,12 @@
 
 		// Empty the list
 		this._list.empty();
+
+		/**
+		 * The collection of templates
+		 * @property {Object} templates
+		 */
+		this.templates = {};
 
 		/**
 		*  The modal element
@@ -151,8 +157,12 @@
 		this._modules.empty();
 
 		// The currently selected templates
-		var template = this.val(),
-			modules = template.modules,
+		var template = this.val();
+
+		// Make sure we have a valid template
+		if (!template) return;
+
+		var modules = template.modules,
 			required = template.required,
 			checkbox,
 			id, 
@@ -317,17 +327,14 @@
 		var html = $(this._listTemp);
 
 		// Make some changes
-		if (template.name !== "Default")
-		{
-			html.find('button')
-				.removeClass('disabled btn-default')
-				.addClass('btn-danger')
-				.prop('disabled', false)
-				.click(this.removeTemplate.bind(this, template));
+		html.find('button').click(this.removeTemplate.bind(this, template));
 
-			html.find('.name').text(template.name);
-		}
+		// Add the name of the template
+		html.find('.name').text(template.name + " (v" + template.version + ")");
 		
+		// Give the template an id
+		html.prop('id', template.id.replace(/\./g, '-'));
+
 		// Add to the list of existing templates
 		this._list.append(html);
 
@@ -363,17 +370,28 @@
 		// Delete from the saved temlates
 		delete this.templates[template.id];
 
-		// Remove the select option
-		this._select.find("option[value='" + template.id + "']").remove();
-
-		// Remove the template from list
-		$(e.currentTarget).closest(".template").remove();
+		// Remove the id
+		this.removeTemplateUI(template.id);
 
 		// Remove the template
 		fs.removeSync(template.path);
 
 		// Save the saved templates
 		this.save();
+	};
+
+	/**
+	 * Remove the select list and template in modal
+	 * @method  removeTemplateUI
+	 * @param  {String} templateId The template id
+	 */
+	p.removeTemplateUI = function(templateId)
+	{
+		// Remove the select option
+		this._select.find("option[value='" + templateId + "']").remove();
+
+		// Remove the template from list
+		$("#" + templateId.replace(/\./g, '-')).remove();
 	};
 
 	/**
@@ -399,16 +417,13 @@
 	*/
 	p.load = function()
 	{
-		var id; 
+		var id, templates, template;
+
 		try
 		{
-			this.templates = JSON.parse(
+			templates = JSON.parse(
 				localStorage.getItem('installedTemplates')
 			);
-			for (id in this.templates)
-			{
-				this.templates[id] = new Template(this.templates[id]);
-			}
 		}
 		catch(e)
 		{
@@ -416,36 +431,59 @@
 			{
 				console.error(e.stack);
 			}
-		}
-
-		// First-Time run, copy the default template
-		// to the setting folder
-		if (!this.templates)
-		{
-			this.templates = {};
-			this.addTemplate(path.join('assets','templates','default'));
+			else
+			{
+				alert('Unable to read saved templates');
+			}
 			return;
 		}
 
-		// Load the existing templates
-		for(id in this.templates)
+		for (id in templates)
 		{
 			try
 			{
-				// Add the parent template
-				this.addParent(this.templates[id]);
+				template = new Template(templates[id]);
 			}
 			catch(e)
 			{
 				alert(e);
-			}		
-
-			// Add to the select list
-			this.append(this.templates[id]);		
+				if (DEBUG) console.error(e);
+				continue;
+			}
+			this.templates[id] = template;
 		}
 
-		// Populate with modules
-		this.updateModules();
+		// First-Time run, copy the default template
+		// to the setting folder
+		if (!_.keys(this.templates).length)
+		{
+			// Install the default template
+			console.log("Install the default template : assets/templates/default");
+			this.addTemplate(path.join('assets','templates','default'));
+			return;
+		}
+		else
+		{
+			// Loop throught the existing templates
+			for (id in this.templates)
+			{
+				try
+				{
+					// Add the parent template
+					this.addParent(this.templates[id]);
+				}
+				catch(e)
+				{
+					alert(e);
+				}		
+
+				// Add to the select list
+				this.append(this.templates[id]);
+			}
+
+			// Populate with modules
+			this.updateModules();
+		}
 	};
 
 	/**
@@ -486,7 +524,7 @@
 				{
 					console.info("Download ZIP : " + tags[i].zipball_url);
 				}
-				downloadZip(
+				this.downloadZip(
 					template,
 					tags[i].zipball_url, 
 					tags[i].commit.sha.substr(0,7)
@@ -504,18 +542,20 @@
 	*  @param  {string} zipUrl The path to the zip to unpack
 	*  @param {string} sha The hash to get the folder
 	*/
-	var downloadZip = function(template, zipUrl, sha)
+	p.downloadZip = function(template, zipUrl, sha)
 	{
 		var zipFile = path.join(
 			gui.App.dataPath, 
 			'Templates', 
 			template.id + '.zip'
-		);		
+		);
 
 		if (DEBUG)
 		{
 			console.log("Downloaded zip for " + template.name + " to " + zipFile);
 		}
+		
+		var self = this;
 		var out = fs.createWriteStream(zipFile);
 		var apiRequest = request({
 			method: 'GET',
@@ -529,32 +569,25 @@
 		apiRequest.pipe(out);
 		apiRequest.on('end', function(){
 			
-			// Create a new zip file and get entries
-			var zip = new AdmZip(zipFile);
-		
+			console.log("Finished downloading zip, now extracting...");
+			
 			// Remove the existing project
 			fs.removeSync(template.path);
 
-			// Extra the folder to the directory
-			zip.extractAllTo(path.dirname(template.path), true);
+			// Extract the file to directory
+			Extract.run(zipFile, template.path, function()
+			{
+				// Remove the ZIP file downloaded
+				fs.removeSync(zipFile);
 
-			// Get the extraction path
-			var extractPath = path.join(
-				path.dirname(template.path), 
-				// The zip contains a folder with the name of the repo
-				// and then the shortened name of the sha hash
-				template.github.replace("/", "-") + "-" + sha
-			);
-			fs.copySync(extractPath, template.path);
+				// Remove the UI
+				self.removeTemplateUI(template.id);
 
-			// Clean up extraction path
-			fs.removeSync(extractPath);
+				// Add the updated template
+				self.append(new Template(template.path));
 
-			// Remove the zip file
-			fs.unlinkSync(zipFile);
-
-			// Let the user know we're done
-			alert("Updated " + template.name + " template");
+				alert("Updated " + template.name + " template.");
+			});
 		});
 	};
 

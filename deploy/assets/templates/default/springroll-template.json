@@ -1,7 +1,7 @@
 {
 	"name" : "Default",
 	"id" : "io.springroll.default",
-	"version" : "1.3.0",
+	"version" : "1.3.1",
 	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
@@ -61,7 +61,7 @@
 		},
 		{
 			"id": "easeljs-interface",
-			"name": "EaselJS Animation",
+			"name": "EaselJS Interface",
 			"description": "Drag management and basic buttons for EaselJS",
 			"main": "components/springroll/dist/modules/easeljs-interface.min.js",
 			"mainDebug": "components/springroll/dist/modules/easeljs-interface.js",

@@ -1,6 +1,6 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
@@ -77,6 +77,7 @@
 			"src/less/tasks/TaskRunner.less"
 		],
 		"new": [
+			"src/js/new/Extract.js",
 			"src/js/new/JSONUtils.js",
 			"src/js/new/TemplateModule.js",
 			"src/js/new/Template.js",
