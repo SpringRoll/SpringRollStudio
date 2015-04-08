@@ -7,6 +7,7 @@
 		var path = require('path');
 		var replace = require("replace");
 		var glob = require("glob");
+		var _ = require('lodash');
 	}
 
 	// Import classes
@@ -105,6 +106,15 @@
 			build.librariesDebug, 
 			options.librariesDebug
 		);
+
+		// Either the build has librariesCopy or the options have some libraries copy
+		if (!_.isEmpty(build.librariesCopy) || !_.isEmpty(options.librariesCopy))
+		{
+			build.librariesCopy = _.extend({}, 
+				options.librariesCopy, 
+				build.librariesCopy
+			);
+		}
 
 		this.writeJSON(Installer.FILE, build);
 		
