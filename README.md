@@ -1,4 +1,4 @@
-SpringRollStudio
+SpringRollStudio [![Dependency Status](https://david-dm.org/SpringRoll/SpringRollStudio.svg)](https://david-dm.org/SpringRoll/SpringRollStudio)
 ============
 
 SpringRollStudio is an native application (build with [nw-init](https://github.com/CloudKidStudio/nw-init) and designed to provide graphic user interfaces for building and managing [SpringRoll](https://github.com/SpringRoll/SpringRoll) projects.

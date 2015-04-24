@@ -1,7 +1,7 @@
 {
 	"name" : "Default",
 	"id" : "io.springroll.default",
-	"version" : "1.3.1",
+	"version" : "1.3.4",
 	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
@@ -17,10 +17,17 @@
 			"main": "components/springroll/dist/core.min.js",
 			"mainDebug": "components/springroll/dist/core.js",
 			"bower": {
-				"springroll": "*"
+				"springroll": "master"
 			},
 			"libraries": "components/preloadjs/lib/preloadjs.min.js",
 			"librariesDebug": "components/preloadjs/lib/preloadjs.combined.js"
+		},
+		{
+			"id": "debug",
+			"name": "Debug",
+			"description": "Feature parity with window.console but with support remote debugging and colored logs",
+			"mainDebug": "components/springroll/dist/modules/debug.js",
+			"depends": ["core"]
 		},
 		{
 			"id": "easeljs-display",
@@ -132,13 +139,6 @@
 			"default": false
 		},
 		{
-			"id": "debug",
-			"name": "Debug",
-			"description": "Feature parity with window.console but with support remote debugging and colored logs",
-			"mainDebug": "components/springroll/dist/modules/debug.js",
-			"depends": ["core"]
-		},
-		{
 			"id": "tasks",
 			"name": "Tasks",
 			"description": "Manager for asynchronous tasks, like loading multiple assets",
@@ -194,7 +194,7 @@
 			"main": "components/springroll/dist/modules/game.min.js",
 			"mainDebug": "components/springroll/dist/modules/game.js",
 			"depends": [
-				"sound", 
+				"sound",
 				"core",
 				["easeljs-display","pixi-display"]
 			]
@@ -213,6 +213,7 @@
 			"description": "Integration for sending events with the Progress Tracker",
 			"main": "components/springroll/dist/modules/progress-tracker.min.js",
 			"mainDebug": [
+				"components/jquery/dist/jquery.min.js",
 				"components/springroll/dist/modules/progress-tracker.js",
 				"components/springroll/dist/modules/progress-tracker.css"
 			],
@@ -222,16 +223,24 @@
 			"id": "tracking-game",
 			"name": "Tracking Game",
 			"description": "Special game application which can use hinting or progress-tracker",
-			"main": "components/springroll/dist/modules/tracking-game.min.js",
-			"mainDebug": "components/springroll/dist/modules/tracking-game.js",
+			"main": [
+				"components/springroll/dist/modules/tracking-game.min.js",
+				"components/springroll/dist/modules/tracking-game.min.css"
+			],
+			"mainDebug": [
+				"components/springroll/dist/modules/tracking-game.js",
+				"components/springroll/dist/modules/tracking-game.css"
+			],
 			"bower": {
 				"bellhop": "*"
 			},
-			"libraries":[ 
-				"components/bellhop/dist/bellhop.min.js"
+			"libraries":[
+				"components/bellhop/dist/bellhop.min.js",
+				"components/normalize-less/normalize.less"
 			],
 			"librariesDebug": [
-				"components/bellhop/dist/bellhop.js"
+				"components/bellhop/dist/bellhop.js",
+				"components/normalize-less/normalize.less"
 			],
 			"depends": [
 				"game",
@@ -271,7 +280,7 @@
 				"bellhop": "*",
 				"jquery": "*"
 			},
-			"libraries":[ 
+			"libraries":[
 				"components/bellhop/dist/bellhop.min.js",
 				"components/jquery/dist/jquery.min.js"
 			],

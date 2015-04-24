@@ -22,7 +22,7 @@
 		"components/bootstrap/less/bootstrap.less",
 		"components/bootstrap-confirmation/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
-		"components/wavesurfer.js/build/wavesurfer.min.js",
+		"components/wavesurfer.js/dist/wavesurfer.min.js",
 		"components/sunlight/build/dist/sunlight-min.js",
 		"components/sunlight/build/dist/lang/sunlight.javascript-min.js",
 		"components/sunlight/build/dist/themes/sunlight.default.css"
@@ -39,7 +39,7 @@
 		"components/bootstrap/less/bootstrap.less",
 		"components/bootstrap-confirmation/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
-		"components/wavesurfer.js/build/wavesurfer.min.js",
+		"components/wavesurfer.js/dist/wavesurfer.min.js",
 		"components/sunlight/build/dist/sunlight-min.js",
 		"components/sunlight/build/dist/lang/sunlight.javascript-min.js",
 		"components/sunlight/build/dist/themes/sunlight.default.css"

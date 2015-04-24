@@ -131,16 +131,18 @@
 		
 		var self = this;
 		var project = this.project;
+		var gruntPath = path.join(project.path, 'node_modules', 'grunt');
+		var gruntFile = path.join(project.path, 'Gruntfile.js');
 
 		// Check for grunt within project
-		if (!fs.existsSync(path.join(project.path, 'node_modules', 'grunt')))
+		if (!fs.existsSync(gruntPath))
 		{
 			this.failed('Unable to find local grunt.');
 			return;
 		}
 
 		// Check for grunt file
-		if (!fs.existsSync(path.join(project.path, 'Gruntfile.js')))
+		if (!fs.existsSync(gruntFile))
 		{
 			this.failed('Unable to find Gruntfile.js.');
 			return;
@@ -154,7 +156,8 @@
 				{
 					if (error)
 					{
-						self.failed('Exec error: ' + error);
+						console.error(error.toString());
+						self.failed(error.toString());
 						return;
 					}
 
@@ -232,6 +235,8 @@
 			{
 				if (error)
 				{
+					console.error(error.toString());
+
 					// Try to get tasks from the help
 					tasksFromHelp();
 					return;
