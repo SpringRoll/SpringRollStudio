@@ -639,7 +639,7 @@
 				$("<span class='timestamp'></span>").text(now)
 			);
 		messageDom = $("<span class='message'></span>").html(message);
-		if(stack)
+		if(stack && stack.length)
 		{
 			var stackLinkText = stack[0].file;
 			if(stackLinkText.indexOf("/") >= 0)
