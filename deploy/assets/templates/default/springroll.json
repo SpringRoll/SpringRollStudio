@@ -2,10 +2,9 @@
 	"name": "_className_",
 	"displayName": "_name_",
 	"version": "_version_",
-	"config": "src/_namespace_/config",
+	"config": "src/config",
 	"main": [
-		"src/_namespace_/_className_.js",
-		"src/_namespace_/_className_.less"
+		"src/main.js"
 	],
 	"libraries": [
 		"components/normalize-less/normalize.less",
