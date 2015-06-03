@@ -81,9 +81,9 @@
 		/**
 		 * If the module is selected by default
 		 * @property {boolean} default
-		 * @default true
+		 * @default false
 		 */
-		this.default = _.isUndefined(data.default) ? true : !!data.default;
+		this.default = _.isUndefined(data.default) ? false : !!data.default;
 	};
 
 	/**

@@ -80,31 +80,6 @@
 				event.preventDefault();
 			}
 		);
-		/*.on(
-			'drop',
-			function handleDrop(event)
-			{
-				event.stopPropagation();
-				event.preventDefault();
-
-				var files = event.originalEvent.dataTransfer.files;
-
-				_.each(files, function(file){
-
-					var stats = fs.statSync(file.path);
-
-					if (stats.isDirectory() && path.dirname(file.path) !== file.path)
-					{
-						app.addProject(file.path);
-					}
-					else if (stats.isFile() && path.dirname(path.dirname(file.path)) !== path.dirname(file.path))
-					{
-						app.addProject(path.dirname(file.path));
-					}
-				});
-				return false;
-			}
-		);*/
 	};
 
 	// Assign to namespace

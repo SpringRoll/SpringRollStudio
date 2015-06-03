@@ -180,11 +180,6 @@
 			var displays = this.templates.displays();
 			var template = this.templates.val();
 
-			if (!displays.length)
-			{
-				throw "Please select a renderer to use.";
-			}
-
 			// Create a collection of selected modules
 			var modules = [];
 			var checkboxes = $(".module:checkbox:checked")
@@ -228,7 +223,7 @@
 					libraries: libraries.concat(main),
 					librariesDebug: librariesDebug.concat(mainDebug),
 					librariesCopy: librariesCopy,
-					displayClass: displays[0],
+					displayClass: displays.length ? displays[0] : "",
 					bower: bower
 				},
 				this._onCompleted.bind(this)

@@ -164,6 +164,7 @@
 
 		var modules = template.modules,
 			required = template.required,
+			disabled = template.disabled,
 			checkbox,
 			id, 
 			input, 
@@ -197,6 +198,12 @@
 			{
 				input.attr('disabled', true)
 					.prop('checked', true);
+			}
+			// Explicitly disable modules
+			if (disabled.indexOf(module.id) > -1)
+			{
+				input.attr('disabled', true)
+					.prop('checked', false);
 			}
 			if (module.display)
 			{

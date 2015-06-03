@@ -1,7 +1,7 @@
 {
 	"name" : "Default",
 	"id" : "io.springroll.default",
-	"version" : "1.4.0",
+	"version" : "1.4.2",
 	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
@@ -26,7 +26,31 @@
 				"springroll": "*"
 			},
 			"libraries": "components/preloadjs/lib/preloadjs.min.js",
-			"librariesDebug": "components/preloadjs/lib/preloadjs.combined.js"
+			"librariesDebug": "components/preloadjs/lib/preloadjs.combined.js",
+			"default": true
+		},
+		{
+			"id": "debug",
+			"name": "Debug",
+			"description": "Feature parity with window.console but with support remote debugging and colored logs",
+			"mainDebug": [
+				"components/springroll/dist/modules/debug.js",
+				"components/springroll/dist/modules/debug.css"
+			],
+			"default": true
+		},
+		{
+			"id": "container-client",
+			"name": "Container Client",
+			"description": "Required for games being loaded by the Container module",
+			"main": "components/springroll/dist/modules/container-client.min.js",
+			"mainDebug": "components/springroll/dist/modules/container-client.js",
+			"bower": {
+				"bellhop": "*"
+			},
+			"libraries": "components/bellhop/dist/bellhop.min.js",
+			"librariesDebug": "components/bellhop/dist/bellhop.js",
+			"default": true
 		},
 		{
 			"id": "states",
@@ -36,15 +60,6 @@
 			"mainDebug": "components/springroll/dist/modules/states.js",
 			"depends": [
 				["pixi-animation", "easeljs-animation"]
-			]
-		},
-		{
-			"id": "debug",
-			"name": "Debug",
-			"description": "Feature parity with window.console but with support remote debugging and colored logs",
-			"mainDebug": [
-				"components/springroll/dist/modules/debug.js",
-				"components/springroll/dist/modules/debug.css"
 			]
 		},
 		{
@@ -141,24 +156,7 @@
 			"mainDebug": "components/springroll/dist/modules/hints.js",
 			"depends": [
 				"sound",
-				"learning-media",
 				["pixi-animation", "easeljs-animation"]
-			]
-		},
-		{
-			"id": "container-client",
-			"name": "Container Client",
-			"description": "Required for games being loaded by the Container module",
-			"main": "components/springroll/dist/modules/container-client.min.js",
-			"mainDebug": "components/springroll/dist/modules/container-client.js",
-			"bower": {
-				"bellhop": "*"
-			},
-			"libraries":[ 
-				"components/bellhop/dist/bellhop.min.js"
-			],
-			"librariesDebug": [
-				"components/bellhop/dist/bellhop.js"
 			]
 		},
 		{
@@ -261,8 +259,7 @@
 			},
 			"libraries": "components/pixi.js/bin/pixi.js",
 			"librariesDebug": "components/pixi.js/bin/pixi.dev.js",
-			"display": "springroll.pixi.PixiDisplay",
-			"default": false
+			"display": "springroll.pixi.PixiDisplay"
 		},
 		{
 			"id": "pixi-animation",
@@ -270,8 +267,7 @@
 			"description": "Manage animation playback with sprites or Spine animations",
 			"main": "components/springroll/dist/modules/pixi-animation.min.js",
 			"mainDebug": "components/springroll/dist/modules/pixi-animation.js",
-			"depends": ["pixi-display"],
-			"default": false
+			"depends": ["pixi-display"]
 		},
 		{
 			"id": "pixi-ui",
@@ -279,8 +275,7 @@
 			"description": "Drag management and basic buttons for Pixi.js",
 			"main": "components/springroll/dist/modules/pixi-ui.min.js",
 			"mainDebug": "components/springroll/dist/modules/pixi-ui.js",
-			"depends": ["pixi-display"],
-			"default": false
+			"depends": ["pixi-display"]
 		},
 		{
 			"id": "native-display",
@@ -288,8 +283,7 @@
 			"description": "Display plugin which uses Context2d to render the canvas",
 			"main": "components/springroll/dist/modules/native-display.min.js",
 			"mainDebug": "components/springroll/dist/modules/native-display.js",
-			"display": "springroll.native.NativeDisplay",
-			"default": false
+			"display": "springroll.native.NativeDisplay"
 		},
 		{
 			"id": "container",
@@ -308,8 +302,7 @@
 			"librariesDebug": [
 				"components/bellhop/dist/bellhop.js",
 				"components/jquery/dist/jquery.js"
-			],
-			"default": false
+			]
 		}
 	]
 }

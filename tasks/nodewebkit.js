@@ -1,10 +1,15 @@
 module.exports = {
 	options: {
-		version: '0.12.1',
+		version: '0.12.2',
 		buildDir: '<%= buildDir %>',
 		macIcns: '<%= distFolder %>/assets/images/icon.icns',
 		winIco: '<%= distFolder %>/assets/images/icon.ico',
-		macZip: true
+		macZip: true,
+		macPlist: {
+			"LSEnvironment": {
+				"PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+			}
+		}
 	},
 	all: {
 		options: {

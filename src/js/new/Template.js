@@ -72,11 +72,20 @@
 		this.rename = data.rename || null;
 
 		/**
-		 * The collection of parent modules that are required
+		 * The collection of parent modules that are required,
+		 * these are checked by default
 		 * @property {array} _required
 		 * @private
 		 */
 		this._required = data.required || [];
+
+		/**
+		 * The modules to exclude from the listing, these
+		 * will show up unchecked and disabled
+		 * @property {array} _disabled
+		 * @private
+		 */
+		this._disabled = data.disabled || [];
 
 		/**
 		 * Template to extend to
@@ -199,6 +208,22 @@
 				required = required.concat(this.parent.required);
 			}
 			return required.concat(this._required);
+		}
+	});
+
+	/**
+	 * Get the list of disabled module ids
+	 * @property {object} disabled
+	 */
+	Object.defineProperty(p, "disabled", {
+		get: function()
+		{
+			var disabled = [];
+			if (this.parent)
+			{
+				disabled = disabled.concat(this.parent.disabled);
+			}
+			return disabled.concat(this._disabled);
 		}
 	});
 
