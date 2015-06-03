@@ -11,12 +11,6 @@ module.exports = {
 	"packagewin64": {
 		cmd: 'makensis <%= installerDir %>/win64.nsi'
 	},
-	"packageosx32": {
-		cmd: 'appdmg <%= installerDir %>/osx32.json <%= buildDir %>/<%= project.name %>-Setup-x32.dmg'
-	},
-	"packageosx64": {
-		cmd: 'appdmg <%= installerDir %>/osx64.json <%= buildDir %>/<%= project.name %>-Setup-x64.dmg'
-	},
 	"openosx32" : {
 		cmd: 'open <%= buildDir %>/<%= project.name %>/osx32/<%= project.name %>.app'
 	},

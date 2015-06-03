@@ -57,8 +57,8 @@ module.exports = function(grunt)
 			tasks.push(
 				'exec:packagewin32',
 				'exec:packagewin64',
-				'exec:packageosx32',
-				'exec:packageosx64'
+				'appdmg:osx32',
+				'appdmg:osx64'
 			);
 		}
 		grunt.task.run(tasks);	
