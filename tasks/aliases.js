@@ -47,9 +47,13 @@ module.exports = function(grunt)
 		var tasks = [];
 
 		// Package a single platform
-		if (platform)
+		if (/win/.test(platform))
 		{
 			tasks.push('exec:package' + platform);
+		}
+		else if (/osx/.test(platform))
+		{
+			tasks.push('appdmg:' + platform);
 		}
 		// Package all platforms
 		else
