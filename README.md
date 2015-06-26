@@ -57,10 +57,10 @@ The build tasks extend [project-grunt](https://github.com/CloudKidStudio/project
 
 Task | Description
 ---|---
-**app:(win32|win64|osx64|osx32)** | Builds a release version of the NW.js app, when no platform is specified, all platforms are built.
-**app-debug:(win32|win64|osx64|osx32)** | Builds a debug version of the NW.js app, when no platform is specified, all platforms are build in debug mode.
-**package:(win32|win64|osx64|osx32)** | Create the OSX and Windows installers, also optional platform
-**open:(win32|win64|osx64|osx32)** | Open the OSX application, also optional platform
+**app:(win32,win64,osx64,osx32)** | Builds a release version of the NW.js app, when no platform is specified, all platforms are built.
+**app-debug:(win32,win64,osx64,osx32)** | Builds a debug version of the NW.js app, when no platform is specified, all platforms are build in debug mode.
+**package:(win32,win64,osx64,osx32)** | Create the OSX and Windows installers, also optional platform
+**open:(win32,win64,osx64,osx32)** | Open the OSX application, also optional platform
 
 ### Examples
 
