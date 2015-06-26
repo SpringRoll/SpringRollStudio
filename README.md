@@ -1,7 +1,7 @@
 SpringRollStudio [![Dependency Status](https://david-dm.org/SpringRoll/SpringRollStudio.svg)](https://david-dm.org/SpringRoll/SpringRollStudio)
 ============
 
-SpringRollStudio is an native application (build with [nw-init](https://github.com/CloudKidStudio/nw-init) and designed to provide graphic user interfaces for building and managing [SpringRoll](https://github.com/SpringRoll/SpringRoll) projects.
+SpringRollStudio is an native application (build with [NW.js](http://nwjs.io/) and designed to provide graphic user interfaces for building and managing [SpringRoll](https://github.com/SpringRoll/SpringRoll) projects.
 
 **Features**
 * Manage a captions library
@@ -37,9 +37,9 @@ brew install makensis
 npm install -g appdmg
 ```
 
-### wine 
+### xquarts & wine 
 
-On OSX if building for Windows, Wine needs to be installed to create the application icon. Can be installed with [brew](http://brew.sh/)
+On OSX if building for Windows, Wine needs to be installed to create the application icon. First install xquartz by downloading [here](http://xquartz.macosforge.org/landing/), then Wine can be installed with [Homebrew](http://brew.sh/)
 
 ```bash
 brew install wine
@@ -47,25 +47,35 @@ brew install wine
 
 ## Building
 
-The Grunt project is an extension of the [grunt-game-builder](https://github.com/CloudKidStudio/grunt-game-builder) and all those grunt tasks can be used on your app. In addition, there are several Grunt tasks that are specific and useful to building SpringRollStudio:
+Before building, make sure to run NPM install to import Node dependencies for building the project.
+
+```bash
+npm install
+```
+
+The build tasks extend [project-grunt](https://github.com/CloudKidStudio/project-grunt) and all those Grunt tasks can be used when building SpringRoll Studio. In addition, there are several Grunt tasks that are specific and useful to building the [NW.js](http://nwjs.io/) app:
 
 Task | Description
 ---|---
-**app** | Builds a release version of the node-webkit app
-**app-debug** | Builds a debug version of the node-webkit app
-**package** | Create the OSX and Windows installers
-**open** | Open the OSX application
+**app:(win32|win64|osx64|osx32)** | Builds a release version of the NW.js app, when no platform is specified, all platforms are built.
+**app-debug:(win32|win64|osx64|osx32)** | Builds a debug version of the NW.js app, when no platform is specified, all platforms are build in debug mode.
+**package:(win32|win64|osx64|osx32)** | Create the OSX and Windows installers, also optional platform
+**open:(win32|win64|osx64|osx32)** | Open the OSX application, also optional platform
 
 ### Examples
 
-Build SpringRollStudio in debug mode and run:
+Build SpringRollStudio in debug mode for OS X run:
 
 ```bash
-grunt app-debug open
+grunt app-debug:osx64 open:osx64
 ```
 
-Build SpringRollStudio and package to installers:
+Build SpringRollStudio for all platforms and package for all using:
 
 ```bash
 grunt app package
 ```
+
+### Known Issues
+
+* On OS X,  building Windows 32-bit and 64-bit platforms back-to-back have been known to fail when using Wine to update the icon. The workaround is to build one platform at a time.
