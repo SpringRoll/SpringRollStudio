@@ -551,9 +551,9 @@
 	*  @param {function} next Method to do after 
 	*  @param {String} result
 	*/
-	p._saveClose = function()
+	p._saveClose = function(e)
 	{
-		if (this.id === "save")
+		if (e.currentTarget.id == "save")
 		{
 			this.project.save();
 		}

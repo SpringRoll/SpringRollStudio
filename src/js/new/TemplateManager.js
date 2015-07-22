@@ -270,6 +270,10 @@
 		// Copy the files from the source to the destination
 		fs.copySync(source, destination);
 
+		// Remove stuff we don't want included in template
+		fs.removeSync(path.join(destination, '.git'));
+		fs.removeSync(path.join(destination, '.DS_Store'));
+
 		// Update the path destination
 		template.path = destination;
 
