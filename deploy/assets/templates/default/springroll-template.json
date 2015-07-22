@@ -1,7 +1,7 @@
 {
 	"name" : "Default",
 	"id" : "io.springroll.default",
-	"version" : "1.4.2",
+	"version" : "1.4.3",
 	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
@@ -214,7 +214,10 @@
 			"description": "Drag management and basic buttons for EaselJS",
 			"main": "components/springroll/dist/modules/easeljs-ui.min.js",
 			"mainDebug": "components/springroll/dist/modules/easeljs-ui.js",
-			"depends": ["easeljs-display"]
+			"depends": [
+				"easeljs-display",
+				"easeljs-utils"
+			]
 		},
 		{
 			"id": "easeljs-learning",
