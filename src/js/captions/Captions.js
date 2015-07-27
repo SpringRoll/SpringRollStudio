@@ -104,59 +104,7 @@
 
 		var list = this.list.parent;
 		var self = this;
-
-		$(document.body).on("dragover drop", function(e) {
-			e.preventDefault();
-			return false;
-		});
-
-		/*list.on("dragenter", function(event){
-			event.preventDefault();
-			list.addClass("dragover");
-		})
-		.on("dragover", function(event) {
-			event.preventDefault();
-			if(!list.hasClass("dragover"))
-				list.addClass("dragover");
-		})
-		.on("dragleave", function(event) {
-			event.preventDefault();
-			list.removeClass("dragover");
-		})
-		.on("drop", function(event) {
-			event.preventDefault();
-			list.removeClass("dragover");
-
-			var fileList = event.originalEvent.dataTransfer.files;
-
-			if (fileList.length > 1)
-			{
-				throw "Only one project at a time";
-			}
-
-			// Select the first entry
-			var file = fileList[0];
-
-			// Directories only!
-			if (APP)
-			{
-				var fs = require('fs');
-				if (!fs.lstatSync(file.path).isDirectory())
-				{
-					throw "Folders only. Please drag a project folder.";
-				}
-			}
-			else
-			{
-				if (file.type !== "")
-				{
-					throw "Folders only. Please drag a project folder.";
-				}
-			}
-
-			self.open(APP ? file.path : file.name);
-		});*/
-
+		
 		this.open(localStorage.getItem('project'));
 	};
 

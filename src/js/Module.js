@@ -38,6 +38,12 @@
 			}
 		}
 
+		// Turn off all file dragging
+		$(document.body).on("dragover drop", function(e){
+			e.preventDefault();
+			return false;
+		});
+
 		// Initialize the browser utility
 		Browser.init();	
 	};

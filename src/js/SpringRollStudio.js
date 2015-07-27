@@ -93,6 +93,48 @@
 			}
 		}.bind(this));
 
+		// Setup the drop zone for the new templates
+		var self = this;
+		var drop = $(document.body)
+			.on("dragenter", function(ev){
+				ev.preventDefault();
+				drop.addClass(DRAG_CLASS);
+			})
+			.on("dragover", function(ev){
+				ev.preventDefault();
+				if(!drop.hasClass(DRAG_CLASS))
+					drop.addClass(DRAG_CLASS);
+			})
+			.on("dragleave", function(ev){
+				ev.preventDefault();
+				drop.removeClass(DRAG_CLASS);
+			})
+			.on("drop", function(ev){
+				ev.preventDefault();
+				drop.removeClass(DRAG_CLASS);
+				var fileList = ev.originalEvent.dataTransfer.files;
+				if (fileList.length > 1)
+				{
+					alert("Only one template at a time.");
+					return;
+				}
+
+				// Select the first entry
+				var file = fileList[0];
+
+				// Directories only!
+				if (APP)
+				{
+					if (!fs.lstatSync(file.path).isDirectory())
+					{
+						alert("Folders only. Please drag a project folder.");
+						return;
+					}
+					self.openProject(file.path);
+				}
+			});
+		
+
 		// Set the current project state based on the project
 		var project = localStorage.getItem('project');
 		if (project)
@@ -107,6 +149,9 @@
 
 	// Reference to the prototype
 	var p = extend(SpringRollStudio, NodeWebkitApp);
+
+	// The class name for when dragging a file
+	var DRAG_CLASS = "dragging";
 
 	/**
 	*  Handle when an item is clicked on in the system menu

@@ -75,12 +75,6 @@
 		this._modal = $("#templateModal")
 			.on('hidden.bs.modal', this.onModalClose.bind(this));
 
-		// Turn off all file dragging
-		$(document.body).on("dragover drop", function(e){
-			e.preventDefault();
-			return false;
-		});
-
 		var self = this;
 
 		// Setup the drop zone for the new templates
