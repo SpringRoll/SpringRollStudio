@@ -1,13 +1,13 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.8",
+	"version": "0.2.9",
 	"private": true,
 	"dependencies": {
 		"jqueryui": "*",
 		"bootstrap": "~3.2.0",
 		"cloudkid-namespace": "*",
 		"requestAnimationFrame": "*",
-		"bootstrap-confirmation": "https://github.com/tavicu/bootstrap-confirmation.git",
+		"bootstrap-confirmation2": "*",
 		"wavesurfer.js": "*",
 		"underscore": "~1.7.0",
 		"node-webkit-app": "*",
