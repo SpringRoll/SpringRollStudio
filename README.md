@@ -21,6 +21,14 @@ Grunt is required to build. See the [getting started guide](http://gruntjs.com/g
 npm install -g grunt-cli
 ```
 
+### appdmg
+
+[node-appdmg](https://github.com/LinusU/node-appdmg) is required to create the OS X DMG installer image.
+
+```bash
+npm install -g appdmg
+```
+
 ### makensis
 
 [makensis](http://nsis.sourceforge.net/Main_Page) is required to create the Windows setup executable. Can be installed with [brew](http://brew.sh/):
