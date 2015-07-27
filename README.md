@@ -29,14 +29,6 @@ npm install -g grunt-cli
 brew install makensis
 ```
 
-### appdmg
-
-[node-appdmg](https://github.com/LinusU/node-appdmg) is required to create the OS X DMG installer image.
-
-```bash
-npm install -g appdmg
-```
-
 ### xquarts & wine 
 
 On OSX if building for Windows, Wine needs to be installed to create the application icon. First install xquartz by downloading [here](http://xquartz.macosforge.org/landing/), then Wine can be installed with [Homebrew](http://brew.sh/)
