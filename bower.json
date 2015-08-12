@@ -1,16 +1,17 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.10",
+	"version": "0.2.11",
 	"private": true,
 	"dependencies": {
 		"jqueryui": "*",
 		"bootstrap": "~3.2.0",
-		"cloudkid-namespace": "*",
+		"springroll": "*",
 		"requestAnimationFrame": "*",
 		"bootstrap-confirmation2": "*",
 		"wavesurfer.js": "*",
 		"underscore": "~1.7.0",
 		"node-webkit-app": "*",
+		"pbskids-pt-client": "SpringRoll/ProgressTrackerClient",
 		"sortable": "farhadi/html5sortable",
 		"default": "https://github.com/SpringRoll/SpringRollTemplate.git",
 		"sunlight": "https://github.com/CloudKidStudio/sunlight.git#master"

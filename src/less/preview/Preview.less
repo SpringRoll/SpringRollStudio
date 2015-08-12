@@ -1,24 +1,233 @@
-@import '../mixins';
+@import 'preview-icons';
+@import 'preview-mixins';
 
-body {
-	overflow: hidden;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: normal;
+@uiHeight: 40px;
+@uiHeightSmall: 80px;
+@smBreak: 500px;
+
+* {
+	/* make transparent link selection, adjust last value opacity 0 to 1.0 */
+	-webkit-tap-highlight-color: rgba(0,0,0,0); 
 }
 
-#previewContainer {
-	position:absolute;
+body {
+	/* prevent callout to copy image, etc when tap to hold */
+	-webkit-touch-callout: none;
+	/* prevent webkit from resizing text to fit */
+	-webkit-text-size-adjust: none;
+	/* prevent copy paste, to allow, change 'none' to 'text' */
+	.user-select(none);
+	background-color:#000;
+	font-family: 'OpenSans', sans-serif;
+	font-weight: lighter;
+	font-size:12px;
+	height:100%;
+	margin:0px;
+	padding:0px;
+	color:white;
 	width:100%;
-	top:40px;
-	bottom:0;
-	background:#000;
-	iframe {
-		position:absolute;
+	text-align: left;
+}
+
+.drop-down {
+	position:absolute;
+	display:none;
+	padding: 1px 1px 1px 0;
+	background:#222;
+	&.on {
+		display:block;
+	}
+	height:auto;
+	width:374px;
+	padding:10px;
+	margin-left: 1px;
+	.box-sizing(border-box);
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	.form-group {
+		font-size:12px;
+		color:#ccc;
+		.btn {
+			.label { font-size: 18px }
+			.icon { font-size: 20px }
+		}
+	}
+	.form-title {
+		font-size:16px;
+		text-align: left;
+		color: #ccc;
+		margin: 5px 0 15px;
+		.close {
+			color: #fff;
+		}
+	}
+	@media screen and (max-width: @smBreak) {
 		width:100%;
-		height:100%;
+		margin-left:0;
 	}
 }
 
-#refreshButton {
-	right:40px;
+#pausedScreen {
+	z-index: 2;
+	position: fixed;
+	left: 0;
+	top:0;
+	bottom:0;
+	width:100%;
+	height:0;
+	overflow:hidden;
+	background-color:transparent;
+	.no-touch & {
+		.transition(background-color 0.4s);
+	}
+	.container {
+		display:none;
+		position:absolute;
+		top:50%;
+		text-align: center;
+		margin-top:-45px;
+		height:90px;
+		width:100%;
+		h2 {
+			margin:0 0 0.5em;
+			font-size:180%;
+			font-weight:300;
+		}
+	}
+	.paused & {
+		height:auto;
+		background-color:rgba(0,0,0,0.6);
+		.container {
+			display:block;
+		}
+	}
+	.loading & {
+		.container { display:none }
+	}
+	@media screen and (max-width: @smBreak) {
+		h2 {
+			font-size:150%;
+		}
+	}
+}
+
+#frame {
+	position:fixed;
+	z-index:1;
+	width:100%;
+	height:100%;
+	background:#222;
+	top:0;
+	left:0;
+
+	&.show-controls {
+		.controls { 
+			display:block;
+		}
+		#pausedScreen {
+			top:@uiHeight;
+			@media screen and (max-width: @smBreak) {
+				top:@uiHeightSmall;
+			}
+		}
+		.appWrapper {
+			top:@uiHeight;
+			@media screen and (max-width: @smBreak) {
+				top:@uiHeightSmall;
+			}
+		}
+	}
+	.controls {
+		display:none;
+		position:absolute;
+		top:0;
+		right:0;
+		height:@uiHeight;
+		z-index:3;
+		font-size:0;
+		width:375px;
+		.btn.main {
+			outline:none;
+			cursor:pointer;
+			border-radius:0;
+			border:0;
+			display:inline-block;
+			height:100%;
+			font-size:24px;
+			width: percentage(1/8);
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+			border-left: 1px solid rgba(0,0,0, 0.6);
+			margin:0;
+			padding:0;
+
+			// The drop down handle for the audio
+			// and captions additional options
+			&.drop-handle {
+				margin-left:0;
+				padding:0 7px;
+				border-left: 1px solid rgba(0,0,0, 0.1);
+				width: percentage(1/16);
+				.arrow-down {
+					width: 0; 
+					height: 0; 
+					border-left: 5px solid transparent;
+					border-right: 5px solid transparent;
+					border-top: 5px solid #fff;
+					display: inline-block;
+					margin-bottom: 7px;
+				}
+				&.disabled {
+					border-left-color: #777;
+					.arrow-down {
+						border-top-color:#999;
+					}
+				}
+			}
+			.glyphicon {
+				font-size:20px;
+			}
+			.icon {
+				width:26px;
+				display:inline-block;
+			}
+		}
+		.unpaused .off,
+		.unmuted .off { display:none !important }
+		.paused .on,
+		.muted .on { display:none !important }
+		@media screen and (max-width: @smBreak) {
+			top:@uiHeight;
+			width:100%;
+		}
+	}
+}
+
+#appTitle {
+	display:none;
+	position: absolute;
+	top: 5px;
+	left: 15px;
+	color: #fff;
+	font-size: 160%;
+	.show-title & {
+		display:block;
+	}
+}
+
+.appWrapper {
+	position: absolute;
+	top:0;
+	bottom:0;
+	right:0;
+	left:0;
+	z-index:0;
+	background:#000;
+}
+
+#appContainer {
+	position: absolute;
+	width:100%;
+	height:100%;
+	z-index:0;
 }
