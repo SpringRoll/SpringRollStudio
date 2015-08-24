@@ -1,0 +1,12 @@
+extends preview-client
+
+block head
+	include partials/shared
+	link(href='assets/css/preview.css', rel='stylesheet')
+	script(src='assets/js/preview.js')
+
+block controls
+	button#refreshButton.btn.btn-primary.main(data-toggle='tooltip', title='Reload')
+		span.glyphicon.glyphicon-refresh
+	button#devToolsButton.btn.btn-primary.main(data-toggle='tooltip', title='Toggle Console')
+		span.glyphicon.glyphicon-list
