@@ -32,6 +32,7 @@
 		 */
 		this.container = new PreviewContainer();
 
+		$("#browserLink").text("http://" + this.server.address + ":" + this.server.port);
 		$("#refreshButton").click(this.refresh.bind(this));
 		$("#devToolsButton").click(this.toggleDevTools.bind(this));
 
@@ -69,8 +70,6 @@
 			this.container.remoteChannel.val(this.server.title);
 			this.container.connectLoggingService();
 		}
-
-		console.log("Open location " + this.location);
 		this.container.open(this.location);
 		this.container.once('closed', this.open.bind(this));
 	};

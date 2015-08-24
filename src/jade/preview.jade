@@ -1,9 +1,15 @@
 extends preview-client
 
+block variables
+	- bodyClass="internal"
+
 block head
 	include partials/shared
 	link(href='assets/css/preview.css', rel='stylesheet')
 	script(src='assets/js/preview.js')
+
+block frame
+	#browserLink
 
 block controls
 	button#refreshButton.btn.btn-primary.main(data-toggle='tooltip', title='Reload')

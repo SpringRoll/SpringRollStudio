@@ -1,3 +1,4 @@
+block variables
 doctype html
 html
 	head
@@ -11,8 +12,9 @@ html
 			link(href='assets/css/preview.css', rel='stylesheet')
 			script(src='assets/js/preview-client.js')
 			meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0")
-	body
+	body(class=bodyClass)
 		#frame.loading.show-title.show-controls
+			block frame
 			#pausedScreen
 				.container
 					h2 Game is Paused.
