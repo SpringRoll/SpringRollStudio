@@ -13,6 +13,7 @@ module.exports = {
 			"<%= distFolder %>/index.html": "src/jade/index.jade",
 			"<%= distFolder %>/new.html": "src/jade/new.jade",
 			"<%= distFolder %>/preview.html": "src/jade/preview.jade",
+			"<%= distFolder %>/preview-client.html": "src/jade/preview-client.jade",
 			"<%= distFolder %>/remote.html": "src/jade/remote.jade",
 			"<%= distFolder %>/tasks-terminal.html": "src/jade/tasks-terminal.jade",
 			"<%= distFolder %>/tasks-test.html": "src/jade/tasks-test.jade",

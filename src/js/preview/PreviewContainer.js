@@ -23,6 +23,12 @@
 			pauseButton: "#pauseButton, #resumeButton"
 		});
 
+		// Disable the form submitting
+		$('form').submit(function(e)
+		{
+			return false;
+		});
+
 		/**
 		*  The entire game view including the standard game buttons
 		*  @property {jquery} frame

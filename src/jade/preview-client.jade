@@ -4,9 +4,13 @@ html
 		meta(charset='utf-8')
 		title Preview
 		include partials/libraries
-		include partials/shared
-		link(href='assets/css/preview.css', rel='stylesheet')
-		script(src='assets/js/preview.js')
+		
+		block head
+
+			link(href='assets/css/shared.css', rel='stylesheet')
+			link(href='assets/css/preview.css', rel='stylesheet')
+			script(src='assets/js/preview-client.js')
+			meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0")
 	body
 		#frame.loading.show-title.show-controls
 			#pausedScreen
@@ -16,7 +20,7 @@ html
 						span.icon.icon-play
 						|  Resume
 			#appTitle Loading...
-			.controls
+			.controls.text-right
 				button#helpButton.btn.btn-primary.main.disabled(data-toggle='tooltip', title='Play Help')
 					span.icon.icon-help
 				button#soundButton.btn.btn-primary.main.muted.disabled(data-toggle='tooltip', title='Toggle All Sounds')
@@ -139,9 +143,8 @@ html
 				button#pauseButton.btn.btn-primary.main.unpaused.disabled(data-toggle='tooltip', title='Play/Pause')
 					span.icon.icon-pause.on
 					span.icon.icon-play.off
-				button#refreshButton.btn.btn-primary.main(data-toggle='tooltip', title='Reload')
-					span.glyphicon.glyphicon-refresh
-				button#devToolsButton.btn.btn-primary.main(data-toggle='tooltip', title='Toggle Console')
-					span.glyphicon.glyphicon-list
+
+				block controls
+
 			.appWrapper
 				iframe#appContainer(frameborder='0', scrolling='no')

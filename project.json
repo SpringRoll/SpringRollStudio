@@ -1,6 +1,6 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.11",
+	"version": "0.2.12",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
@@ -91,8 +91,14 @@
 			"src/less/new/NewProject.less"
 		],
 		"preview": [
+			"src/js/preview/PreviewServer.js",
 			"src/js/preview/PreviewContainer.js",
 			"src/js/preview/Preview.js",
+			"src/less/preview/Preview.less"
+		],
+		"preview-client": [
+			"src/js/preview/PreviewContainer.js",
+			"src/js/preview/PreviewClient.js",
 			"src/less/preview/Preview.less"
 		]
 	}

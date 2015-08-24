@@ -1,18 +1,9 @@
-(function(){
-	
-	if (APP)
-	{
-		var connect = require('connect');
-		var serveStatic = require('serve-static');
-		var path = require('path');
-	}
-
+(function()
+{
 	// Import classes
 	var Module = springroll.Module,
-		PreviewContainer = springroll.PreviewContainer;
-
-	// The local port to use for the preview server
-	var SERVER_PORT = 3030;
+		PreviewContainer = springroll.PreviewContainer,
+		Server = springroll.PreviewServer;
 
 	/**
 	 *  Preview the current project
@@ -24,16 +15,16 @@
 		Module.call(this);
 
 		/**
-		 * The web server
-		 * @property {Server} server
+		 * The web server for project view
+		 * @property {springroll.PreviewServer} server
 		 */
-		this.server = null;
+		this.server = new Server(localStorage.getItem('project'));
 
 		/**
 		 * The local location for the iframe
 		 * @property {string} location
 		 */
-		this.location = "http://localhost:" + SERVER_PORT;
+		this.location = "http://localhost:" + this.server.port + '/game';
 
 		/**
 		 * The current iframe
@@ -41,33 +32,16 @@
 		 */
 		this.container = new PreviewContainer();
 
-		// Grab the opened project
-		this.project = localStorage.getItem('project');
-
 		$("#refreshButton").click(this.refresh.bind(this));
 		$("#devToolsButton").click(this.toggleDevTools.bind(this));
-		
-		// Disable the form submitting
-		$('form').submit(function(e)
-		{
-			return false;
-		});
 
 		if (APP)
 		{
-			var app = connect();
-			this.server = app.listen(SERVER_PORT);
-			app.use(serveStatic(
-				path.join(this.project, 'deploy'),
-				{'index': ['index.html']}
-			));
-
 			// Initialize the menu
 			this.initMenubar(false, true);
 		}
-
-		// When the app closes re-open it
-		this.open();
+		
+		this.open(); 
 	};
 
 	// Reference to the prototype
@@ -91,11 +65,12 @@
 		if (APP)
 		{
 			// Set the project title and 
-			this.container.appTitle.text(path.basename(this.project));
-			this.container.remoteChannel.val(path.basename(this.project));
+			this.container.appTitle.text(this.server.title);
+			this.container.remoteChannel.val(this.server.title);
 			this.container.connectLoggingService();
 		}
 
+		console.log("Open location " + this.location);
 		this.container.open(this.location);
 		this.container.once('closed', this.open.bind(this));
 	};
@@ -125,14 +100,20 @@
 	p.shutdown = function()
 	{
 		this.container = null;
-		this.project = null;
 
 		if (this.server)
 		{
-			this.server.close();
-			this.server = null;
+			this.server.destroy(function()
+			{
+				this.server = null;
+				this.close(true);
+			}
+			.bind(this));
 		}
-		this.close(true);
+		else
+		{
+			this.close(true);
+		}
 	};
 
 	// Create the module

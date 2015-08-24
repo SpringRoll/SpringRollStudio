@@ -1,6 +1,6 @@
 module.exports = {
 	options: {
-		version: '0.12.2',
+		version: '0.12.3',
 		buildDir: '<%= buildDir %>',
 		macIcns: '<%= distFolder %>/assets/images/icon.icns',
 		winIco: '<%= distFolder %>/assets/images/icon.ico',
