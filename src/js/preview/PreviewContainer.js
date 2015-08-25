@@ -144,10 +144,13 @@
 		$("select[name='size']").val(styles.size);
 		$("select[name='edge']").val(styles.edge);
 
-		// Turn on the tooltips
-		$('[data-toggle="tooltip"]').tooltip({
-			placement: 'bottom'
-		});
+		if (!Features.touch)
+		{
+			// Turn on the tooltips
+			$('[data-toggle="tooltip"]').tooltip({
+				placement: 'bottom'
+			});
+		}
 
 		// Turn off the tool tip for the help button initially
 		this.helpEnabled = false;
@@ -234,6 +237,8 @@
 	 */
 	var onHelpEnabled = function(enabled)
 	{
+		if (Features.touch) return;
+
 		var helpButton = this.helpButton;
 		if (enabled)
 		{
