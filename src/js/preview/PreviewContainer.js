@@ -147,9 +147,7 @@
 		if (!Features.touch)
 		{
 			// Turn on the tooltips
-			$('[data-toggle="tooltip"]').tooltip({
-				placement: 'bottom'
-			});
+			$('[data-toggle="tooltip"]').tooltip();
 		}
 
 		// Turn off the tool tip for the help button initially
@@ -242,9 +240,7 @@
 		var helpButton = this.helpButton;
 		if (enabled)
 		{
-			helpButton.tooltip({
-				placement: 'bottom'
-			});
+			helpButton.tooltip();
 		}
 		else
 		{

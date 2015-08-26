@@ -2,7 +2,6 @@
 @import 'preview-mixins';
 
 @uiHeight: 40px;
-@uiHeightSmall: 80px;
 @smBreak: 500px;
 
 * {
@@ -62,9 +61,25 @@ body {
 		}
 	}
 	@media screen and (max-width: @smBreak) {
-		width:100%;
-		margin-left:0;
+		.scrollDropDowns();
 	}
+	.touch & {
+		.scrollDropDowns();
+	}
+}
+
+.scrollDropDowns()
+{
+	width:100%;
+	margin-left:0;
+	position:fixed;
+	top:@uiHeight;
+	bottom:0;
+	left:0;
+	right:0;
+	overflow: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
 }
 
 #pausedScreen {
@@ -137,15 +152,9 @@ body {
 		}
 		#pausedScreen {
 			top:@uiHeight;
-			@media screen and (max-width: @smBreak) {
-				top:@uiHeightSmall;
-			}
 		}
 		.appWrapper {
 			top:@uiHeight;
-			@media screen and (max-width: @smBreak) {
-				top:@uiHeightSmall;
-			}
 		}
 	}
 	.controls {
@@ -216,7 +225,6 @@ body {
 		.paused .on,
 		.muted .on { display:none !important }
 		@media screen and (max-width: @smBreak) {
-			top:@uiHeight;
 			width:100%;
 		}
 	}
@@ -231,6 +239,9 @@ body {
 	font-size: 160%;
 	.show-title & {
 		display:block;
+	}
+	@media screen and (max-width: @smBreak) {
+		display:none !important;
 	}
 }
 
