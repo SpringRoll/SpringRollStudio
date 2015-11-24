@@ -1,7 +1,7 @@
 {
 	"name" : "Default",
 	"id" : "io.springroll.default",
-	"version" : "1.4.3",
+	"version" : "1.5.0",
 	"github": "SpringRoll/SpringRollTemplate",
 	"rename" : {
 		"gitignore" : ".gitignore",
@@ -23,7 +23,7 @@
 				"components/springroll/dist/core.css"
 			],
 			"bower": {
-				"springroll": "*"
+				"springroll": "~0.4"
 			},
 			"libraries": "components/preloadjs/lib/preloadjs.min.js",
 			"librariesDebug": "components/preloadjs/lib/preloadjs.combined.js",
@@ -53,21 +53,18 @@
 			"default": true
 		},
 		{
+			"id": "animation",
+			"name": "Animation",
+			"description": "Use of the Animator to playback various animation formats",
+			"main": "components/springroll/dist/modules/animation.min.js",
+			"mainDebug": "components/springroll/dist/modules/animation.js"
+		},
+		{
 			"id": "states",
 			"name": "States",
 			"description": "Add states to Application and a transition",
 			"main": "components/springroll/dist/modules/states.min.js",
-			"mainDebug": "components/springroll/dist/modules/states.js",
-			"depends": [
-				["pixi-animation", "easeljs-animation"]
-			]
-		},
-		{
-			"id": "tasks",
-			"name": "Tasks",
-			"description": "Manager for asynchronous tasks, like loading multiple assets",
-			"main": "components/springroll/dist/modules/tasks.min.js",
-			"mainDebug": "components/springroll/dist/modules/tasks.js"
+			"mainDebug": "components/springroll/dist/modules/states.js"
 		},
 		{
 			"id": "sound",
@@ -121,34 +118,6 @@
 			"mainDebug": "components/springroll/dist/modules/languages.js"
 		},
 		{
-			"id": "learning",
-			"name": "Learning",
-			"description": "Integration for sending events with the Learning dispatcher",
-			"main": "components/springroll/dist/modules/learning.min.js",
-			"mainDebug": [
-				"components/springroll/dist/modules/learning.js",
-				"components/springroll/dist/modules/learning.css"
-			],
-			"bower": {
-				"jquery": "*"
-			},
-			"librariesDebug": [
-				"components/jquery/dist/jquery.js"
-			]
-		},
-		{
-			"id": "learning-media",
-			"name": "Learning Media",
-			"description": "Convenience functions for playing and dispatching events for feedback, movie playback, voice over.",
-			"main": "components/springroll/dist/modules/learning-media.min.js",
-			"mainDebug": "components/springroll/dist/modules/learning-media.js",
-			"depends": [
-				"captions",
-				"sound",
-				["pixi-animation", "easeljs-animation"]
-			]
-		},
-		{
 			"id": "hints",
 			"name": "Hints",
 			"description": "Management of hints using either animation or VO playback",
@@ -156,7 +125,7 @@
 			"mainDebug": "components/springroll/dist/modules/hints.js",
 			"depends": [
 				"sound",
-				["pixi-animation", "easeljs-animation"]
+				"animation"
 			]
 		},
 		{
@@ -206,7 +175,10 @@
 				"components/tweenjs/lib/tweenjs.combined.js",
 				"components/easeljs/lib/movieclip.combined.js"
 			],
-			"depends": ["easeljs-display"]
+			"depends": [
+				"animation",
+				"easeljs-display"
+			]
 		},
 		{
 			"id": "easeljs-ui",
@@ -215,28 +187,8 @@
 			"main": "components/springroll/dist/modules/easeljs-ui.min.js",
 			"mainDebug": "components/springroll/dist/modules/easeljs-ui.js",
 			"depends": [
-				"easeljs-display",
-				"easeljs-utils"
+				"easeljs-display"
 			]
-		},
-		{
-			"id": "easeljs-learning",
-			"name": "EaselJS Learning",
-			"description": "EaselJS-specific convenience utilities for event tracking",
-			"main": "components/springroll/dist/modules/easeljs-learning.min.js",
-			"mainDebug": "components/springroll/dist/modules/easeljs-learning.js",
-			"depends": [
-				"easeljs-display",
-				"learning"
-			]
-		},
-		{
-			"id": "easeljs-utils",
-			"name": "EaselJS Utilities",
-			"description": "Contains bitmap utilities for managing, loading and formatting bitmaps",
-			"main": "components/springroll/dist/modules/easeljs-utils.min.js",
-			"mainDebug": "components/springroll/dist/modules/easeljs-utils.js",
-			"depends": ["easeljs-display"]
 		},
 		{
 			"id": "easeljs-cutscene",
@@ -246,10 +198,19 @@
 			"mainDebug": "components/springroll/dist/modules/easeljs-cutscene.js",
 			"depends": [
 				"easeljs-display",
-				"easeljs-animation",
-				"easeljs-utils",
-				"tasks"
+				"animation",
+				"easeljs-animation"
 			]
+		},
+		{
+			"id": "easeljs-cursor",
+			"name": "EaselJS Cursor",
+			"description": "Add a custom cursor to the Application",
+			"main": "components/springroll-cursor/dist/modules/easeljs-cursor.min.js",
+			"mainDebug": "components/springroll-cursor/dist/modules/easeljs-cursor.js",
+			"bower": {
+				"springroll-cursor": "*"
+			}
 		},
 		{
 			"id": "pixi-display",
@@ -260,8 +221,8 @@
 			"bower": {
 				"pixi.js":"https://github.com/SpringRoll/pixi.js.git"
 			},
-			"libraries": "components/pixi.js/bin/pixi.js",
-			"librariesDebug": "components/pixi.js/bin/pixi.dev.js",
+			"libraries": "components/pixi.js/bin/pixi.min.js",
+			"librariesDebug": "components/pixi.js/bin/pixi.js",
 			"display": "springroll.pixi.PixiDisplay"
 		},
 		{
@@ -270,7 +231,21 @@
 			"description": "Manage animation playback with sprites or Spine animations",
 			"main": "components/springroll/dist/modules/pixi-animation.min.js",
 			"mainDebug": "components/springroll/dist/modules/pixi-animation.js",
-			"depends": ["pixi-display"]
+			"depends": [
+				"animation", 
+				"pixi-display"
+			]
+		},
+		{
+			"id": "pixi-spine",
+			"name": "Pixi.js Spine",
+			"description": "Manage spine playback and loading",
+			"main": "components/springroll/dist/modules/pixi-spine.min.js",
+			"mainDebug": "components/springroll/dist/modules/pixi-spine.js",
+			"depends": [
+				"animation", 
+				"pixi-display"
+			]
 		},
 		{
 			"id": "pixi-ui",
@@ -289,23 +264,14 @@
 			"display": "springroll.native.NativeDisplay"
 		},
 		{
-			"id": "container",
-			"name": "Container",
-			"description": "The container for interacting with SpringRoll projects that are iframed",
-			"main": "components/springroll/dist/modules/container.min.js",
-			"mainDebug": "components/springroll/dist/modules/container.js",
+			"id": "keyboard",
+			"name": "Keyboard",
+			"description": "A keyboard input handling plugin",
+			"main": "components/springroll-keyboard/dist/keyboard.min.js",
+			"mainDebug": "components/springroll-keyboard/dist/keyboard.js",
 			"bower": {
-				"bellhop": "*",
-				"jquery": "*"
-			},
-			"libraries":[
-				"components/bellhop/dist/bellhop.min.js",
-				"components/jquery/dist/jquery.min.js"
-			],
-			"librariesDebug": [
-				"components/bellhop/dist/bellhop.js",
-				"components/jquery/dist/jquery.js"
-			]
+				"springroll-keyboard": "*"
+			}
 		}
 	]
 }

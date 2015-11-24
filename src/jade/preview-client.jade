@@ -127,24 +127,7 @@ html
 							option(value='tahoma') Tahoma
 							option(value='times') Times New Roman
 							option(value='trebuchet') Trebuchet MS
-							option(value='verdana') Verdana						
-				button#settingsButton.btn.btn-primary.main.disabled(data-toggle-div='#settings', data-placement='bottom', data-toggle='tooltip', title='Logging Service')
-					span.icon.icon-gear
-				form#settings.drop-down.form.form-horizontal
-					.form-group.form-title
-						button#cancelSettings.close(data-toggle-div='#settings')
-							| &times;
-						| Logging Service
-					.form-group
-						label.col-xs-4.control-label Host or IP
-						.col-xs-8: input.pause-on-focus.form-control#remoteHost(type='text', name='remoteHost')
-					.form-group
-						label.col-xs-4.control-label Channel Name
-						.col-xs-8: input.pause-on-focus.form-control#remoteChannel(type='text', name='remoteChannel')
-					.form-group.text-center
-						.col-xs-8.col-xs-offset-4
-							button#remoteConnect.btn.btn-primary.btn-block.disabled(data-toggle-div='#settings')
-								| Connect
+							option(value='verdana') Verdana
 				button#pauseButton.btn.btn-primary.main.unpaused.disabled(data-placement='bottom', data-toggle='tooltip', title='Play/Pause')
 					span.icon.icon-pause.on
 					span.icon.icon-play.off

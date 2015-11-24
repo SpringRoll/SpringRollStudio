@@ -3,8 +3,8 @@
 	// Import classes
 	var Container = include('springroll.Container'),
 		Features = include('springroll.Features'),
-		SavedData = include('springroll.SavedData'),
-		Tracker = include('pbskids.Tracker');
+		SavedData = include('springroll.SavedData');
+		// Tracker = include('pbskids.Tracker');
 
 	/**
 	*  The main class for the site
@@ -40,44 +40,31 @@
 		*  @property {springroll.Container} container
 		*/
 		this.on({
-			learningEvent: onLearningEvent.bind(this),
-			analyticEvent: onAnalyticEvent.bind(this),
 			open: onOpen.bind(this),
 			opened: onOpened.bind(this),
 			pause: onPauseToggle.bind(this),
 			helpEnabled: onHelpEnabled.bind(this),
 			closed: onClosed.bind(this),
 			features: onFeatures.bind(this),
-			unsupported: function(){
+			unsupported: function()
+			{
 				alert("Your current web browser doesn't support this games features.");
 			},
-			remoteFailed: function(){
+			remoteFailed: function()
+			{
 				alert('Invalid API request');
 			},
-			remoteError: function(err){
+			remoteError: function(err)
+			{
 				alert(err);
 			}
 		});
-
-		/**
-		 * The Progress tracker client for sending events 
-		 * @property {pbskids.Tracker} tracker
-		 */
-		this.tracker = new Tracker();
-		this.tracker.setEnabled(false);
 
 		/**
 		*  The game title area
 		*  @property {jquery} appTitle
 		*/
 		this.appTitle = $("#appTitle");
-
-		/**
-		*  Button for connecting to the remote host
-		*  @property {jquery} remoteConnect
-		*/
-		this.remoteConnect = $("#remoteConnect")
-			.click(this.connectLoggingService.bind(this));
 
 		/**
 		*  The toggle button for captions options
@@ -90,25 +77,6 @@
 		*  @property {jquery} soundToggle
 		*/
 		this.soundToggle = $("#soundToggle");
-
-		/**
-		*  The toggle for the settings
-		*  @property {jquery} settingsButton
-		*/
-		this.settingsButton = $("#settingsButton");
-
-		/**
-		*  The name of the remote host or ip address
-		*  @property {jquery} remoteHost
-		*/
-		this.remoteHost = $("#remoteHost")
-			.val(SavedData.read('remoteHost'));
-
-		/**
-		*  The name of the remote channel name
-		*  @property {jquery} remoteChannel
-		*/
-		this.remoteChannel = $("#remoteChannel");
 
 		/**
 		* Toggle the control drop down options
@@ -158,28 +126,6 @@
 	var p = extend(PreviewContainer, Container);
 
 	/**
-	*  Handle the progress tracker events
-	*  @method onAnalyticEvent
-	*  @private
-	*  @param {object} data THe event data
-	*/
-	var onAnalyticEvent = function(data)
-	{
-		this.tracker.remoteSend("ga-event", data);
-	};
-
-	/**
-	*  Handle the progress tracker events
-	*  @method onLearningEvent
-	*  @private
-	*  @param {object} data THe event data
-	*/
-	var onLearningEvent = function(data)
-	{
-		this.tracker.pushEvent(data);
-	};
-
-	/**
 	*  Handler for change in captions settings
 	*  @method onCaptionsStyles
 	*  @private
@@ -200,31 +146,9 @@
 	{		
 		this.captionsToggle.hide();
 		this.soundToggle.hide();
-		this.settingsButton.hide();
 
 		if (features.captions) this.captionsToggle.show();
 		if (features.sound) this.soundToggle.show();
-		if (features.learning) this.settingsButton.show();
-	};
-
-	/**
-	 * Handler to connect to the remote host
-	 * @method connectLoggingService
-	 * @private
-	 */
-	p.connectLoggingService = function()
-	{
-		var host = this.remoteHost.val();
-		var channel = this.remoteChannel.val();
-		SavedData.write('remoteHost', host);
-		if (host)
-		{
-			this.tracker.remoteConnect(host);
-		}
-		if (channel)
-		{
-			this.tracker.remoteChannel(channel);
-		}
 	};
 
 	/**

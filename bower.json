@@ -11,7 +11,6 @@
 		"wavesurfer.js": "*",
 		"underscore": "~1.7.0",
 		"node-webkit-app": "*",
-		"pbskids-pt-client": "SpringRoll/ProgressTrackerClient",
 		"sortable": "farhadi/html5sortable",
 		"default": "https://github.com/SpringRoll/SpringRollTemplate.git",
 		"sunlight": "https://github.com/CloudKidStudio/sunlight.git#master"

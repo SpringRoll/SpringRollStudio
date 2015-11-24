@@ -67,10 +67,8 @@
 		{
 			// Set the project title and 
 			this.container.appTitle.text(this.server.title);
-			this.container.remoteChannel.val(this.server.title);
-			this.container.connectLoggingService();
 		}
-		this.container.open(this.location);
+		this.container.openPath(this.location);
 		this.container.once('closed', this.open.bind(this));
 	};
 

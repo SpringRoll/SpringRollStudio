@@ -5,9 +5,7 @@ $(function()
 	{
 		var container = new springroll.PreviewContainer();
 		container.appTitle.text(title);
-		container.remoteChannel.val(title);
-		container.connectLoggingService();
-		container.open('/game');
+		container.openPath('/game');
 	});
 
 });
