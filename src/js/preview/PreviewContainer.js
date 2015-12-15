@@ -4,7 +4,6 @@
 	var Container = include('springroll.Container'),
 		Features = include('springroll.Features'),
 		SavedData = include('springroll.SavedData');
-		// Tracker = include('pbskids.Tracker');
 
 	/**
 	*  The main class for the site

@@ -1,6 +1,6 @@
 {
 	"name": "SpringRollStudio",
-	"version": "0.2.13",
+	"version": "0.2.14",
 	"main": [
 		"components/node-webkit-app/src/utils/UpdateChecker.js",
 		"components/node-webkit-app/src/utils/Browser.js",
@@ -19,7 +19,7 @@
 		"components/sortable/jquery.sortable.js",
 		"components/bootstrap/dist/js/bootstrap.min.js",
 		"components/bellhop/dist/bellhop.min.js",
-		"components/springroll/dist/modules/container.min.js",
+		"components/springroll-container/dist/container.min.js",
 		"components/bootstrap/less/bootstrap.less",
 		"components/bootstrap-confirmation2/bootstrap-confirmation.js",
 		"components/underscore/underscore.js",
@@ -37,7 +37,7 @@
 		"components/sortable/jquery.sortable.js",
 		"components/bootstrap/dist/js/bootstrap.js",
 		"components/bellhop/dist/bellhop.js",
-		"components/springroll/dist/modules/container.js",
+		"components/springroll-container/dist/container.js",
 		"components/bootstrap/less/bootstrap.less",
 		"components/bootstrap-confirmation2/bootstrap-confirmation.min.js",
 		"components/underscore/underscore.js",
