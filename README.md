@@ -1,3 +1,8 @@
+# Depreciated
+With the release of SpringRoll 2.0 this repository has been deprecated.
+
+To manage captions you can checkout the new online solution at [springroll.io](http://springroll.io)
+
 SpringRollStudio [![Dependency Status](https://david-dm.org/SpringRoll/SpringRollStudio.svg)](https://david-dm.org/SpringRoll/SpringRollStudio)
 ============
 
@@ -37,7 +42,7 @@ npm install -g appdmg
 brew install makensis
 ```
 
-### xquarts & wine 
+### xquarts & wine
 
 On OSX if building for Windows, Wine needs to be installed to create the application icon. First install xquartz by downloading [here](http://xquartz.macosforge.org/landing/), then Wine can be installed with [Homebrew](http://brew.sh/)
 
