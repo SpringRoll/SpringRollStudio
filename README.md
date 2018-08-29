@@ -1,7 +1,7 @@
 # Deprecated
 With the release of SpringRoll 2.0 this repository has been deprecated.
 
-To manage captions you can checkout the new online solution at [springroll.io](http://springroll.io)
+To manage captions you can checkout the new online solution at [springroll.io](http://springroll.io) and for creating new game projects you can check out [SpringRoll-Seed](https://github.com/SpringRoll/Springroll-Seed)
 
 SpringRollStudio [![Dependency Status](https://david-dm.org/SpringRoll/SpringRollStudio.svg)](https://david-dm.org/SpringRoll/SpringRollStudio)
 ============
