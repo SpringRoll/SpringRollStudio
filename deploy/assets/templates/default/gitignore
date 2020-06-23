@@ -1,7 +1,0 @@
-/components/
-node_modules/
-*.map
-.DS_Store
-*.sublime-*
-RECOVER_*
-npm-debug.log
