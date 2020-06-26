@@ -2,9 +2,9 @@ name: run-test
 
 # Current values are for testing. Update later.
 on:
-  push:
+  pull_request:
     branches:
-    - feature/vue-electron-env-setup
+      - develop
 
 jobs:
   build:
