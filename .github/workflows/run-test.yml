@@ -24,16 +24,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: npm install
-      run: |
-        npm ci
+      run: npm ci
       env:
         CI: true
 
     - name: Run headless test
-            uses: GabrielBB/xvfb-action@v1.2
-            with:
-              run: |
-                npm run unit
+      uses: GabrielBB/xvfb-action@v1.2
+      with:
+        run: npm run unit
     # - name: test
     #   run: |
     #     npm run unit
