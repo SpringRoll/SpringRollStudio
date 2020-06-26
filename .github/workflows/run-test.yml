@@ -29,8 +29,13 @@ jobs:
       env:
         CI: true
 
-    - name: test
-      run: |
-        npm run github-unit
-      env:
-        CI: true
+    - name: Run headless test
+            uses: GabrielBB/xvfb-action@v1.2
+            with:
+              run: |
+                npm run unit
+    # - name: test
+    #   run: |
+    #     npm run unit
+    #   env:
+    #     CI: true
