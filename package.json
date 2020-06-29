@@ -1,6 +1,6 @@
 {
   "name": "springrollstudio",
-  "version": "0.0.1",
+  "version": "0.0.1-test",
   "author": "admin@springroll.io",
   "description": "",
   "license": null,
@@ -22,8 +22,9 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "springrollstudio",
+    "productName": "SpringrollStudio",
     "appId": "io.springroll.studio",
+    "artifactName": "${productName}-${os}-${version}.${ext}",
     "directories": {
       "output": "build"
     },

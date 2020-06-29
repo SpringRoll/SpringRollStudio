@@ -1,4 +1,4 @@
-name: run-test
+name: Testing
 
 # Current values are for testing. Update later.
 on:
