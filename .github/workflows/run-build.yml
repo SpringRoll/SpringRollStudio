@@ -1,9 +1,6 @@
 name: Build/release
 
-on:
-  push:
-    branches:
-      - feature/test-release
+on: push
 
 jobs:
   release:
@@ -11,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -25,11 +22,6 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          
-          # release: true
-
-          # build_script_name: .electron-vue/build.js
-
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
