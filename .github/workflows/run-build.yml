@@ -25,7 +25,10 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          build_script_name: .electron-vue/build.js
+          
+          release: true
+
+          # build_script_name: .electron-vue/build.js
 
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
