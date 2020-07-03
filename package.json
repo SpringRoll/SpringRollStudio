@@ -34,8 +34,17 @@
     ],
     "dmg": {
       "contents": [
-        { "x": 410, "y": 150,"type": "link", "path": "/Applications" },
-        { "x": 130, "y": 150, "type": "file" }
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
       ]
     },
     "mac": {
@@ -73,6 +82,7 @@
     "electron-builder": "^22.7.0",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
+    "electron-updater": "^4.3.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-friendly-formatter": "^4.0.1",
