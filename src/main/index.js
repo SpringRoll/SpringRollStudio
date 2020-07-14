@@ -1,7 +1,7 @@
 'use strict';
 
 import { app, BrowserWindow } from 'electron';
-// import AppUpdater from './updater/AppUpdater';
+// import { appUpdater } from './updater/AppUpdater';
 
 /**
  * Set `__static` path to static files in production
@@ -29,6 +29,8 @@ function createWindow () {
       nodeIntegrationInWorker: true
     }
   });
+
+  // appUpdater.checkForUpdate();
 
   mainWindow.loadURL(winURL);
 
