@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+build/*
+!build/icons
+
 # local env files
 .env.local
 .env.*.local
