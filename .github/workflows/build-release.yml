@@ -26,7 +26,16 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         with:
 
+          # Use vue-cli-service electron:build
           use_vue_cli: true
+
+          # Mac OSX signing information
+          # mac_certs: ${{ secrets.mac_signing_cert }}
+          # mac_certs_password: ${{ secrets.mac_signing_pass }}
+
+          # Windows signing information
+          # windows_certs:${{ secrets.win_signing_cert }}
+          # windows_certs_password: ${{ secrets.win_signing_pass }}
 
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
