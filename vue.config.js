@@ -1,8 +1,18 @@
+const path = require('path');
+
 module.exports = {
+
+  configureWebpack: {
+    entry: {
+      app: path.resolve(__dirname, "src/renderer/index.js")
+    }
+  },
 
   pluginOptions: {
 
     electronBuilder: {
+
+      mainProcessFile: path.resolve(__dirname, "src/main/index.js"),
 
       builderOptions: {
         productName: "SpringrollStudio",
