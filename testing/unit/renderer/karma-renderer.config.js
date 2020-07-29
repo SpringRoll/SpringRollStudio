@@ -1,5 +1,13 @@
+const path = require('path');
+const baseConfig = require('../../webpack-testing.config');
+
 module.exports = (config) => {
   config.set({
+    failOnEmptyTestSuite: false,
+    colors: true,
+    autoWatch: true,
+    singleRun: true,
+
     files: ['./index.js'],
 
     client: {
@@ -11,14 +19,20 @@ module.exports = (config) => {
       './index.js': ['webpack', 'sourcemap']
     },
 
-    webpack: require('../../webpack-renderer.config'),
+    webpack: {
+      ...baseConfig,
+    
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '../../../src/renderer')
+        }
+      },
+    
+      target: 'electron-renderer'
+    },
     webpackMiddleware: {
       stats: 'errors-only'
     },
-
-    colors: true,
-    autoWatch: true,
-    singleRun: true,
 
     logLevel: config.LOG_INFO,
     reporters: ['progress'],
@@ -27,6 +41,7 @@ module.exports = (config) => {
       VisibleElectron: {
         base: 'Electron',
         browserWindowOptions: {
+          show: true,
           webPreferences: {
             nodeIntegration: true
           }

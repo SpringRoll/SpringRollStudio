@@ -1,5 +1,4 @@
 const { VueLoaderPlugin } = require('vue-loader');
-const path = require('path');
 
 /**
  * To be used for testing only.
@@ -37,11 +36,8 @@ module.exports = {
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
-  },
-
-  target: 'electron-renderer'
+  }
 }
