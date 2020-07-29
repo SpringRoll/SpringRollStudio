@@ -8,7 +8,7 @@ module.exports = (config) => {
     autoWatch: true,
     singleRun: true,
 
-    files: ['./index.js'],
+    files: ['specs/**/*.spec.js'],
 
     client: {
       useIframe: false
@@ -16,7 +16,7 @@ module.exports = (config) => {
 
     frameworks: ['mocha', 'chai'],
     preprocessors: {
-      './index.js': ['webpack', 'sourcemap']
+      'specs/**/*.spec.js': ['webpack', 'sourcemap']
     },
 
     webpack: {
