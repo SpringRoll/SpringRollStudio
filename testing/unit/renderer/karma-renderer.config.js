@@ -2,16 +2,13 @@ module.exports = (config) => {
   config.set({
     files: ['./index.js'],
 
-    customLaunchers: {
-      VisibleElectron: {
-        base: 'Electron',
-        flags: ['--show']
-      }
+    client: {
+      useIframe: false
     },
 
     frameworks: ['mocha', 'chai'],
     preprocessors: {
-      './index.js': ['webpack', 'electron', 'sourcemap']
+      './index.js': ['webpack', 'sourcemap']
     },
 
     webpack: require('../../webpack-renderer.config'),
@@ -26,6 +23,17 @@ module.exports = (config) => {
     logLevel: config.LOG_INFO,
     reporters: ['progress'],
 
-    browsers: ['Electron']
+    customLaunchers: {
+      VisibleElectron: {
+        base: 'Electron',
+        browserWindowOptions: {
+          webPreferences: {
+            nodeIntegration: true
+          }
+        }
+      }
+    },
+
+    browsers: ['VisibleElectron']
   })
 };

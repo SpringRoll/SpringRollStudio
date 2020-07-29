@@ -1,7 +1,12 @@
 const { VueLoaderPlugin } = require('vue-loader');
 const path = require('path');
 
+/**
+ * To be used for testing only.
+ */
 module.exports = {
+  devtool: '#inline-source-map',
+
   plugins: [
     new VueLoaderPlugin()
   ],
@@ -9,23 +14,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|vue)$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        }
+        test: /\.js$/,
+        loader: 'babel-loader'
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader'
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader'
       },
       {
         test: /\.css$/,
@@ -43,7 +37,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      '@': path.join(__dirname, '../src/renderer'),
+      '@': path.resolve(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
