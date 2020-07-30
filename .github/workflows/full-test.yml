@@ -26,7 +26,7 @@ jobs:
       env:
         CI: true
 
-    - name: Run headless test
+    - name: Running tests
       uses: GabrielBB/xvfb-action@v1.2
       with:
         run: npm test
