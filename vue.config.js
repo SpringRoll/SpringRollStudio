@@ -4,7 +4,7 @@ module.exports = {
 
   configureWebpack: {
     entry: {
-      app: path.resolve(__dirname, "src/renderer/index.js")
+      app: path.resolve(__dirname, 'src/renderer/main.js')
     }
   },
 
@@ -12,26 +12,26 @@ module.exports = {
 
     electronBuilder: {
 
-      mainProcessFile: path.resolve(__dirname, "src/main/index.js"),
+      mainProcessFile: path.resolve(__dirname, 'src/main/index.js'),
 
       builderOptions: {
-        productName: "SpringrollStudio",
-        appId: "io.springroll.studio",
-        artifactName: "${productName}-${os}-${version}-Setup.${ext}",
+        productName: 'SpringrollStudio',
+        appId: 'io.springroll.studio',
+        artifactName: '${productName}-${os}-${version}-Setup.${ext}',
         directories: {
-          output: "build"
+          output: 'build'
         },
         dmg: {
           contents: [
-            { x: 410, y: 150, type: "link", path: "/Applications" },
-            { x: 130, y: 150, type: "file" }
+            { x: 410, y: 150, type: 'link', path: '/Applications' },
+            { x: 130, y: 150, type: 'file' }
           ]
         },
         mac: {
-          icon: "build/icons/icon.icns"
+          icon: 'build/icons/icon.icns'
         },
         win: {
-          icon: "build/icons/icon.ico"
+          icon: 'build/icons/icon.ico'
         }
       }
     }

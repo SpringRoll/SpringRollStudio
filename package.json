@@ -3,13 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "test": "npm run lint && npm run unit:full",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint --ext .js,.vue src",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "unit:main": "node_modules/.bin/karma start testing/unit/main/karma-main.config.js",
+    "unit:renderer": "node_modules/.bin/karma start testing/unit/renderer/karma-renderer.config.js",
+    "unit:full": "npm run unit:main && npm run unit:renderer"
   },
   "main": "background.js",
   "dependencies": {
@@ -18,15 +22,29 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
     "babel-eslint": "^10.1.0",
+    "chai": "^4.2.0",
+    "css-loader": "^4.0.0",
     "electron": "^9.0.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "karma": "^5.1.0",
+    "karma-chai": "^0.1.0",
+    "karma-electron": "^6.3.1",
+    "karma-mocha": "^2.0.1",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^4.0.0-rc.6",
+    "less-loader": "^6.2.0",
+    "mocha": "^8.0.1",
+    "sass-loader": "^9.0.2",
+    "url-loader": "^4.1.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
-    "vue-template-compiler": "^2.6.11"
+    "vue-loader": "^15.9.3",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.44.0"
   },
   "eslintConfig": {
     "root": true,
