@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="test">This is a test</div>
+    <div class="test">{{ test }}</div>
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
@@ -8,11 +8,17 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue';
+import { mapState } from 'vuex';
 
 export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  computed: {
+    ...mapState({
+      test: state => state.projectInfo.test
+    })
   }
 };
 </script>

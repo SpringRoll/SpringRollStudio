@@ -11,6 +11,7 @@ module.exports = {
   pluginOptions: {
 
     electronBuilder: {
+      nodeIntegration: true,
 
       mainProcessFile: path.resolve(__dirname, 'src/main/index.js'),
 
