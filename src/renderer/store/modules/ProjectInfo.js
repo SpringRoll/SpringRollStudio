@@ -1,6 +1,6 @@
 export default {
   state: {
-    test: "Springroll Studio"
+    test: 'Springroll Studio'
   },
 
   mutations: {

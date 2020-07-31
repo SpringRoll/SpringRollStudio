@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="test">{{ test }}</div>
+    <div class="test">{{ test }} : This is a test</div>
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
