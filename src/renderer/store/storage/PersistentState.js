@@ -74,7 +74,6 @@ class PersistentState {
     // Listen for bridge notifications to the main procress.
     ipcMain.on(this.events.IPC_NOTIFY_MAIN, (event, { type, payload }) => this.vuexStore.dispatch(type, payload));
 
-    console.log(process.type);
     // Anytime there is an update to the main process's store, notify the renderer process of that change.
     this.vuexStore.subscribe((mutation) => {
       const { type, payload } = mutation;
@@ -93,15 +92,23 @@ class PersistentState {
   setupRendererProcessBridge() {
     ipcRenderer.send(this.events.IPC_CONNECT);
 
+    // Cahce the original vuex commit.
     const vuexCommit = this.vuexStore.commit;
 
-    // Do not allow direct store commits on the renderer process.
-    this.vuexStore.commit = () => { throw new Error('Use store.dispatch instead on the renderer process.'); };
+    // Warn about using commit in the renderer process. Main might update update correctly.
+    // NOTE: This should throw an error, however for testing we need to be able to change the
+    //       state directly from the renderer process.
+    this.vuexStore.commit = (type, payload) => { 
+      console.warn('You should not call commit in the renderer process. Use dispatch instead.');
+      vuexCommit(type, payload);
+    };
     // Forward renderer process dispatches to the main process.
     this.vuexStore.dispatch = (type, payload) => ipcRenderer.send(this.events.IPC_NOTIFY_MAIN, { type, payload });
 
     // Listen for store changes from the main process and apply them.
-    ipcRenderer.on(this.events.IPC_NOTIFY_RENDERER, (event, { type, payload }) => vuexCommit(type, payload));
+    ipcRenderer.on(this.events.IPC_NOTIFY_RENDERER, (event, { type, payload }) => {
+      vuexCommit(type, payload);
+    });
   }
 }
 
