@@ -5,6 +5,12 @@ module.exports = {
   configureWebpack: {
     entry: {
       app: path.resolve(__dirname, 'src/renderer/main.js')
+    },
+
+    resolve: {
+      alias: {
+          vue$: 'vue/dist/vue.esm.js'
+      }
     }
   },
 
