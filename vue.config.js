@@ -19,7 +19,10 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
 
-      mainProcessFile: path.resolve(__dirname, 'src/main/index.js'),
+      mainProcessFile: 'src/main/index.js',
+      
+      // Fix this. This will watch file creation and deletion as well.
+      mainProcessWatch: ['src/main/**/*.js'],
 
       builderOptions: {
         productName: 'SpringrollStudio',

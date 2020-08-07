@@ -4,7 +4,7 @@ const { VueLoaderPlugin } = require('vue-loader');
  * To be used for testing only.
  */
 module.exports = {
-  devtool: '#inline-source-map',
+  // devtool: '#inline-source-map',
 
   plugins: [
     new VueLoaderPlugin()
@@ -21,11 +21,20 @@ module.exports = {
         loader: 'vue-loader'
       },
       {
+        test: /\.scss$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.sass$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+      },
+      {
+        test: /\.less$/,
+        use: ['vue-style-loader', 'css-loader', 'less-loader']
+      },
+      {
         test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          'css-loader'
-        ]
+        use: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

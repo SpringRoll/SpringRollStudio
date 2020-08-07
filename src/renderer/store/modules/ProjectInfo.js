@@ -1,13 +1,13 @@
 export default {
   state: {
-    test: 'Springroll Studio'
+    location: undefined
   },
 
   mutations: {
-    test: (state, payload) => state.test = payload.test
+    location: (state, payload) => state.location = payload.location
   },
 
   actions: {
-    setTest: (store, payload) => store.commit('test', payload)
+    setProjectLocation: (store, payload) => store.commit('location', payload)
   }
 };
