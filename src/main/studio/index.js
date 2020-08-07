@@ -52,7 +52,7 @@ class SpringRollStudio {
       break;
 
     default:
-      throw new Error(`[Studio] Unrecognized dialog type. [type = ${typeof type}]`);
+      throw new Error(`[Studio] Unrecognized dialog type. [type = ${type}]`);
     }
   }
 
