@@ -1,5 +1,10 @@
 <template>
-  <div class="main">    
+  <div class="main">
+
+    <md-dialog-prompt :md-active.sync="previewDialogToggle">
+      <md-dialog-title>Preview Target</md-dialog-title>
+    </md-dialog-prompt>
+
     <div class="heading">
       <img class="logo" src="~@/renderer/assets/img/256x256.png" />
       <h1 class="name">SpringRoll Studio</h1>
@@ -9,7 +14,7 @@
 
     <div class="navigation">
       <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" @click="sendEvent('previewGame')">Preview Game</button>
+      <button class="previewGameBtn" @click="previewDialogToggle = true">Preview Game</button>
       <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
       <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
     </div>
@@ -24,12 +29,18 @@ import { mapState } from 'vuex';
 import { EVENTS, DIALOGS } from '../../../contants';
 
 export default {
+  data: function() {
+    return {
+      previewDialogToggle: false
+    }
+  },
+
   computed: {
     ...mapState({
       /**
        * Returns the path for the current project.
        */
-      projectLocation: (state) => {
+      projectLocation: function(state) {
         if (!state.projectInfo || !state.projectInfo.location) {
           return 'No active project';
         }
@@ -42,12 +53,25 @@ export default {
     /**
      * Button click handler that will send and event through the ipcRenderer.
      */
-    sendEvent: (event, ...args) => ipcRenderer.send.apply(ipcRenderer, [event].concat(args))
+    sendEvent: function(event, ...args) {
+      ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
+    },
+
+    showPreviewDialog: function() {
+      this.$data.previewDialogToggle = true;
+    },
+
+    /**
+     * Go to another page.
+     */
+    goto: function(path) {
+      // this.$router.push({ path });
+    }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .main {
     width: 100%;
     height: 100%;
@@ -126,5 +150,9 @@ export default {
       margin-bottom: 5px;
       font-size: 12pt;
     }
+
+    // .md-dialog /deep/ .md-dialog-container {
+    //   max-width: 768px;
+    // }
   }
 </style>

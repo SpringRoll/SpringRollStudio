@@ -21,7 +21,6 @@ class SpringRollStudio {
    */
   setupListeners() {
     ipcMain.on(EVENTS.OPEN_DIALOG, this.openDialog.bind(this));
-    ipcMain.on(EVENTS.PREVIEW_GAME, this.previewGame.bind(this));
     ipcMain.on(EVENTS.CREATE_PROJECT_TEMPLATE, this.createProjectTemplate.bind(this));
     ipcMain.on(EVENTS.OPEN_CAPTION_STUDIO, this.openCaptionStudio.bind(this));
   }
@@ -54,14 +53,6 @@ class SpringRollStudio {
     default:
       throw new Error(`[Studio] Unrecognized dialog type. [type = ${type}]`);
     }
-  }
-
-  /**
-   * Handler for the EVENTS.PREVIEW_GAME event.
-   * @memberof SpringRollStudio
-   */
-  previewGame() {
-    console.log('[previewGame] Missing implementation');
   }
 
   /**
