@@ -1,27 +1,24 @@
 <template>
   <div class="dialog" v-show="visible === true">
-
     <div class="content">
+      <p class="heading">Choose Preview Target</p>
 
-    <p class="heading">Choose Preview Target</p>
+      <div class="options">
+        <input type="radio" name="previewType" :checked="isDeploy" @change="setPreviewType('deploy')">
+        <label for="male">Deploy Folder</label><br />
 
-    <div class="options">
-      <input type="radio" name="previewType" :checked="isDeploy" @change="setPreviewType('deploy')">
-      <label for="male">Deploy Folder</label><br />
+        <input type="radio" name="previewType" :checked="isURL" @change="setPreviewType('url')">
+        <label for="male">Custom URL</label><br />
 
-      <input type="radio" name="previewType" :checked="isURL" @change="setPreviewType('url')">
-      <label for="male">Custom URL</label><br />
+        <input id="urlInput" :value="previewURL" class="urlInput" disabled @input="onUrlInputChange()"/>
+      </div>
 
-      <input id="urlInput" :value="previewURL" class="urlInput" disabled @input="onUrlInputChange()"/>
+      <div class="actions">
+        <button @click="onBtnCancelClick()">Cancel</button>
+        <button id="confirmBtn" @click="onBtnConfirmClick()" disabled>Confirm</button>
+      </div>
+
     </div>
-
-    <div class="actions">
-      <button @click="onBtnCancelClick()">Cancel</button>
-      <button id="confirmBtn" @click="onBtnConfirmClick()" disabled>Confirm</button>
-    </div>
-
-    </div>
-
   </div>
 </template>
 
