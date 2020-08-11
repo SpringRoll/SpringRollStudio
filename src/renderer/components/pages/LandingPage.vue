@@ -1,10 +1,6 @@
 <template>
   <div class="main">
 
-    <md-dialog-prompt :md-active.sync="previewDialogToggle">
-      <md-dialog-title>Preview Target</md-dialog-title>
-    </md-dialog-prompt>
-
     <div class="heading">
       <img class="logo" src="~@/renderer/assets/img/256x256.png" />
       <h1 class="name">SpringRoll Studio</h1>
@@ -14,7 +10,7 @@
 
     <div class="navigation">
       <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" @click="previewDialogToggle = true">Preview Game</button>
+      <button class="previewGameBtn" @click="goto('preview')">Preview Game</button>
       <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
       <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
     </div>
@@ -65,7 +61,7 @@ export default {
      * Go to another page.
      */
     goto: function(path) {
-      // this.$router.push({ path });
+      this.$router.push({ path });
     }
   }
 };
