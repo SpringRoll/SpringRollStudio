@@ -80,9 +80,9 @@ export default {
       console.log('cancel');
     },
 
-    onPreviewTargetDialogConfirm: function() {
+    onPreviewTargetDialogConfirm: function(results) {
       this.$data.showPreviewTargetDialog = false;
-      console.log('confirm');
+      console.log('confirm', results);
     }
   }
 };

@@ -11,13 +11,13 @@
 
       <input type="radio" name="previewType" @change="setPreviewType('url')">
       <label for="male">Custom URL</label><br />
-      
-      <input id="urlInput" class="urlInput" disabled/>
+
+      <input id="urlInput" class="urlInput" disabled @input="onUrlInputChange()"/>
     </div>
 
     <div class="actions">
       <button @click="onBtnCancelClick()">Cancel</button>
-      <button @click="onBtnConfirmClick()">Confirm</button>
+      <button id="confirmBtn" @click="onBtnConfirmClick()" disabled>Confirm</button>
     </div>
 
     </div>
@@ -26,6 +26,15 @@
 </template>
 
 <script>
+const canConfirm = function() {
+  if (this.$data.previewType === 'deploy') {
+    return true;
+  }
+  else if (this.$data.previewType === 'url') {
+    return !/^ *$/.test(this.$el.querySelector('#urlInput').value);
+  }
+  return false;
+}
 export default {
   props: [
     // Variables
@@ -45,7 +54,12 @@ export default {
   methods: {
     setPreviewType: function(type) {
       this.$data.previewType = type;
-      this.$el.querySelector('.urlInput').disabled = type === 'deploy';
+      this.$el.querySelector('#urlInput').disabled = type === 'deploy';
+      this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
+    },
+
+    onUrlInputChange: function() {
+      this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
     },
 
     onBtnCancelClick: function() {
@@ -58,7 +72,11 @@ export default {
     onBtnConfirmClick: function() {
       const onConfirm = this.$props.onConfirm;
       if (onConfirm && typeof onConfirm === 'function') {
-        onConfirm();
+        const result = { type: this.$data.previewType };
+        if (result.type === 'url') {
+          result.url = this.$el.querySelector('#urlInput').value;
+        }
+        onConfirm(result);
       }
     }
   }
