@@ -58,8 +58,11 @@ export default {
     };
   },
 
+  /**
+   * When this component is mounted, set some states.
+   */
   mounted: function() {
-    this.$data.previewType = this.getPreviewTarget;
+    this.$data.previewType = this.previewTarget;
     this.$el.querySelector('#urlInput').disabled = this.isDeploy;
     this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
   },
@@ -67,25 +70,31 @@ export default {
   computed: {
     ...mapState({
       /**
-       * Returns the last known preview URL from storage or nothing if it doesn't exist.
+       * Returns the last known preview target from storage.
        */
-      previewURL: function(state) {
-        if (!state.gamePreview || !state.gamePreview.previewURL) {
-          return '';
-        }
-        return state.gamePreview.previewURL;
-      },
-
-      getPreviewTarget: function(state) {
+      previewTarget: function(state) {
         return (!state.gamePreview || !state.gamePreview.previewTarget) ? undefined : state.gamePreview.previewTarget;
       },
 
-      isDeploy: function(state) {
-        return !state.gamePreview || !state.gamePreview.previewTarget || state.gamePreview.previewTarget === 'deploy';
+      /**
+       * Returns the last known preview URL from storage.
+       */
+      previewURL: function(state) {
+        return (!state.gamePreview || !state.gamePreview.previewURL) ? undefined : state.gamePreview.previewURL;
       },
 
+      /**
+       * Returns whether deploy was the last known preview target.
+       */
+      isDeploy: function(state) {
+        return state.gamePreview && state.gamePreview.previewTarget && state.gamePreview.previewTarget === 'deploy';
+      },
+
+      /**
+       * Returns whether url was the last known preview target.
+       */
       isURL: function(state) {
-        return !state.gamePreview || !state.gamePreview.previewTarget || state.gamePreview.previewTarget === 'url';
+        return state.gamePreview || state.gamePreview.previewTarget || state.gamePreview.previewTarget === 'url';
       }
     })
   },
