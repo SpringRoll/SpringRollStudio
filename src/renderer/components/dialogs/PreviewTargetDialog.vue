@@ -1,18 +1,18 @@
 <template>
-  <div class="dialog" v-if="visible === true">
+  <div class="dialog" v-show="visible === true">
 
     <div class="content">
 
     <p class="heading">Choose Preview Target</p>
 
     <div class="options">
-      <input type="radio" name="previewType" @change="setPreviewType('deploy')">
+      <input type="radio" name="previewType" :checked="isDeploy" @change="setPreviewType('deploy')">
       <label for="male">Deploy Folder</label><br />
 
-      <input type="radio" name="previewType" @change="setPreviewType('url')">
+      <input type="radio" name="previewType" :checked="isURL" @change="setPreviewType('url')">
       <label for="male">Custom URL</label><br />
 
-      <input id="urlInput" class="urlInput" disabled @input="onUrlInputChange()"/>
+      <input id="urlInput" :value="previewURL" class="urlInput" disabled @input="onUrlInputChange()"/>
     </div>
 
     <div class="actions">
@@ -26,6 +26,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
+/**
+ * Checks to see if the confirm button should be disabled or not.
+ * TODO - Needs to check for spaces.
+ */
 const canConfirm = function() {
   if (this.$data.previewType === 'deploy') {
     return true;
@@ -35,6 +41,7 @@ const canConfirm = function() {
   }
   return false;
 }
+
 export default {
   props: [
     // Variables
@@ -51,17 +58,58 @@ export default {
     };
   },
 
+  mounted: function() {
+    this.$data.previewType = this.getPreviewTarget;
+    this.$el.querySelector('#urlInput').disabled = this.isDeploy;
+    this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
+  },
+
+  computed: {
+    ...mapState({
+      /**
+       * Returns the last known preview URL from storage or nothing if it doesn't exist.
+       */
+      previewURL: function(state) {
+        if (!state.gamePreview || !state.gamePreview.previewURL) {
+          return '';
+        }
+        return state.gamePreview.previewURL;
+      },
+
+      getPreviewTarget: function(state) {
+        return (!state.gamePreview || !state.gamePreview.previewTarget) ? undefined : state.gamePreview.previewTarget;
+      },
+
+      isDeploy: function(state) {
+        return !state.gamePreview || !state.gamePreview.previewTarget || state.gamePreview.previewTarget === 'deploy';
+      },
+
+      isURL: function(state) {
+        return !state.gamePreview || !state.gamePreview.previewTarget || state.gamePreview.previewTarget === 'url';
+      }
+    })
+  },
+
   methods: {
+    /**
+     * Sets the previewType variable anytime an option is selected.
+     */
     setPreviewType: function(type) {
       this.$data.previewType = type;
       this.$el.querySelector('#urlInput').disabled = type === 'deploy';
       this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
     },
 
+    /**
+     * Updates the state of the confirm button any time the input text is updated.
+     */
     onUrlInputChange: function() {
       this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
     },
 
+    /**
+     * Handler for clicking the cancel button.
+     */
     onBtnCancelClick: function() {
       const onCancel = this.$props.onCancel;
       if (onCancel && typeof onCancel === 'function') {
@@ -69,6 +117,9 @@ export default {
       }
     },
 
+    /**
+     * Handler for clicking the confirm button.
+     */
     onBtnConfirmClick: function() {
       const onConfirm = this.$props.onConfirm;
       if (onConfirm && typeof onConfirm === 'function') {

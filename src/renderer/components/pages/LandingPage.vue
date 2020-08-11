@@ -77,12 +77,11 @@ export default {
 
     onPreviewTargetDialogCancel: function() {
       this.$data.showPreviewTargetDialog = false;
-      console.log('cancel');
     },
 
     onPreviewTargetDialogConfirm: function(results) {
       this.$data.showPreviewTargetDialog = false;
-      console.log('confirm', results);
+      this.sendEvent(EVENTS.PREVIEW_TARGET_SET, results);
     }
   }
 };

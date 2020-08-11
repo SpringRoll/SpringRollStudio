@@ -1,6 +1,6 @@
 import { ipcMain, dialog } from 'electron';
 import { EVENTS, DIALOGS } from '../../contants';
-import { projectInfo } from './storage';
+import { projectInfo, gamePreview } from './storage';
 
 /**
  * Main application Singleton. This object is responsible for setting up logic specific to SpringRoll Studio.
@@ -23,6 +23,7 @@ class SpringRollStudio {
     ipcMain.on(EVENTS.OPEN_DIALOG, this.openDialog.bind(this));
     ipcMain.on(EVENTS.CREATE_PROJECT_TEMPLATE, this.createProjectTemplate.bind(this));
     ipcMain.on(EVENTS.OPEN_CAPTION_STUDIO, this.openCaptionStudio.bind(this));
+    ipcMain.on(EVENTS.PREVIEW_TARGET_SET, this.previewTargetSet.bind(this));
   }
 
   /**
@@ -69,6 +70,16 @@ class SpringRollStudio {
    */
   openCaptionStudio() {
     console.log('[openCaptionStudio] Missing implementation');
+  }
+
+  /**
+   *Handler for the EVENTS.PREVIEW_TARGET_SET event.
+   *
+   * @memberof SpringRollStudio
+   */
+  previewTargetSet(event, data) {
+    gamePreview.previewTarget = data.type;
+    gamePreview.previewURL = data.url || '';
   }
 }
 
