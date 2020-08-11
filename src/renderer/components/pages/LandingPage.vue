@@ -1,6 +1,12 @@
 <template>
   <div class="main">
 
+    <preview-target-dialog 
+      v-bind:onCancel="onPreviewTargetDialogCancel"
+      v-bind:onConfirm="onPreviewTargetDialogConfirm"
+      v-bind:visible="showPreviewTargetDialog"
+    />
+
     <div class="heading">
       <img class="logo" src="~@/renderer/assets/img/256x256.png" />
       <h1 class="name">SpringRoll Studio</h1>
@@ -10,7 +16,7 @@
 
     <div class="navigation">
       <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" @click="goto('preview')">Preview Game</button>
+      <button class="previewGameBtn" @click="showPreviewTargetDialog = true">Preview Game</button>
       <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
       <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
     </div>
@@ -20,15 +26,20 @@
 </template>
 
 <script>
+import PreviewTargetDialog from '../dialogs/PreviewTargetDialog';
 import { ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
 import { EVENTS, DIALOGS } from '../../../contants';
 
 export default {
+  components: {
+    PreviewTargetDialog
+  },
+
   data: function() {
     return {
-      previewDialogToggle: false
-    }
+      showPreviewTargetDialog: false
+    };
   },
 
   computed: {
@@ -62,6 +73,16 @@ export default {
      */
     goto: function(path) {
       this.$router.push({ path });
+    },
+
+    onPreviewTargetDialogCancel: function() {
+      this.$data.showPreviewTargetDialog = false;
+      console.log('cancel');
+    },
+
+    onPreviewTargetDialogConfirm: function() {
+      this.$data.showPreviewTargetDialog = false;
+      console.log('confirm');
     }
   }
 };
