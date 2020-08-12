@@ -1,8 +1,9 @@
 <template>
   <div class="main">
-    <h2 class="test">{{ test }}</h2>
 
-    <spring-roll-container/>
+    <spring-roll-container
+      v-bind:target="previewURL"
+    />
 
     <div class="navigation">
 
@@ -19,8 +20,7 @@ export default {
 
   computed: {
     ...mapState({
-      test: function(state) {
-        console.log(state)
+      previewURL: function(state) {
         return state.gamePreview.previewURL
       }
     })
@@ -32,6 +32,8 @@ export default {
   .main {
     width: 100%;
     height: 100%;
+
+    background-color: black;
   }
 
   .navigation {

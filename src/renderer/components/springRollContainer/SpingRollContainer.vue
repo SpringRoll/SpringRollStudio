@@ -1,21 +1,17 @@
 <template>
   <div class="main">
-    <iframe class="gameFrame"/>
+    <webview class="gameFrame" :src="target" />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
-  mounted: function() {
-    console.log("got here");
+  props: {
+    target: ''
   },
 
   computed: {
-    ...mapState({
-      
-    })
+    
   }
 };
 </script>
