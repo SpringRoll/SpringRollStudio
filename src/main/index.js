@@ -21,7 +21,7 @@ protocol.registerSchemesAsPrivileged([
  */
 function createWindow() {
   // Initialize SpringRoll Studio.
-  studio.initialize();
+  studio.initialize(win);
 
   // Create the browser window.
   win = new BrowserWindow({

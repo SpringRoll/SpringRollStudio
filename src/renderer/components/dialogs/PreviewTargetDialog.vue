@@ -4,18 +4,43 @@
       <p class="heading">Choose Preview Target</p>
 
       <div class="options">
-        <input type="radio" name="previewType" :checked="isDeploy" @change="setPreviewType('deploy')">
-        <label for="male">Deploy Folder</label><br />
+        <input type="radio"
+          name="previewType"
+          :checked="isDeploy" 
+          @change="setPreviewType('deploy')"
+        />
+        <label for="male">Deploy Folder</label>
 
-        <input type="radio" name="previewType" :checked="isURL" @change="setPreviewType('url')">
-        <label for="male">Custom URL</label><br />
+        <br />
 
-        <input id="urlInput" :value="previewURL" class="urlInput" disabled @input="onUrlInputChange()"/>
+        <input type="radio"
+          name="previewType"
+          :checked="isURL"
+          @change="setPreviewType('url')"
+        />
+        <label for="male">Custom URL</label>
+
+        <br />
+
+        <input id="urlInput" 
+          class="urlInput" 
+          :disabled="disableURL === true" 
+          :value="previewURL" 
+          @input="onUrlInputChange()"
+        />
       </div>
 
       <div class="actions">
-        <button @click="onBtnCancelClick()">Cancel</button>
-        <button id="confirmBtn" @click="onBtnConfirmClick()" disabled>Confirm</button>
+        <button 
+          @click="onBtnCancelClick()">
+          Cancel
+        </button>
+        <button
+          id="confirmBtn"
+          :disabled="disableConfirm === true"
+          @click="onBtnConfirmClick()">
+          Confirm
+        </button>
       </div>
 
     </div>
@@ -51,7 +76,8 @@ export default {
 
   data: function () {
     return {
-      previewType: undefined
+      previewType: undefined,
+      
     };
   },
 
@@ -60,11 +86,12 @@ export default {
    */
   mounted: function() {
     this.$data.previewType = this.previewTarget;
-    this.$el.querySelector('#urlInput').disabled = this.isDeploy;
-    this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
   },
 
   computed: {
+    disableURL: function() { return this.previewType === 'deploy'; },
+    disableConfirm: function() { return !canConfirm.call(this); },
+
     ...mapState({
       /**
        * Returns the last known preview target from storage.
@@ -77,7 +104,10 @@ export default {
        * Returns the last known preview URL from storage.
        */
       previewURL: function(state) {
-        return (!state.gamePreview || !state.gamePreview.previewURL) ? undefined : state.gamePreview.previewURL;
+        if (this.isDeploy || this.$data.previewType === 'deploy') {
+          return '';
+        }
+        return (!state.gamePreview || !state.gamePreview.previewURL) ? '' : state.gamePreview.previewURL;
       },
 
       /**
@@ -91,7 +121,7 @@ export default {
        * Returns whether url was the last known preview target.
        */
       isURL: function(state) {
-        return state.gamePreview || state.gamePreview.previewTarget || state.gamePreview.previewTarget === 'url';
+        return state.gamePreview && state.gamePreview.previewTarget && state.gamePreview.previewTarget === 'url';
       }
     })
   },
@@ -102,8 +132,6 @@ export default {
      */
     setPreviewType: function(type) {
       this.$data.previewType = type;
-      this.$el.querySelector('#urlInput').disabled = type === 'deploy';
-      this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
     },
 
     /**

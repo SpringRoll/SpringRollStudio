@@ -64,10 +64,6 @@ export default {
       ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
     },
 
-    showPreviewDialog: function() {
-      this.$data.previewDialogToggle = true;
-    },
-
     /**
      * Go to another page.
      */
@@ -75,13 +71,22 @@ export default {
       this.$router.push({ path });
     },
 
+    /**
+     * Handler for canceling the preview target dailog.
+     */
     onPreviewTargetDialogCancel: function() {
       this.$data.showPreviewTargetDialog = false;
     },
 
+    /**
+     * Handler for confirming the preview target dialog.
+     */
     onPreviewTargetDialogConfirm: function(results) {
       this.$data.showPreviewTargetDialog = false;
       this.sendEvent(EVENTS.PREVIEW_TARGET_SET, results);
+
+      // Go to the game preview page.
+      this.goto('preview');
     }
   }
 };

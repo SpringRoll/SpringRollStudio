@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import { ipcMain, dialog } from 'electron';
 import { EVENTS, DIALOGS } from '../../contants';
 import { projectInfo, gamePreview } from './storage';
@@ -11,7 +13,8 @@ class SpringRollStudio {
    * Initialize SpringRoll Studio.
    * @memberof SpringRollStudio
    */
-  initialize() {
+  initialize(window) {
+    this.window = window;
     this.setupListeners();
   }
 
@@ -44,11 +47,11 @@ class SpringRollStudio {
         defaultPath: projectInfo.location,
         properties: ['openDirectory']
       };
-      dialog.showOpenDialog(options).then((result) => {
-        if (!result.canceled) {
-          projectInfo.location = result.filePaths[0];
-        }
-      });
+
+      const paths = dialog.showOpenDialogSync(this.window, options);
+      if (paths !== undefined) {
+        projectInfo.location = paths[0];
+      }
       break;
 
     default:
@@ -74,12 +77,20 @@ class SpringRollStudio {
 
   /**
    *Handler for the EVENTS.PREVIEW_TARGET_SET event.
-   *
    * @memberof SpringRollStudio
    */
   previewTargetSet(event, data) {
     gamePreview.previewTarget = data.type;
-    gamePreview.previewURL = data.url || '';
+
+    switch(data.type) {
+    case 'deploy':
+      gamePreview.previewURL = resolve(projectInfo.location, 'deploy');
+      break;
+
+    case 'url':
+      gamePreview.previewURL = data.url
+      break;
+    }
   }
 }
 
