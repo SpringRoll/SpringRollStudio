@@ -5,6 +5,7 @@
 
       <div class="options">
         <input
+          id="deployOption"
           type="radio"
           name="previewType"
           :checked="isDeploy" 
@@ -15,6 +16,7 @@
         <br />
 
         <input
+          id="urlOption"
           type="radio"
           name="previewType"
           :checked="isURL"
@@ -34,7 +36,12 @@
       </div>
 
       <div class="actions">
-        <button @click="onBtnCancelClick()">Cancel</button>
+        <button 
+          id="cancelBtn"
+          @click="onBtnCancelClick()"
+        >
+          Cancel
+        </button>
         <button
           id="confirmBtn"
           :disabled="disableConfirm() === true"

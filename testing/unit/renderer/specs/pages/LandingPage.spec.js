@@ -32,6 +32,8 @@ describe('LandingPage.js', () => {
     wrapper.find('.previewGameBtn').trigger('click');
 
     expect(LandingPage.methods.togglePreviewTargetDialog.callCount).to.equal(1);
+    expect(LandingPage.methods.togglePreviewTargetDialog.calledWith(true)).to.equal(true);
+
     LandingPage.methods.togglePreviewTargetDialog = toggle;
   });
 
