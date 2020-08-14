@@ -16,7 +16,7 @@ module.exports = (config) => {
 
     frameworks: ['mocha', 'chai'],
     preprocessors: {
-      'specs/**/*.spec.js': ['webpack', 'sourcemap']
+      'specs/**/*.spec.js': ['webpack']
     },
 
     webpack: {
@@ -24,7 +24,7 @@ module.exports = (config) => {
     
       resolve: {
         alias: {
-          '@': path.resolve(__dirname, '../../../src/renderer')
+          '@': path.resolve(__dirname, '../../../src')
         }
       },
     

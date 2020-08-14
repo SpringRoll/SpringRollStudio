@@ -5,6 +5,12 @@ module.exports = {
   configureWebpack: {
     entry: {
       app: path.resolve(__dirname, 'src/renderer/main.js')
+    },
+
+    resolve: {
+      alias: {
+          vue$: 'vue/dist/vue.esm.js'
+      }
     }
   },
 
@@ -13,7 +19,10 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
 
-      mainProcessFile: path.resolve(__dirname, 'src/main/index.js'),
+      mainProcessFile: 'src/main/index.js',
+      
+      // Fix this. This will watch file creation and deletion as well.
+      mainProcessWatch: ['src/main/**/*.js'],
 
       builderOptions: {
         productName: 'SpringrollStudio',

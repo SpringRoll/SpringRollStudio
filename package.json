@@ -21,6 +21,7 @@
     "core-js": "^3.6.5",
     "electron-store": "^6.0.0",
     "vue": "^2.6.11",
+    "vue-router": "^3.4.1",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -42,7 +43,9 @@
     "karma-webpack": "^4.0.0-rc.6",
     "less-loader": "^6.2.0",
     "mocha": "^8.0.1",
+    "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
+    "sinon": "^9.0.3",
     "url-loader": "^4.1.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
     "vue-loader": "^15.9.3",
