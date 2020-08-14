@@ -44,6 +44,7 @@ export default {
   mounted: function() {
     // TODO - Setup control elements and pass them to the container.
     springrollContainer = new Container('#gameFrame');
+    springrollContainer.openPath(this.previewURL);
   },
 
   methods: {
