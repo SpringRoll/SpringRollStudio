@@ -15,7 +15,7 @@
 
     <div class="navigation">
       <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" @click="showPreviewTargetDialog = true">Preview Game</button>
+      <button class="previewGameBtn" @click="togglePreviewTargetDialog(true)">Preview Game</button>
       <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
       <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
     </div>
@@ -77,18 +77,25 @@ export default {
      * Handler for canceling the preview target dailog.
      */
     onPreviewTargetDialogCancel: function() {
-      this.showPreviewTargetDialog = false;
+      this.togglePreviewTargetDialog(false);
     },
 
     /**
      * Handler for confirming the preview target dialog.
      */
     onPreviewTargetDialogConfirm: function(results) {
-      this.showPreviewTargetDialog = false;
+      this.togglePreviewTargetDialog(false);
       this.sendEvent(EVENTS.PREVIEW_TARGET_SET, results);
 
       // Go to the game preview page.
       this.goto('preview');
+    },
+
+    /**
+     * Toggle the preview target dialog.
+     */
+    togglePreviewTargetDialog: function(toggle) {
+      this.showPreviewTargetDialog = toggle;
     }
   }
 };
@@ -173,9 +180,5 @@ export default {
       margin-bottom: 5px;
       font-size: 12pt;
     }
-
-    // .md-dialog /deep/ .md-dialog-container {
-    //   max-width: 768px;
-    // }
   }
 </style>

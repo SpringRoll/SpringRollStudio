@@ -11,45 +11,35 @@ describe('LandingPage.js', () => {
   });
 
   it('should mount and render', () => {
-    const vm = createVue({
-      el: document.createElement('div'),
-      render: h => h(LandingPage)
-    }).$mount();
-    expect(vm.$el.querySelector('.name').textContent).to.equal('SpringRoll Studio');
+    const wrapper = createVue(LandingPage);
+    expect(wrapper.find('.name').text()).to.equal('SpringRoll Studio');
   });
 
   it('should dispatch EVENTS.OPEN_DIALOG with parameter DIALOGS.PROJECT_LOCATION_SETTER', () => {
     LandingPage.methods.sendEvent = Sinon.stub();
 
-    const vm = createVue({
-      el: document.createElement('div'),
-      render: h => h(LandingPage)
-    }).$mount();
-    vm.$el.querySelector('.projectLocationBtn').click();
+    const wrapper = createVue(LandingPage);
+    wrapper.find('.projectLocationBtn').trigger('click');
 
     expect(LandingPage.methods.sendEvent.calledWith(EVENTS.OPEN_DIALOG, DIALOGS.PROJECT_LOCATION_SETTER)).to.equal(true);
   });
 
-  it('should dispatch EVENTS.PREVIEW_GAME', () => {
-    LandingPage.methods.sendEvent = Sinon.stub();
+  it('preview game button should toggle the preview target dialog', () => {
+    const toggle = LandingPage.methods.togglePreviewTargetDialog;
+    LandingPage.methods.togglePreviewTargetDialog = Sinon.stub();
 
-    const vm = createVue({
-      el: document.createElement('div'),
-      render: h => h(LandingPage)
-    }).$mount();
-    vm.$el.querySelector('.previewGameBtn').click();
+    const wrapper = createVue(LandingPage);
+    wrapper.find('.previewGameBtn').trigger('click');
 
-    expect(LandingPage.methods.sendEvent.calledWith(EVENTS.PREVIEW_GAME)).to.equal(true);
+    expect(LandingPage.methods.togglePreviewTargetDialog.callCount).to.equal(1);
+    LandingPage.methods.togglePreviewTargetDialog = toggle;
   });
 
   it('should dispatch EVENTS.CREATE_PROJECT_TEMPLATE', () => {
     LandingPage.methods.sendEvent = Sinon.stub();
 
-    const vm = createVue({
-      el: document.createElement('div'),
-      render: h => h(LandingPage)
-    }).$mount();
-    vm.$el.querySelector('.projectTemplateBtn').click();
+    const wrapper = createVue(LandingPage);
+    wrapper.find('.projectTemplateBtn').trigger('click');
 
     expect(LandingPage.methods.sendEvent.calledWith(EVENTS.CREATE_PROJECT_TEMPLATE)).to.equal(true);
   });
@@ -57,11 +47,8 @@ describe('LandingPage.js', () => {
   it('should dispatch EVENTS.OPEN_CAPTION_STUDIO', () => {
     LandingPage.methods.sendEvent = Sinon.stub();
 
-    const vm = createVue({
-      el: document.createElement('div'),
-      render: h => h(LandingPage)
-    }).$mount();
-    vm.$el.querySelector('.captionStudioBtn').click();
+    const wrapper = createVue(LandingPage);
+    wrapper.find('.captionStudioBtn').trigger('click');
 
     expect(LandingPage.methods.sendEvent.calledWith(EVENTS.OPEN_CAPTION_STUDIO)).to.equal(true);
   });

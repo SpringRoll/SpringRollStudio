@@ -1,17 +1,21 @@
-import Vue from 'vue';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import persistentState from '@/renderer/store/storage/PersistentState';
 import projectInfo from '@/renderer/store/modules/ProjectInfo';
+import gamePreview from '@/renderer/store/modules/GamePreview';
 
-Vue.use(Vuex);
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
-export const createVue = (options = {}) => {
-  return new Vue({
-    ...options,
+export const createVue = (component, options = {}) => {
+  return mount(component, {
+    ...options, 
+    localVue,
 
     store: new Vuex.Store({
       modules: {
-        projectInfo
+        projectInfo,
+        gamePreview
       },
 
       plugins: [
