@@ -1,10 +1,11 @@
 <template>
-  <div class="dialog" v-show="visible === true">
+  <div v-show="visible === true" class="dialog">
     <div class="content">
       <p class="heading">Choose Preview Target</p>
 
       <div class="options">
-        <input type="radio"
+        <input
+          type="radio"
           name="previewType"
           :checked="isDeploy" 
           @change="setPreviewType('deploy')"
@@ -13,7 +14,8 @@
 
         <br />
 
-        <input type="radio"
+        <input
+          type="radio"
           name="previewType"
           :checked="isURL"
           @change="setPreviewType('url')"
@@ -22,76 +24,61 @@
 
         <br />
 
-        <input id="urlInput" 
+        <input
+          id="urlInput" 
           class="urlInput" 
-          :disabled="disableURL === true" 
+          :disabled="disableURL() === true" 
           :value="previewURL" 
           @input="onUrlInputChange()"
         />
       </div>
 
       <div class="actions">
-        <button 
-          @click="onBtnCancelClick()">
-          Cancel
-        </button>
+        <button @click="onBtnCancelClick()">Cancel</button>
         <button
           id="confirmBtn"
-          :disabled="disableConfirm === true"
-          @click="onBtnConfirmClick()">
+          :disabled="disableConfirm() === true"
+          @click="onBtnConfirmClick()"
+        >
           Confirm
         </button>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
-/**
- * Checks to see if the confirm button should be disabled or not.
- * TODO - Needs to check for spaces.
- */
-const canConfirm = function() {
-  if (this.$data.previewType === 'deploy') {
-    return true;
-  }
-  else if (this.$data.previewType === 'url') {
-    return !/^ *$/.test(this.$el.querySelector('#urlInput').value);
-  }
-  return false;
-}
+import { mapState } from 'vuex';
 
 export default {
-  props: [
+  props: {
     // Variables
-    'visible',
+    visible: {
+      type:Boolean,
+      default: false
+    },
 
     // Callbacks
-    'onCancel',
-    'onConfirm'
-  ],
-
-  data: function () {
-    return {
-      previewType: undefined,
-      
-    };
+    onCancel: { 
+      type: Function,
+      default: () => {}
+    },
+    onConfirm: {
+      type: Function,
+      default: () => {}
+    }
   },
 
   /**
-   * When this component is mounted, set some states.
+   * Data object
    */
-  mounted: function() {
-    this.$data.previewType = this.previewTarget;
+  data: function () {
+    return {
+      previewType: undefined
+    };
   },
 
   computed: {
-    disableURL: function() { return this.previewType === 'deploy'; },
-    disableConfirm: function() { return !canConfirm.call(this); },
-
     ...mapState({
       /**
        * Returns the last known preview target from storage.
@@ -104,7 +91,7 @@ export default {
        * Returns the last known preview URL from storage.
        */
       previewURL: function(state) {
-        if (this.isDeploy || this.$data.previewType === 'deploy') {
+        if (this.isDeploy || this.previewType === 'deploy') {
           return '';
         }
         return (!state.gamePreview || !state.gamePreview.previewURL) ? '' : state.gamePreview.previewURL;
@@ -126,19 +113,47 @@ export default {
     })
   },
 
+  /**
+   * When this component is mounted, set some states.
+   */
+  mounted: function() {
+    this.previewType = this.previewTarget;
+  },
+
   methods: {
+    /**
+     * Whether or not the URL input field should be disabled.
+     */
+    disableURL: function() {
+      return this.previewType === 'deploy';
+    },
+    /**
+     * Whether or not the confirm button should be disabled.
+     */
+    disableConfirm: function() {
+      switch (this.previewType) {
+      case 'deploy':
+        return false;
+
+      case 'url':
+        const val = this.$el.querySelector('#urlInput').value;
+        return !val || val === '';
+      }
+      return false;
+    },
+
     /**
      * Sets the previewType variable anytime an option is selected.
      */
     setPreviewType: function(type) {
-      this.$data.previewType = type;
+      this.previewType = type;
     },
 
     /**
      * Updates the state of the confirm button any time the input text is updated.
      */
     onUrlInputChange: function() {
-      this.$el.querySelector('#confirmBtn').disabled = !canConfirm.call(this);
+      this.$el.querySelector('#confirmBtn').disabled = this.disableConfirm();
     },
 
     /**
@@ -157,7 +172,7 @@ export default {
     onBtnConfirmClick: function() {
       const onConfirm = this.$props.onConfirm;
       if (onConfirm && typeof onConfirm === 'function') {
-        const result = { type: this.$data.previewType };
+        const result = { type: this.previewType };
         if (result.type === 'url') {
           result.url = this.$el.querySelector('#urlInput').value;
         }
@@ -165,7 +180,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

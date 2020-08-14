@@ -1,4 +1,4 @@
-import store from "../../../renderer/store";
+import store from '../../../renderer/store';
 
 /**
  *

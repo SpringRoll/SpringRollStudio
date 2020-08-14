@@ -19,6 +19,7 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       webviewTag: true,
+      webSecurity: false,
 
       mainProcessFile: 'src/main/index.js',
       

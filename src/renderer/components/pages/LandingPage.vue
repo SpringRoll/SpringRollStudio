@@ -1,10 +1,9 @@
 <template>
   <div class="main">
-
-    <preview-target-dialog 
-      v-bind:onCancel="onPreviewTargetDialogCancel"
-      v-bind:onConfirm="onPreviewTargetDialogConfirm"
-      v-bind:visible="showPreviewTargetDialog"
+    <preview-target-dialog
+      :on-cancel="onPreviewTargetDialogCancel"
+      :on-confirm="onPreviewTargetDialogConfirm"
+      :visible="showPreviewTargetDialog"
     />
 
     <div class="heading">
@@ -26,7 +25,7 @@
 </template>
 
 <script>
-import PreviewTargetDialog from '../dialogs/PreviewTargetDialog';
+import PreviewTargetDialog from '../dialogs/PreviewTargetDialog.vue';
 import { ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
 import { EVENTS, DIALOGS } from '../../../contants';
@@ -36,6 +35,9 @@ export default {
     PreviewTargetDialog
   },
 
+  /**
+   * Data object
+   */
   data: function() {
     return {
       showPreviewTargetDialog: false
@@ -75,14 +77,14 @@ export default {
      * Handler for canceling the preview target dailog.
      */
     onPreviewTargetDialogCancel: function() {
-      this.$data.showPreviewTargetDialog = false;
+      this.showPreviewTargetDialog = false;
     },
 
     /**
      * Handler for confirming the preview target dialog.
      */
     onPreviewTargetDialogConfirm: function(results) {
-      this.$data.showPreviewTargetDialog = false;
+      this.showPreviewTargetDialog = false;
       this.sendEvent(EVENTS.PREVIEW_TARGET_SET, results);
 
       // Go to the game preview page.

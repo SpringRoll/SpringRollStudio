@@ -82,13 +82,13 @@ class SpringRollStudio {
   previewTargetSet(event, data) {
     gamePreview.previewTarget = data.type;
 
-    switch(data.type) {
+    switch (data.type) {
     case 'deploy':
       gamePreview.previewURL = resolve(projectInfo.location, 'deploy');
       break;
 
     case 'url':
-      gamePreview.previewURL = data.url
+      gamePreview.previewURL = data.url;
       break;
     }
   }

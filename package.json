@@ -20,7 +20,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "electron-store": "^6.0.0",
-    "springroll-container": "^2.0.0",
+    "springroll-container": "^2.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.4.1",
     "vuex": "^3.5.1"

@@ -14,11 +14,6 @@ export default new Router({
       path: '/preview',
       name: 'preview-page',
       component: require('../components/pages/PreviewPage').default
-    },
-    {
-      path: '/preview-error',
-      name: 'preview-error-page',
-      component: require('../components/pages/PreviewErrorPage').default
     }
   ]
 });
