@@ -1,4 +1,5 @@
 export const EVENTS = {
+  NAVIGATE: 'navigate',
   OPEN_DIALOG: 'openDialog',
   OPEN_CAPTION_STUDIO: 'openCaptionStudio',
   PREVIEW_GAME: 'previewGame',

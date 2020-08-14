@@ -29,7 +29,10 @@ describe('LandingPage.js', () => {
     LandingPage.methods.togglePreviewTargetDialog = Sinon.stub();
 
     const wrapper = createVue(LandingPage);
-    wrapper.find('.previewGameBtn').trigger('click');
+    const btn = wrapper.find('.previewGameBtn');
+
+    btn.element.disabled = false;
+    btn.trigger('click');
 
     expect(LandingPage.methods.togglePreviewTargetDialog.callCount).to.equal(1);
     expect(LandingPage.methods.togglePreviewTargetDialog.calledWith(true)).to.equal(true);

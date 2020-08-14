@@ -20,9 +20,6 @@ protocol.registerSchemesAsPrivileged([
  * Creates electron window
  */
 function createWindow() {
-  // Initialize SpringRoll Studio.
-  studio.initialize(win);
-
   // Create the browser window.
   win = new BrowserWindow({
     width: 1024,
@@ -35,6 +32,9 @@ function createWindow() {
       webSecurity: false
     }
   });
+
+  // Initialize SpringRoll Studio.
+  studio.initialize(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

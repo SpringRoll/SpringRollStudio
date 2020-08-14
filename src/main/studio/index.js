@@ -91,6 +91,8 @@ class SpringRollStudio {
       gamePreview.previewURL = data.url;
       break;
     }
+
+    this.window.webContents.send(EVENTS.NAVIGATE, 'preview');
   }
 }
 

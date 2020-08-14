@@ -15,7 +15,7 @@
 
     <div class="navigation">
       <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" @click="togglePreviewTargetDialog(true)">Preview Game</button>
+      <button class="previewGameBtn" :disabled="disablePreview" @click="togglePreviewTargetDialog(true)">Preview Game</button>
       <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
       <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
     </div>
@@ -54,6 +54,13 @@ export default {
           return 'No active project';
         }
         return state.projectInfo.location;
+      },
+
+      /**
+       * Whether or not to disable the preview game button.
+       */
+      disablePreview: function(state) {
+        return !state.projectInfo || !state.projectInfo.location;
       }
     })
   },
@@ -86,9 +93,6 @@ export default {
     onPreviewTargetDialogConfirm: function(results) {
       this.togglePreviewTargetDialog(false);
       this.sendEvent(EVENTS.PREVIEW_TARGET_SET, results);
-
-      // Go to the game preview page.
-      this.goto('preview');
     },
 
     /**
