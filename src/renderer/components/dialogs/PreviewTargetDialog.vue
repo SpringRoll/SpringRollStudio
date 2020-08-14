@@ -11,7 +11,7 @@
           :checked="isDeploy" 
           @change="setPreviewType('deploy')"
         />
-        <label for="male">Deploy Folder</label>
+        <label for="previewType">Deploy Folder</label>
 
         <br />
 
@@ -22,7 +22,7 @@
           :checked="isURL"
           @change="setPreviewType('url')"
         />
-        <label for="male">Custom URL</label>
+        <label for="previewType">Custom URL</label>
 
         <br />
 
