@@ -8,7 +8,7 @@
           id="deployOption"
           type="radio"
           name="previewType"
-          :checked="isDeploy" 
+          :checked="isDeploy"
           @change="setPreviewType('deploy')"
         />
         <label for="previewType">Deploy Folder</label>
@@ -27,16 +27,16 @@
         <br />
 
         <input
-          id="urlInput" 
-          class="urlInput" 
-          :disabled="disableURL() === true" 
-          :value="previewURL" 
+          id="urlInput"
+          class="urlInput"
+          :disabled="disableURL"
+          :value="previewURL"
           @input="onUrlInputChange()"
         />
       </div>
 
       <div class="actions">
-        <button 
+        <button
           id="cancelBtn"
           @click="onBtnCancelClick()"
         >
@@ -44,7 +44,7 @@
         </button>
         <button
           id="confirmBtn"
-          :disabled="disableConfirm() === true"
+          :disabled="disableConfirm"
           @click="onBtnConfirmClick()"
         >
           Confirm
@@ -66,7 +66,7 @@ export default {
     },
 
     // Callbacks
-    onCancel: { 
+    onCancel: {
       type: Function,
       default: () => {}
     },
@@ -116,7 +116,27 @@ export default {
        */
       isURL: function(state) {
         return state.gamePreview && state.gamePreview.previewTarget && state.gamePreview.previewTarget === 'url';
-      }
+      },
+      /**
+       * Whether or not the URL input field should be disabled.
+       */
+      disableURL: function() {
+        return this.previewType === 'deploy';
+      },
+      /**
+       * Whether or not the confirm button should be disabled.
+       */
+      disableConfirm: function() {
+        switch (this.previewType) {
+        case 'deploy':
+          return false;
+
+        case 'url':
+          const val = this.$el.querySelector('#urlInput').value;
+          return !val || val === '';
+        }
+        return false;
+      },
     })
   },
 
@@ -128,27 +148,6 @@ export default {
   },
 
   methods: {
-    /**
-     * Whether or not the URL input field should be disabled.
-     */
-    disableURL: function() {
-      return this.previewType === 'deploy';
-    },
-    /**
-     * Whether or not the confirm button should be disabled.
-     */
-    disableConfirm: function() {
-      switch (this.previewType) {
-      case 'deploy':
-        return false;
-
-      case 'url':
-        const val = this.$el.querySelector('#urlInput').value;
-        return !val || val === '';
-      }
-      return false;
-    },
-
     /**
      * Sets the previewType variable anytime an option is selected.
      */
