@@ -159,7 +159,7 @@ export default {
      * Updates the state of the confirm button any time the input text is updated.
      */
     onUrlInputChange: function() {
-      this.$el.querySelector('#confirmBtn').disabled = this.disableConfirm();
+      this.$el.querySelector('#confirmBtn').disabled = this.disableConfirm;
     },
 
     /**
