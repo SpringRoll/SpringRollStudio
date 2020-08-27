@@ -44,7 +44,7 @@
         </button>
         <button
           id="confirmBtn"
-          :disabled="disableConfirm"
+          :disabled="disableConfirm()"
           @click="onBtnConfirmClick()"
         >
           Confirm
@@ -123,20 +123,7 @@ export default {
       disableURL: function() {
         return this.previewType === 'deploy';
       },
-      /**
-       * Whether or not the confirm button should be disabled.
-       */
-      disableConfirm: function() {
-        switch (this.previewType) {
-        case 'deploy':
-          return false;
 
-        case 'url':
-          const val = this.$el.querySelector('#urlInput').value;
-          return !val || val === '';
-        }
-        return false;
-      },
     })
   },
 
@@ -149,6 +136,20 @@ export default {
 
   methods: {
     /**
+     * Whether or not the confirm button should be disabled.
+     */
+    disableConfirm: function() {
+      switch (this.previewType) {
+      case 'deploy':
+        return false;
+
+      case 'url':
+        const val = this.$el.querySelector('#urlInput').value;
+        return !val || val === '';
+      }
+      return false;
+    },
+    /**
      * Sets the previewType variable anytime an option is selected.
      */
     setPreviewType: function(type) {
@@ -159,7 +160,7 @@ export default {
      * Updates the state of the confirm button any time the input text is updated.
      */
     onUrlInputChange: function() {
-      this.$el.querySelector('#confirmBtn').disabled = this.disableConfirm;
+      this.$el.querySelector('#confirmBtn').disabled = this.disableConfirm();
     },
 
     /**

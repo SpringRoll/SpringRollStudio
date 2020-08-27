@@ -11,7 +11,7 @@ describe('PreviewTargetDialog.js', () => {
 
   it('dialog should be visible after setting the "visible" property', async () => {
     const wrapper = createVue(PreviewTargetDialog);
-    await wrapper.setProps({ visible: true })
+    await wrapper.setProps({ visible: true });
     expect(wrapper.find('.dialog').element.style.display).to.not.equal('none');
   });
 
