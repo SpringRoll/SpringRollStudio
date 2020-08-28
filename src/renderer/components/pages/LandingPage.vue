@@ -28,7 +28,7 @@
 import PreviewTargetDialog from '../dialogs/PreviewTargetDialog.vue';
 import { ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
-import { EVENTS, DIALOGS } from '../../../contants';
+import { EVENTS, DIALOGS } from '../../../contents';
 
 export default {
   components: {

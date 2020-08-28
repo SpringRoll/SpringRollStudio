@@ -54,5 +54,5 @@ module.exports = (config) => {
     },
 
     browsers: ['VisibleElectron']
-  })
+  });
 };

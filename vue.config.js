@@ -9,7 +9,7 @@ module.exports = {
 
     resolve: {
       alias: {
-          vue$: 'vue/dist/vue.esm.js'
+        vue$: 'vue/dist/vue.esm.js'
       }
     }
   },
@@ -22,7 +22,7 @@ module.exports = {
       webSecurity: false,
 
       mainProcessFile: 'src/main/index.js',
-      
+
       // Fix this. This will watch file creation and deletion as well.
       mainProcessWatch: ['src/main/**/*.js'],
 

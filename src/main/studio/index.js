@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 import { ipcMain, dialog } from 'electron';
-import { EVENTS, DIALOGS } from '../../contants';
+import { EVENTS, DIALOGS } from '../../contents';
 import { projectInfo, gamePreview } from './storage';
 
 /**

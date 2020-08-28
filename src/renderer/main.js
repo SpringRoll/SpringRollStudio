@@ -5,7 +5,7 @@ import store from './store';
 
 import App from './App.vue';
 import { ipcRenderer } from 'electron';
-import { EVENTS } from '../contants';
+import { EVENTS } from '../contents';
 
 Vue.config.productionTip = false;
 
