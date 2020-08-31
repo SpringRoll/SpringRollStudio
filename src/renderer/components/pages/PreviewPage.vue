@@ -28,11 +28,7 @@ export default {
           return join(state.gamePreview.previewURL, 'index.html');
 
         case 'url':
-          let url = `${state.gamePreview.previewURL}/index.html`;
-          if (url.indexOf('http:') === -1) {
-            url = `http://${url}`;
-          }
-          return url;
+          return `${state.gamePreview.previewURL}/index.html`;
         }
       }
     })
