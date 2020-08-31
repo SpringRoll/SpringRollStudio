@@ -23,7 +23,6 @@ export default {
        * Returns a formatted preview url.
        */
       previewURL: function(state) {
-        console.log(state.gamePreview.previewURL)
         if (state.gamePreview.previewURL.indexOf('index.html') === -1)  {
           switch (state.gamePreview.previewTarget) {
           case 'deploy':
