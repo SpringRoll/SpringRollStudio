@@ -23,13 +23,17 @@ export default {
        * Returns a formatted preview url.
        */
       previewURL: function(state) {
-        switch (state.gamePreview.previewTarget) {
-        case 'deploy':
-          return join(state.gamePreview.previewURL, 'index.html');
+        console.log(state.gamePreview.previewURL)
+        if (state.gamePreview.previewURL.indexOf('index.html') === -1)  {
+          switch (state.gamePreview.previewTarget) {
+          case 'deploy':
+            return join(state.gamePreview.previewURL, 'index.html');
 
-        case 'url':
-          return `${state.gamePreview.previewURL}/index.html`;
+          case 'url':
+            return `${state.gamePreview.previewURL}/index.html`;
+          }
         }
+        return state.gamePreview.previewURL;
       }
     })
   },

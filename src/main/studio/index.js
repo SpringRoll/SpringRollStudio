@@ -88,7 +88,7 @@ class SpringRollStudio {
       break;
 
     case 'url':
-      if (data.url.indexOf('http:') === -1) {
+      if (data.url.indexOf('http:') === -1 && data.url.indexOf('https:') === -1) {
         data.url = `http://${data.url}`;
       }
       gamePreview.previewURL = data.url;
