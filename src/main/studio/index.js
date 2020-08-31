@@ -84,7 +84,7 @@ class SpringRollStudio {
 
     switch (data.type) {
     case 'deploy':
-      gamePreview.previewURL = resolve(projectInfo.location, 'deploy');
+      gamePreview.previewURL = `file://${resolve(projectInfo.location, 'deploy')}`;
       break;
 
     case 'url':
