@@ -2,7 +2,17 @@
   <div class="main">
     <div class="content">
       <div class="controls">
-        <button id="btnHome" @click="onHomeClick()">Home</button>
+        <div class="controls-left">
+          <button id="btnHome" class="btn-controls" @click="onHomeClick()">Home</button>
+        </div>
+        <div class="controls-right">
+          <button id="helpButton" class="btn-controls">Help</button>
+          <button id="soundButton" class="btn-controls">Sound</button>
+          <button id="soundToggle" class="btn-controls --toggle">V</button>
+          <button id="captionsButton" class="btn-controls">Captions</button>
+          <button id="captionsToggle" class="btn-controls --toggle">V</button>
+          <button id="pauseButton" class="btn-controls">Pause</button>
+        </div>
       </div>
       <iframe id="gameFrame" class="gameFrame" :src="previewURL" />
     </div>
@@ -63,7 +73,7 @@ export default {
     width: 100%;
     height: 100%;
 
-    background-color: black;
+    background-color: #222;
   }
 
   .content {
@@ -74,19 +84,39 @@ export default {
     flex-direction: column;
 
     .controls {
-      background-color: blue;
+      display: flex;
+      justify-content: space-between;
+      height: 40px;
 
       width: 100%;
-      height: 50px;
 
-      > button {
-        width: 40px;
-        height: 40px;
+      .controls-left {
+        width: 325px;
       }
 
-      #btnHome {
-        margin-left: 5px;
-        margin-top: 5px;
+      .controls-right {
+        width: 325px;
+      }
+
+      .btn-controls {
+        cursor: pointer;
+        height: 100%;
+        width: 20%;
+        background-color: #337ab7;
+        color: white;
+        outline: 0;
+        border: 0;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+
+        &:hover {
+          background-color: #286090;
+        }
+
+        &.--toggle {
+          width: 10%;
+        }
       }
     }
 
