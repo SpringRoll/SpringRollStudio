@@ -3,7 +3,7 @@
     <div class="content">
       <div class="controls">
         <div class="controls-left">
-          <button id="btnHome" class="btn-controls" @click="onHomeClick()">Home</button>
+          <button id="btnHome" class="btn-controls" @click="onHomeClick()"><HomeIcon class="controls-icon" /></button>
         </div>
         <div class="controls-right">
           <button id="helpButton" class="btn-controls">Help</button>
@@ -21,12 +21,16 @@
 
 <script>
 import { Container } from 'springroll-container';
+import HomeIcon from '../../assets/svg/001-home.svg';
 import { mapState } from 'vuex';
 import { join } from 'path';
 
 let springrollContainer;
 
 export default {
+  components: {
+    HomeIcon
+  },
   computed: {
     ...mapState({
       /**
@@ -74,6 +78,12 @@ export default {
     height: 100%;
 
     background-color: #222;
+  }
+
+  .controls-icon {
+    fill: white;
+    height: 24px;
+    width: 24px;
   }
 
   .content {
