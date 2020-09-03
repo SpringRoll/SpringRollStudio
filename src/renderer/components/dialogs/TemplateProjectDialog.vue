@@ -19,6 +19,39 @@
             </button>
           </div>
         </div>
+
+        <div class="templateType">
+          <p class="templateType-heading">Template Type</p>
+          <div class="templateType-content">
+            <div class="templateOption">
+              <input
+                id="pixiOption"
+                type="radio"
+                name="templateType"
+                checked
+              />
+              <label for="pixiOption">PIXI</label>
+            </div>
+
+            <div class="templateOption">
+              <input
+                id="phaserOption"
+                type="radio"
+                name="templateType"
+              />
+              <label for="phaserOption">Phaser 3</label>
+            </div>
+
+            <div class="templateOption">
+              <input
+                id="createjsOption"
+                type="radio"
+                name="templateType"
+              />
+              <label for="createjsOption">CreateJS</label>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="actions">
@@ -130,7 +163,7 @@ export default {
     position: relative;
 
     width: 500px;
-    height: 400px;
+    height: 300px;
 
     background-color: white;
 
@@ -144,11 +177,11 @@ export default {
       position: absolute;
 
       width: 90%;
-      height: 300px;
+      height: 74%;
 
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content:space-evenly;
       align-items: center;
 
       left: 50%;
@@ -159,7 +192,8 @@ export default {
         width: 100%;
 
         .projectLocation-heading {
-
+          font-size: 10pt;
+          padding-bottom: 5px;
         }
 
         .projectLocation-content {
@@ -175,6 +209,41 @@ export default {
 
           .dirBrowseBtn {
             flex-grow: 1;
+          }
+        }
+      }
+
+      .templateType {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
+        height: 100px;
+
+        .templateType-heading {
+          font-size: 10pt;
+          padding-bottom: 5px;
+        }
+
+        .templateType-content {
+          width: 90%;
+          height: 100%;
+
+          flex-grow: 1;
+          border: 1px solid black;
+          border-radius: 5px;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .templateOption > input {
+            margin-right: 5px;
+          }
+
+          > .templateOption + .templateOption {
+            margin-left: 50px;
           }
         }
       }
