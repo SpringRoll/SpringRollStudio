@@ -164,24 +164,18 @@ export default {
      * Handler for clicking the cancel button.
      */
     onBtnCancelClick: function() {
-      const onCancel = this.$props.onCancel;
-      if (onCancel && typeof onCancel === 'function') {
-        onCancel();
-      }
+      this.onCancel();
     },
 
     /**
      * Handler for clicking the confirm button.
      */
     onBtnConfirmClick: function() {
-      const onConfirm = this.$props.onConfirm;
-      if (onConfirm && typeof onConfirm === 'function') {
-        const result = { type: this.previewType };
-        if (result.type === 'url') {
-          result.url = this.$el.querySelector('#urlInput').value;
-        }
-        onConfirm(result);
+      const result = { type: this.previewType };
+      if (result.type === 'url') {
+        result.url = this.$el.querySelector('#urlInput').value;
       }
+      this.onConfirm(result);
     }
   }
 };
