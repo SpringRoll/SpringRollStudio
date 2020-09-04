@@ -11,3 +11,16 @@ export const EVENTS = {
 export const DIALOGS = {
   PROJECT_LOCATION_SETTER: 'projectLocationSetter'
 };
+
+export const TEMPLATES = {
+  github: {
+    pixi: 'https://github.com/SpringRoll/Springroll-Seed/archive/templates/pixi.zip',
+    phaser: 'https://github.com/SpringRoll/Springroll-Seed/archive/templates/phaser3.zip',
+    createjs: 'https://github.com/SpringRoll/Springroll-Seed/archive/templates/createjs.zip'
+  },
+  file: {
+    pixi: '',
+    phaser: '',
+    createjs: ''
+  }
+};
