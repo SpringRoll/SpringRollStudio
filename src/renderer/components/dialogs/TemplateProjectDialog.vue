@@ -29,6 +29,7 @@
                 type="radio"
                 name="templateType"
                 checked
+                @change="setTemplateType('pixi')"
               />
               <label for="pixiOption">PIXI</label>
             </div>
@@ -38,6 +39,7 @@
                 id="phaserOption"
                 type="radio"
                 name="templateType"
+                @change="setTemplateType('phaser')"
               />
               <label for="phaserOption">Phaser 3</label>
             </div>
@@ -47,6 +49,7 @@
                 id="createjsOption"
                 type="radio"
                 name="templateType"
+                @change="setTemplateType('createjs')"
               />
               <label for="createjsOption">CreateJS</label>
             </div>
@@ -95,9 +98,21 @@ export default {
     }
   },
 
+  /**
+   * Data object
+   */
+  data: function() {
+    return {
+      templateType: 'pixi'
+    };
+  },
+
   computed: {
     ...mapState({
 
+      /**
+       * Returns the path for the current project.
+       */
       projectLocation: function(state) {
         return state.projectInfo.location;
       }
@@ -105,6 +120,13 @@ export default {
   },
 
   methods: {
+    /**
+     * Sets the template type.
+     */
+    setTemplateType: function(type) {
+      this.templateType = type;
+    },
+
     /**
      * Handler for when the project location button is clicked.
      */
@@ -117,7 +139,7 @@ export default {
       // Open dialog in renderer process because this is a temp location
       // until the template dialog confirm action is selected.
       const result = remote.dialog.showOpenDialogSync(remote.getCurrentWindow(), {
-        title: "Select Project Location",
+        title: 'Select Project Location',
         properties: ['openDirectory'],
         defaultPath
       });
@@ -138,10 +160,13 @@ export default {
      * Handler for clicking the confirm button.
      */
     onBtnConfirmClick: function() {
-      this.onConfirm({});
+      this.onConfirm({
+        type: this.templateType,
+        location: this.$el.querySelector('.urlInput').value
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

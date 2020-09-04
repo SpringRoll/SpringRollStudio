@@ -1,8 +1,9 @@
 import { resolve } from 'path';
-
-import { ipcMain, dialog } from 'electron';
+import { ipcMain, dialog, BrowserWindow } from 'electron';
 import { EVENTS, DIALOGS } from '../../contents';
 import { projectInfo, gamePreview } from './storage';
+
+import ProjectTemplateCreator from './managers/ProjectTemplateCreator';
 
 /**
  * Main application Singleton. This object is responsible for setting up logic specific to SpringRoll Studio.
@@ -14,7 +15,9 @@ class SpringRollStudio {
    * @memberof SpringRollStudio
    */
   initialize(window) {
+    /** @type {BrowserWindow} */
     this.window = window;
+    this.templateCreator = new ProjectTemplateCreator(this);
     this.setupListeners();
   }
 
@@ -63,8 +66,17 @@ class SpringRollStudio {
    * Handler for EVENTS.CREATE_PROJECT_TEMPLATE event.
    * @memberof SpringRollStudio
    */
-  createProjectTemplate() {
-    console.log('[createProjectTemplate] Missing implementation');
+  createProjectTemplate(event, data) {
+    // TODO - Block input while template is being created.
+    this.templateCreator.create(data.type, data.location)
+      .then(() => {
+        projectInfo.location = data.location;
+      }).catch(() => {
+        dialog.showErrorBox(
+          'Failed to create template',
+          `Could not create ${data.type} template at ${data.location}`
+        );
+      });
   }
 
   /**
