@@ -3,15 +3,39 @@
     <div class="content">
       <div class="controls">
         <div class="controls-left">
-          <button id="btnHome" class="btn-controls" @click="onHomeClick()"><HomeIcon class="controls-icon" /></button>
+          <button id="btnHome" class="btn btn-controls" @click="onHomeClick()"><HomeIcon class="controls-icon" /></button>
         </div>
         <div class="controls-right">
-          <button id="helpButton" class="btn-controls">Help</button>
-          <button id="soundButton" class="btn-controls">Sound</button>
-          <button id="soundToggle" class="btn-controls --toggle">V</button>
-          <button id="captionsButton" class="btn-controls">Captions</button>
-          <button id="captionsToggle" class="btn-controls --toggle">V</button>
-          <button id="pauseButton" class="btn-controls">Pause</button>
+          <button id="helpButton" class="btn btn-controls"><HelpIcon class="controls-icon" /></button>
+          <button id="soundButton" class="btn btn-controls" @click="muted = !muted">
+            <VolumeOnIcon v-show="!muted" class="controls-icon" />
+            <MuteIcon v-show="muted" class="controls-icon" />
+          </button>
+          <button id="soundToggle" class="btn btn-controls --toggle" @click="soundContextsActive = !soundContextsActive">
+            <CircleDownIcon class="controls-icon --toggle" :class="{ '--active': soundContextsActive }" />
+          </button>
+          <form v-show="soundContextsActive" id="soundContexts" class="dropDown">
+            <div class="form-group form-title">
+              Audio Settings
+            </div>
+            <div class="form-group">
+              <button id="sfxButton" class="btn btn-contexts">
+                <SFXIcon class="controls-icon" /> <span>Sound FX {{ sfxMuted ? 'Off' : 'On' }}</span>
+              </button>
+              <button id="musicButton" class="btn btn-contexts">
+                <MusicIcon class="controls-icon" /> <span>Music {{ musicMuted ? 'Off' : 'On' }}</span>
+              </button>
+              <button id="voButton" class="btn btn-contexts">
+                <VOIcon class="controls-icon" /> <span>Voice Over {{ voMuted ? 'Off' : 'On' }}</span>
+              </button>
+            </div>
+          </form>
+          <button id="captionsButton" class="btn btn-controls"><CCIcon class="controls-icon" /></button>
+          <button id="captionsToggle" class="btn btn-controls --toggle"><CircleDownIcon class="controls-icon --toggle" /></button>
+          <button id="pauseButton" class="btn btn-controls">
+            <PauseIcon v-show="!paused" class="controls-icon" />
+            <PlayIcon v-show="paused" class="controls-icon" />
+          </button>
         </div>
       </div>
       <iframe id="gameFrame" class="gameFrame" :src="previewURL" />
@@ -20,8 +44,19 @@
 </template>
 
 <script>
-import { Container } from 'springroll-container';
+import { Container, PausePlugin, SoundPlugin, CaptionsTogglePlugin } from 'springroll-container';
 import HomeIcon from '../../assets/svg/001-home.svg';
+import HelpIcon from '../../assets/svg/266-question.svg';
+import PlayIcon from '../../assets/svg/285-play3.svg';
+import PauseIcon from '../../assets/svg/286-pause2.svg';
+import VolumeOnIcon from '../../assets/svg/295-volume-high.svg';
+import MuteIcon from '../../assets/svg/299-volume-mute2.svg';
+import CCIcon from '../../assets/svg/cc-no-bg.svg';
+import CircleUpIcon from '../../assets/svg/322-circle-up.svg';
+import CircleDownIcon from '../../assets/svg/324-circle-down.svg';
+import MusicIcon from '../../assets/svg/018-music.svg';
+import SFXIcon from '../../assets/svg/082-bell.svg';
+import VOIcon from '../../assets/svg/vo-audio-icon.svg';
 import { mapState } from 'vuex';
 import { join } from 'path';
 
@@ -29,7 +64,32 @@ let springrollContainer;
 
 export default {
   components: {
-    HomeIcon
+    HomeIcon,
+    HelpIcon,
+    PlayIcon,
+    PauseIcon,
+    VolumeOnIcon,
+    MuteIcon,
+    CCIcon,
+    CircleDownIcon,
+    MusicIcon,
+    SFXIcon,
+    VOIcon,
+  },
+  /**
+   * Data object
+   */
+  data: function() {
+    return {
+      //These are temporary for testing. Should be replaced with the container based element setting
+      paused: false,
+      muted: false,
+      sfxMuted: false,
+      voMuted: false,
+      musicMuted: false,
+      soundContextsActive: false,
+      captionsContextsActive: false,
+    };
   },
   computed: {
     ...mapState({
@@ -76,7 +136,6 @@ export default {
   .main {
     width: 100%;
     height: 100%;
-
     background-color: #222;
   }
 
@@ -84,6 +143,17 @@ export default {
     fill: white;
     height: 24px;
     width: 24px;
+
+    &.--toggle {
+      height: 16px;
+      width: 16px;
+      padding: 4px 0;
+      transition: transform 0.2s;
+
+      &.--active {
+        transform: rotate(180deg);
+      }
+    }
   }
 
   .content {
@@ -97,7 +167,6 @@ export default {
       display: flex;
       justify-content: space-between;
       height: 40px;
-
       width: 100%;
 
       .controls-left {
@@ -108,24 +177,70 @@ export default {
         width: 325px;
       }
 
-      .btn-controls {
-        cursor: pointer;
-        height: 100%;
-        width: 20%;
-        background-color: #337ab7;
-        color: white;
-        outline: 0;
-        border: 0;
-        border-radius: 0;
-        margin: 0;
-        padding: 0;
+      .dropDown {
+        background: #222;
+        width: 324px;
+        margin-left: 1px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        position: absolute;
+        padding: 10px;
+        box-sizing: border-box;
 
-        &:hover {
-          background-color: #286090;
+        .form-title {
+          color: #ccc;
+          font-size: 16px;
+          text-align: left;
+          margin: 5px 0 15px;
         }
 
-        &.--toggle {
-          width: 10%;
+        .form-group {
+          display: flex;
+          width: 100%;
+          flex-direction: column;
+        }
+      }
+
+      .btn {
+          cursor: pointer;
+          background-color: #337ab7;
+          color: white;
+          outline: 0;
+          border: 0;
+          border-radius: 0;
+          padding: 0;
+          &:hover {
+            background-color: #286090;
+          }
+
+        &.btn-controls {
+          height: 100%;
+          width: 20%;
+          border-left: 1px solid rgba(0,0,0,.6);
+
+          &.--toggle {
+            width: 10%;
+            border-left: 1px solid rgba(0,0,0,.1);
+          }
+        }
+
+        &.btn-contexts {
+          width: 100%;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 1;
+          display: block;
+          border-radius: 5px;
+          padding: 6px 12px;
+          margin-bottom: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          svg {
+            margin-right: 0.5rem;
+            scale: 0.8;
+          }
         }
       }
     }
