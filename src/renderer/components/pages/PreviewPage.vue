@@ -19,22 +19,38 @@
               Audio Settings
             </div>
             <div class="form-group">
+              <div id="soundVolumeDiv" class="volume-slider --disabled">
+                <label for="soundVolume">Volume</label>
+                <input id="soundVolume" type="range" name="soundVolume">
+              </div>
               <button id="sfxButton" class="btn btn-contexts">
                 <SFXIcon class="controls-icon" /> <span>Sound FX {{ sfxMuted ? 'Off' : 'On' }}</span>
               </button>
+              <div id="sfxVolumeDiv" class="volume-slider --disabled">
+                <label for="sfxVolume">Volume</label>
+                <input id="sfxVolume" type="range" name="sfxVolume">
+              </div>
               <button id="musicButton" class="btn btn-contexts">
                 <MusicIcon class="controls-icon" /> <span>Music {{ musicMuted ? 'Off' : 'On' }}</span>
               </button>
+              <div id="musicVolumeDiv" class="volume-slider --disabled">
+                <label for="musicVolume">Volume</label>
+                <input id="musicVolume" type="range" name="musicVolume">
+              </div>
               <button id="voButton" class="btn btn-contexts">
                 <VOIcon class="controls-icon" /> <span>Voice Over {{ voMuted ? 'Off' : 'On' }}</span>
               </button>
+              <div id="voVolumeDiv" class="volume-slider --disabled">
+                <label for="voVolume">Volume</label>
+                <input id="voVolume" type="range" name="voVolume">
+              </div>
             </div>
           </form>
           <button id="captionsButton" class="btn btn-controls"><CCIcon class="controls-icon" /></button>
           <button id="captionsToggle" class="btn btn-controls --toggle"><CircleDownIcon class="controls-icon --toggle" /></button>
           <button id="pauseButton" class="btn btn-controls">
-            <PauseIcon v-show="!paused" class="controls-icon" />
-            <PlayIcon v-show="paused" class="controls-icon" />
+            <PauseIcon id="pauseIcon" class="controls-icon" />
+            <PlayIcon id="playIcon" class="controls-icon" />
           </button>
         </div>
       </div>
@@ -81,8 +97,7 @@ export default {
    */
   data: function() {
     return {
-      //These are temporary for testing. Should be replaced with the container based element setting
-      paused: false,
+      isPaused: false,
       muted: false,
       sfxMuted: false,
       voMuted: false,
@@ -109,16 +124,52 @@ export default {
           return url;
         }
       }
-    })
+    }),
   },
-
   /**
    * When this component is mounted, set some states.
    */
   mounted: function() {
-    // TODO - Setup control elements and pass them to the container.
-    springrollContainer = new Container('#gameFrame');
+
+    springrollContainer = new Container('#gameFrame', {
+      plugins: [
+        new PausePlugin('#pauseButton'),
+        new SoundPlugin({
+          soundButtons: '#soundButton',
+          voButtons: '#voButton',
+          sfxButtons: '#sfxButton',
+          musicButtons: '#musicButton',
+          soundSliders: '#soundVolume',
+          sfxSliders: '#sfxVolume',
+          musicSliders: '#musicVolume',
+          voSliders: '#voVolume'
+        }),
+        new CaptionsTogglePlugin('#captionButton'),
+      ]
+    });
+    springrollContainer.client.on('features', ({ data }) => {
+
+      if (!data.soundVolume, !data.musicVolume, !data.sfxVolume, !data.voVolume, !data.sfx, !data.vo, !data.music) {
+        document.querySelector('#soundToggle').style.display = 'none';
+      }
+
+      if (data.soundVolume) {
+        document.querySelector('#soundVolumeDiv').classList.remove('--disabled');
+      }
+      if (data.musicVolume) {
+        document.querySelector('#musicVolumeDiv').classList.remove('--disabled');
+      }
+      if (data.sfxVolume) {
+        document.querySelector('#sfxVolumeDiv').classList.remove('--disabled');
+      }
+      if (data.voVolume) {
+        document.querySelector('#voVolumeDiv').classList.remove('--disabled');
+      }
+    });
     springrollContainer.openPath(this.previewURL);
+
+    console.log(springrollContainer.client.target);
+
   },
 
   methods: {
@@ -198,7 +249,32 @@ export default {
           display: flex;
           width: 100%;
           flex-direction: column;
+          font-size: 12px;
+
+          .volume-slider {
+            width: 100%;
+
+            &.--disabled {
+              display: none;
+            }
+
+            > input {
+              width: 100%;
+            }
+
+            > label {
+              color: #ccc;
+              display: inline-block;
+              max-width: 100%;
+              margin-bottom: 5px;
+              font-weight: 700
+            }
+          }
         }
+      }
+
+      #playIcon {
+        display: none;
       }
 
       .btn {
@@ -221,6 +297,26 @@ export default {
           &.--toggle {
             width: 10%;
             border-left: 1px solid rgba(0,0,0,.1);
+          }
+
+          &.paused {
+            > #pauseIcon {
+              display: none;
+            }
+
+            > #playIcon {
+              display: inline;
+            }
+          }
+
+          &.unpaused {
+            > #pauseIcon {
+              display: inline;
+            }
+
+            > #playIcon {
+              display: none;
+            }
           }
         }
 
