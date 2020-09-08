@@ -168,8 +168,6 @@ export default {
     });
     springrollContainer.openPath(this.previewURL);
 
-    console.log(springrollContainer.client.target);
-
   },
 
   methods: {
