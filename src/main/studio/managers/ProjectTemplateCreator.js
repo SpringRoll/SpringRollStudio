@@ -7,6 +7,7 @@ import DecompressZip from 'decompress-zip';
 import ncp from 'ncp';
 import { promisify } from 'util';
 import rimraf from 'rimraf';
+
 /**
  *
  * @class ProjectTemplateCreator
@@ -24,6 +25,24 @@ export default class ProjectTemplateCreator {
 
   /**
    *
+   * @param {*} location
+   * @memberof ProjectTemplateCreator
+   */
+  isLocatinEmpty(location) {
+    if (!fs.existsSync(location)) {
+      return true;
+    }
+    try {
+      const files = fs.readdirSync(location);
+      return files.length === 0;
+    }
+    catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   *
    * @param {string} type
    * @param {string} location
    * @returns
@@ -31,6 +50,10 @@ export default class ProjectTemplateCreator {
    */
   create(type, location) {
     return new Promise((resolve, reject) => {
+      if (!this.isLocatinEmpty(location)) {
+        reject({ msg: "New project location must be empty." });
+        return;
+      }
       dns.resolve('www.github.com', (err) => {
         if (err) {
           this.createFrom('file', type, location)
@@ -81,7 +104,10 @@ export default class ProjectTemplateCreator {
       return await this.downloadTemplateZip(url);
 
     case 'file':
-      return url;
+      if (process.env.NODE_ENV === 'production') {
+        return join(process.resourcesPath, url);
+      }
+      return join(__dirname, '../', url);
     }
   }
 
@@ -153,13 +179,14 @@ export default class ProjectTemplateCreator {
         const copy = promisify(ncp);
         copy(path, location).then(() => {
           const remove = promisify(rimraf);
+
+          // Clean up temp folder.
           remove(this.tempDir)
             .then(resolve)
             .catch(reject);
         }).catch(reject);
       }
       catch (e) {
-        console.log(e);
         reject();
       }
       resolve();

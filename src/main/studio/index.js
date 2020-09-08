@@ -1,9 +1,10 @@
-import { resolve } from 'path';
+import { resolve, join } from 'path';
 import { ipcMain, dialog, BrowserWindow } from 'electron';
 import { EVENTS, DIALOGS } from '../../contents';
 import { projectInfo, gamePreview } from './storage';
 
 import ProjectTemplateCreator from './managers/ProjectTemplateCreator';
+import { readdirSync, existsSync } from 'fs';
 
 /**
  * Main application Singleton. This object is responsible for setting up logic specific to SpringRoll Studio.
@@ -67,15 +68,15 @@ class SpringRollStudio {
    * @memberof SpringRollStudio
    */
   createProjectTemplate(event, data) {
-    // TODO - Block input while template is being created.
     this.templateCreator.create(data.type, data.location)
       .then(() => {
         projectInfo.location = data.location;
-      }).catch(() => {
-        dialog.showErrorBox(
-          'Failed to create template',
-          `Could not create ${data.type} template at ${data.location}`
-        );
+      }).catch((err) => {
+        let msg = `Could not create ${data.type} template at ${data.location}`;
+        if (err && err.msg) {
+          msg = err.msg;
+        }
+        dialog.showErrorBox('Failed to create template', msg);
       });
   }
 
@@ -96,7 +97,16 @@ class SpringRollStudio {
 
     switch (data.type) {
     case 'deploy':
-      gamePreview.previewURL = `file://${resolve(projectInfo.location, 'deploy')}`;
+      const deployPath = join(projectInfo.location, 'deploy');
+      // Make sure the deploy folder exists because attempting to host it.
+      if (!existsSync(deployPath)) {
+        dialog.showErrorBox(
+          'Deploy folder not found.',
+          `Could not find a deploy folder in:\n${projectInfo.location}`
+        );
+        return;
+      }
+      gamePreview.previewURL = `file://${deployPath}`;
       break;
 
     case 'url':
