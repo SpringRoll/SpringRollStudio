@@ -5,7 +5,7 @@
 
       <div class="options">
         <div class="projectLocation">
-          <p class="projectLocation-heading">Project Location</p>
+          <p class="projectLocation-heading">New Project Location</p>
           <div class="projectLocation-content">
             <input
               class="urlInput"

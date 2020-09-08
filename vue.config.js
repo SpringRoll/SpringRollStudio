@@ -1,7 +1,6 @@
 const path = require('path');
 
 module.exports = {
-
   configureWebpack: {
     entry: {
       app: path.resolve(__dirname, 'src/renderer/main.js')
@@ -33,6 +32,7 @@ module.exports = {
         directories: {
           output: 'build'
         },
+        extraResources: ['extraResources/**'],
         dmg: {
           contents: [
             { x: 410, y: 150, type: 'link', path: '/Applications' },

@@ -19,8 +19,8 @@ export const TEMPLATES = {
     createjs: 'https://github.com/SpringRoll/Springroll-Seed/archive/templates/createjs.zip'
   },
   file: {
-    pixi: '',
-    phaser: '',
-    createjs: ''
+    pixi: 'extraResources/templates/Springroll-Seed-templates-pixi.zip',
+    phaser: 'extraResources/templates/Springroll-Seed-templates-phaser3.zip',
+    createjs: 'extraResources/templates/Springroll-Seed-templates-createjs.zip'
   }
 };
