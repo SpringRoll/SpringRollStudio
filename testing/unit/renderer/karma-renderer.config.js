@@ -21,13 +21,13 @@ module.exports = (config) => {
 
     webpack: {
       ...baseConfig,
-    
+
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '../../../src')
         }
       },
-    
+
       target: 'electron-renderer'
     },
     webpackMiddleware: {
@@ -50,5 +50,5 @@ module.exports = (config) => {
     },
 
     browsers: ['VisibleElectron']
-  })
+  });
 };

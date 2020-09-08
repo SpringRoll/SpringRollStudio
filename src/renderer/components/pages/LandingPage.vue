@@ -1,5 +1,11 @@
 <template>
-  <div class="main">    
+  <div class="main">
+    <preview-target-dialog
+      :on-cancel="onPreviewTargetDialogCancel"
+      :on-confirm="onPreviewTargetDialogConfirm"
+      :visible="showPreviewTargetDialog"
+    />
+
     <div class="heading">
       <img class="logo" src="~@/renderer/assets/img/256x256.png" />
       <h1 class="name">SpringRoll Studio</h1>
@@ -9,7 +15,7 @@
 
     <div class="navigation">
       <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" @click="sendEvent('previewGame')">Preview Game</button>
+      <button class="previewGameBtn" :disabled="disablePreview" @click="togglePreviewTargetDialog(true)">Preview Game</button>
       <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
       <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
     </div>
@@ -19,21 +25,42 @@
 </template>
 
 <script>
+import PreviewTargetDialog from '../dialogs/PreviewTargetDialog.vue';
 import { ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
-import { EVENTS, DIALOGS } from '../../../contants';
+import { EVENTS, DIALOGS } from '../../../contents';
 
 export default {
+  components: {
+    PreviewTargetDialog
+  },
+
+  /**
+   * Data object
+   */
+  data: function() {
+    return {
+      showPreviewTargetDialog: false
+    };
+  },
+
   computed: {
     ...mapState({
       /**
        * Returns the path for the current project.
        */
-      projectLocation: (state) => {
+      projectLocation: function(state) {
         if (!state.projectInfo || !state.projectInfo.location) {
           return 'No active project';
         }
         return state.projectInfo.location;
+      },
+
+      /**
+       * Whether or not to disable the preview game button.
+       */
+      disablePreview: function(state) {
+        return !state.projectInfo || !state.projectInfo.location;
       }
     })
   },
@@ -42,12 +69,43 @@ export default {
     /**
      * Button click handler that will send and event through the ipcRenderer.
      */
-    sendEvent: (event, ...args) => ipcRenderer.send.apply(ipcRenderer, [event].concat(args))
+    sendEvent: function(event, ...args) {
+      ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
+    },
+
+    /**
+     * Go to another page.
+     */
+    goto: function(path) {
+      this.$router.push({ path });
+    },
+
+    /**
+     * Handler for canceling the preview target dailog.
+     */
+    onPreviewTargetDialogCancel: function() {
+      this.togglePreviewTargetDialog(false);
+    },
+
+    /**
+     * Handler for confirming the preview target dialog.
+     */
+    onPreviewTargetDialogConfirm: function(results) {
+      this.togglePreviewTargetDialog(false);
+      this.sendEvent(EVENTS.PREVIEW_TARGET_SET, results);
+    },
+
+    /**
+     * Toggle the preview target dialog.
+     */
+    togglePreviewTargetDialog: function(toggle) {
+      this.showPreviewTargetDialog = toggle;
+    }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .main {
     width: 100%;
     height: 100%;

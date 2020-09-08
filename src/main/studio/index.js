@@ -1,6 +1,8 @@
+import { resolve } from 'path';
+
 import { ipcMain, dialog } from 'electron';
-import { EVENTS, DIALOGS } from '../../contants';
-import { projectInfo } from './storage';
+import { EVENTS, DIALOGS } from '../../contents';
+import { projectInfo, gamePreview } from './storage';
 
 /**
  * Main application Singleton. This object is responsible for setting up logic specific to SpringRoll Studio.
@@ -11,7 +13,8 @@ class SpringRollStudio {
    * Initialize SpringRoll Studio.
    * @memberof SpringRollStudio
    */
-  initialize() {
+  initialize(window) {
+    this.window = window;
     this.setupListeners();
   }
 
@@ -21,9 +24,9 @@ class SpringRollStudio {
    */
   setupListeners() {
     ipcMain.on(EVENTS.OPEN_DIALOG, this.openDialog.bind(this));
-    ipcMain.on(EVENTS.PREVIEW_GAME, this.previewGame.bind(this));
     ipcMain.on(EVENTS.CREATE_PROJECT_TEMPLATE, this.createProjectTemplate.bind(this));
     ipcMain.on(EVENTS.OPEN_CAPTION_STUDIO, this.openCaptionStudio.bind(this));
+    ipcMain.on(EVENTS.PREVIEW_TARGET_SET, this.previewTargetSet.bind(this));
   }
 
   /**
@@ -44,24 +47,16 @@ class SpringRollStudio {
         defaultPath: projectInfo.location,
         properties: ['openDirectory']
       };
-      dialog.showOpenDialog(options).then((result) => {
-        if (!result.canceled) {
-          projectInfo.location = result.filePaths[0];
-        }
-      });
+
+      const paths = dialog.showOpenDialogSync(this.window, options);
+      if (paths !== undefined) {
+        projectInfo.location = paths[0];
+      }
       break;
 
     default:
       throw new Error(`[Studio] Unrecognized dialog type. [type = ${type}]`);
     }
-  }
-
-  /**
-   * Handler for the EVENTS.PREVIEW_GAME event.
-   * @memberof SpringRollStudio
-   */
-  previewGame() {
-    console.log('[previewGame] Missing implementation');
   }
 
   /**
@@ -78,6 +73,29 @@ class SpringRollStudio {
    */
   openCaptionStudio() {
     console.log('[openCaptionStudio] Missing implementation');
+  }
+
+  /**
+   *Handler for the EVENTS.PREVIEW_TARGET_SET event.
+   * @memberof SpringRollStudio
+   */
+  previewTargetSet(event, data) {
+    gamePreview.previewTarget = data.type;
+
+    switch (data.type) {
+    case 'deploy':
+      gamePreview.previewURL = `file://${resolve(projectInfo.location, 'deploy')}`;
+      break;
+
+    case 'url':
+      if (data.url.indexOf('http:') === -1 && data.url.indexOf('https:') === -1) {
+        data.url = `http://${data.url}`;
+      }
+      gamePreview.previewURL = data.url;
+      break;
+    }
+
+    this.window.webContents.send(EVENTS.NAVIGATE, 'preview');
   }
 }
 

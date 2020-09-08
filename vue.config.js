@@ -9,7 +9,7 @@ module.exports = {
 
     resolve: {
       alias: {
-          vue$: 'vue/dist/vue.esm.js'
+        vue$: 'vue/dist/vue.esm.js'
       }
     }
   },
@@ -18,9 +18,11 @@ module.exports = {
 
     electronBuilder: {
       nodeIntegration: true,
+      webviewTag: true,
+      webSecurity: false,
 
       mainProcessFile: 'src/main/index.js',
-      
+
       // Fix this. This will watch file creation and deletion as well.
       mainProcessWatch: ['src/main/**/*.js'],
 

@@ -20,9 +20,6 @@ protocol.registerSchemesAsPrivileged([
  * Creates electron window
  */
 function createWindow() {
-  // Initialize SpringRoll Studio.
-  studio.initialize();
-
   // Create the browser window.
   win = new BrowserWindow({
     width: 1024,
@@ -30,9 +27,14 @@ function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      webviewTag: true,
+      webSecurity: false
     }
   });
+
+  // Initialize SpringRoll Studio.
+  studio.initialize(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

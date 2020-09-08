@@ -9,6 +9,11 @@ export default new Router({
       path: '/',
       name: 'landing-page',
       component: require('../components/pages/LandingPage').default
+    },
+    {
+      path: '/preview',
+      name: 'preview-page',
+      component: require('../components/pages/PreviewPage').default
     }
   ]
 });
