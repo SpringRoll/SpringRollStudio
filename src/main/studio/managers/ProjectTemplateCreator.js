@@ -51,7 +51,7 @@ export default class ProjectTemplateCreator {
   create(type, location) {
     return new Promise((resolve, reject) => {
       if (!this.isLocatinEmpty(location)) {
-        reject({ msg: "New project location must be empty." });
+        reject({ msg: 'New project location must be empty.' });
         return;
       }
       dns.resolve('www.github.com', (err) => {
@@ -83,10 +83,10 @@ export default class ProjectTemplateCreator {
           reject();
         }
         this.extractTemplateFiles(path).then(() => {
-            this.copyTemplateFilesTo(location)
-              .then(resolve)
-              .catch(reject);
-          }).catch(reject);
+          this.copyTemplateFilesTo(location)
+            .then(resolve)
+            .catch(reject);
+        }).catch(reject);
       });
     });
   }

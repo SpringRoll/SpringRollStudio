@@ -40,13 +40,20 @@ describe('LandingPage.js', () => {
     LandingPage.methods.togglePreviewTargetDialog = toggle;
   });
 
-  it('should dispatch EVENTS.CREATE_PROJECT_TEMPLATE', () => {
-    LandingPage.methods.sendEvent = Sinon.stub();
+  it('project template button should toggle the project template dialog', () => {
+    const toggle = LandingPage.methods.toggleProjectTemplateDialog;
+    LandingPage.methods.toggleProjectTemplateDialog = Sinon.stub();
 
     const wrapper = createVue(LandingPage);
-    wrapper.find('.projectTemplateBtn').trigger('click');
+    const btn = wrapper.find('.projectTemplateBtn');
 
-    expect(LandingPage.methods.sendEvent.calledWith(EVENTS.CREATE_PROJECT_TEMPLATE)).to.equal(true);
+    btn.element.disabled = false;
+    btn.trigger('click');
+
+    expect(LandingPage.methods.toggleProjectTemplateDialog.callCount).to.equal(1);
+    expect(LandingPage.methods.toggleProjectTemplateDialog.calledWith(true)).to.equal(true);
+
+    LandingPage.methods.togglePreviewTargetDialog = toggle;
   });
 
   it('should dispatch EVENTS.OPEN_CAPTION_STUDIO', () => {
