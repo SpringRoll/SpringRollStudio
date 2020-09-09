@@ -28,7 +28,7 @@ export default class ProjectTemplateCreator {
    * @param {*} location
    * @memberof ProjectTemplateCreator
    */
-  isLocatinEmpty(location) {
+  isLocationEmpty(location) {
     if (!fs.existsSync(location)) {
       return true;
     }
@@ -50,7 +50,7 @@ export default class ProjectTemplateCreator {
    */
   create(type, location) {
     return new Promise((resolve, reject) => {
-      if (!this.isLocatinEmpty(location)) {
+      if (!this.isLocationEmpty(location)) {
         reject({ msg: 'New project location must be empty.' });
         return;
       }
