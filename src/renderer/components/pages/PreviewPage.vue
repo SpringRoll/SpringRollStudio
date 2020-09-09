@@ -104,6 +104,7 @@ export default {
       musicMuted: false,
       soundContextsActive: false,
       captionsContextsActive: false,
+      springrollContainer: null,
     };
   },
   computed: {
@@ -131,7 +132,7 @@ export default {
    */
   mounted: function() {
 
-    springrollContainer = new Container('#gameFrame', {
+    this.springrollContainer = new Container('#gameFrame', {
       plugins: [
         new PausePlugin('#pauseButton'),
         new SoundPlugin({
@@ -144,10 +145,11 @@ export default {
           musicSliders: '#musicVolume',
           voSliders: '#voVolume'
         }),
-        new CaptionsTogglePlugin('#captionButton'),
+        new CaptionsTogglePlugin('#captionsButton'),
       ]
     });
-    springrollContainer.client.on('features', ({ data }) => {
+
+    this.springrollContainer.client.on('features', ({ data }) => {
 
       if (!data.soundVolume, !data.musicVolume, !data.sfxVolume, !data.voVolume, !data.sfx, !data.vo, !data.music) {
         document.querySelector('#soundToggle').style.display = 'none';
@@ -166,8 +168,11 @@ export default {
         document.querySelector('#voVolumeDiv').classList.remove('--disabled');
       }
     });
-    springrollContainer.openPath(this.previewURL);
+    this.springrollContainer.openPath(this.previewURL);
 
+    this.springrollContainer.client.on('paused', ({data}) => {
+      this.isPaused = data.paused;
+    });
   },
 
   methods: {
@@ -176,7 +181,7 @@ export default {
      */
     onHomeClick: function() {
       this.$router.push({ path: '/' });
-    }
+    },
   }
 };
 </script>
