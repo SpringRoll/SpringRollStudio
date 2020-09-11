@@ -491,11 +491,11 @@ export default {
   //Icon Font stuff
   @font-face {
 	font-family: 'icomoon';
-	src:url(../../../fonts/icomoon.eot?dfjxtz);
-	src:url(../../../fonts/icomoon.eot?#iefixdfjxtz) format('embedded-opentype'),
-		url(../../../fonts/icomoon.woff?dfjxtz) format('woff'),
-		url(../../../fonts/icomoon.ttf?dfjxtz) format('truetype'),
-		url(../../../fonts/icomoon.svg?dfjxtz#icomoon) format('svg');
+	src:url('~@/renderer/assets/fonts/icomoon.eot?dfjxtz');
+	src:url('~@/renderer/assets/fonts/icomoon.eot?#iefixdfjxtz') format('embedded-opentype'),
+		url('~@/renderer/assets/fonts/icomoon.woff?dfjxtz') format('woff'),
+		url('~@/renderer/assets/fonts/icomoon.ttf?dfjxtz') format('truetype'),
+		url('~@/renderer/assets/fonts/icomoon.svg?dfjxtz#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
