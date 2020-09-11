@@ -67,17 +67,18 @@ class SpringRollStudio {
    * Handler for EVENTS.CREATE_PROJECT_TEMPLATE event.
    * @memberof SpringRollStudio
    */
-  createProjectTemplate(event, data) {
-    this.templateCreator.create(data.type, data.location)
-      .then(() => {
-        projectInfo.location = data.location;
-      }).catch((err) => {
-        let msg = `Could not create ${data.type} template at ${data.location}`;
-        if (err && err.msg) {
-          msg = err.msg;
-        }
-        dialog.showErrorBox('Failed to create template', msg);
-      });
+  async createProjectTemplate(event, data) {
+    const result = await this.templateCreator.create(data.type, data.location);
+    if (!result || result.err) {
+      let msg = `Could not create ${data.type} template at ${data.location}`;
+      if (result && result.err) {
+        msg = result.err;
+      }
+      dialog.showErrorBox('Failed to create template', msg);
+    }
+    else if (result.success) {
+      projectInfo.location = data.location;
+    }
   }
 
   /**
