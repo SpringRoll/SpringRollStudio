@@ -48,25 +48,18 @@ export default class ProjectTemplateCreator {
    * @returns
    * @memberof ProjectTemplateCreator
    */
-  create(type, location) {
-    return new Promise((resolve, reject) => {
-      if (!this.isLocationEmpty(location)) {
-        reject({ msg: 'New project location must be empty.' });
-        return;
-      }
-      dns.resolve('www.github.com', (err) => {
-        if (err) {
-          this.createFrom('file', type, location)
-            .then(resolve)
-            .catch(reject);
-        }
-        else {
-          this.createFrom('github', type, location)
-            .then(resolve)
-            .catch(reject);
-        }
-      });
-    });
+  async create(type, location) {
+    if (!this.isLocationEmpty(location)) {
+      return { err: 'New project location must be empty.' };
+    }
+    try {
+      const resolveDNS = promisify(dns.resolve);
+      await resolveDNS('www.github.com');
+      return await this.createFrom('github', type, location);
+    }
+    catch (err) {
+      return await this.createFrom('file', type, location);
+    }
   }
 
   /**
@@ -76,19 +69,15 @@ export default class ProjectTemplateCreator {
    * @param {string} location
    * @memberof ProjectTemplateCreator
    */
-  createFrom(from, type, location) {
-    return new Promise((resolve, reject) => {
-      this.getTemplateZip(from, type).then((path) => {
-        if (path === undefined) {
-          reject();
-        }
-        this.extractTemplateFiles(path).then(() => {
-          this.copyTemplateFilesTo(location)
-            .then(resolve)
-            .catch(reject);
-        }).catch(reject);
-      });
-    });
+  async createFrom(from, type, location) {
+    const path = await this.getTemplateZip(from, type);
+    try {
+      await this.extractTemplateFiles(path);
+      return await this.copyTemplateFilesTo(location);
+    }
+    catch (err) {
+      return { err };
+    }
   }
 
   /**
@@ -101,7 +90,7 @@ export default class ProjectTemplateCreator {
     const url = TEMPLATES[from][type];
     switch (from) {
     case 'github':
-      return await this.downloadTemplateZip(url);
+      return await this.downloadTemplateZip(url, type);
 
     case 'file':
       if (process.env.NODE_ENV === 'production') {
@@ -117,8 +106,8 @@ export default class ProjectTemplateCreator {
    * @returns
    * @memberof ProjectTemplateCreator
    */
-  downloadTemplateZip(url) {
-    return new Promise((resolve, reject) => {
+  downloadTemplateZip(url, type) {
+    return new Promise(resolve => {
       const session = this.studio.window.webContents.session;
 
       session.on('will-download', (event, item, webContents) => {
@@ -130,7 +119,8 @@ export default class ProjectTemplateCreator {
             resolve(path);
           }
           else {
-            reject();
+            // If download fails, fallback to the local archive.
+            resolve(this.getTemplateZip('file', type));
           }
         });
       });
@@ -149,7 +139,7 @@ export default class ProjectTemplateCreator {
       const unzipper = new DecompressZip(source);
 
       unzipper.on('error', (log) => {
-        reject();
+        reject('Failed to extract template.');
       });
       unzipper.on('progress', (fileIndex, fileCount) => {
         // TODO - Show extraction progress?
@@ -167,29 +157,25 @@ export default class ProjectTemplateCreator {
    * @param {string} location
    * @memberof ProjectTemplateCreator
    */
-  copyTemplateFilesTo(location) {
-    return new Promise((resolve, reject) => {
-      try {
-        const decompressed = join(this.tempDir, 'decompressed');
-        const files = fs.readdirSync(decompressed);
-        // This path points into the leading folder from the zip file.
-        // Everything we need to copy is inside that leading folder.
-        const path = join(decompressed, files[0]);
+  async copyTemplateFilesTo(location) {
+    const decompressed = join(this.tempDir, 'decompressed');
 
-        const copy = promisify(ncp);
-        copy(path, location).then(() => {
-          const remove = promisify(rimraf);
+    try {
+      const readDir = promisify(fs.readdir);
+      const files = await readDir(decompressed);
 
-          // Clean up temp folder.
-          remove(this.tempDir)
-            .then(resolve)
-            .catch(reject);
-        }).catch(reject);
-      }
-      catch (e) {
-        reject();
-      }
-      resolve();
-    });
+      const path = join(decompressed, files[0]);
+
+      const copy = promisify(ncp);
+      await copy(path, location);
+
+      const remove = promisify(rimraf);
+      await remove(this.tempDir);
+
+      return { success: true };
+    }
+    catch (err) {
+      return { err };
+    }
   }
 }
