@@ -7,11 +7,13 @@
         </div>
         <div class="controls-right">
           <button id="helpButton" class="btn btn-controls"><HelpIcon class="controls-icon" /></button>
-          <button id="soundButton" class="btn btn-controls" @click="muted = !muted">
-            <VolumeOnIcon v-show="!muted" class="controls-icon" />
-            <MuteIcon v-show="muted" class="controls-icon" />
+          <button id="soundButton" class="btn btn-controls">
+            <!-- <VolumeOnIcon id="volumeOnIcon" class="controls-icon" />
+            <MuteIcon id="volumeOffIcon" class="controls-icon" /> -->
+            <span id="volumeOnIcon" class="controls-icon icon icon-sound on"></span>
+            <span id="volumeOffIcon" class="controls-icon icon icon-sound-off off"></span>
           </button>
-          <button id="soundToggle" class="btn btn-controls --toggle" @click="soundContextsActive = !soundContextsActive">
+          <button id="soundToggle" class="btn btn-controls --toggle" @click="onSoundToggle">
             <CircleDownIcon class="controls-icon --toggle" :class="{ '--active': soundContextsActive }" />
           </button>
           <form v-show="soundContextsActive" id="soundContexts" class="dropDown">
@@ -23,21 +25,21 @@
                 <label for="soundVolume">Volume</label>
                 <input id="soundVolume" type="range" name="soundVolume">
               </div>
-              <button id="sfxButton" class="btn btn-contexts">
+              <button id="sfxButton" class="btn btn-contexts" @click.prevent>
                 <SFXIcon class="controls-icon" /> <span>Sound FX {{ sfxMuted ? 'Off' : 'On' }}</span>
               </button>
               <div id="sfxVolumeDiv" class="volume-slider --disabled">
                 <label for="sfxVolume">Volume</label>
                 <input id="sfxVolume" type="range" name="sfxVolume">
               </div>
-              <button id="musicButton" class="btn btn-contexts">
+              <button id="musicButton" class="btn btn-contexts" @click.prevent>
                 <MusicIcon class="controls-icon" /> <span>Music {{ musicMuted ? 'Off' : 'On' }}</span>
               </button>
               <div id="musicVolumeDiv" class="volume-slider --disabled">
                 <label for="musicVolume">Volume</label>
                 <input id="musicVolume" type="range" name="musicVolume">
               </div>
-              <button id="voButton" class="btn btn-contexts">
+              <button id="voButton" class="btn btn-contexts" @click.prevent>
                 <VOIcon class="controls-icon" /> <span>Voice Over {{ voMuted ? 'Off' : 'On' }}</span>
               </button>
               <div id="voVolumeDiv" class="volume-slider --disabled">
@@ -47,7 +49,59 @@
             </div>
           </form>
           <button id="captionsButton" class="btn btn-controls"><CCIcon class="controls-icon" /></button>
-          <button id="captionsToggle" class="btn btn-controls --toggle"><CircleDownIcon class="controls-icon --toggle" /></button>
+          <button id="captionsToggle" class="btn btn-controls --toggle --disabled" @click="onCaptionsToggle">
+            <CircleDownIcon class="controls-icon --toggle" :class="{ '--active': captionsContextsActive }" />
+          </button>
+          <form v-show="captionsContextsActive" id="captionsContexts" class="dropDown">
+            <div class="form-group form-title">
+              Captions Styles
+            </div>
+            <div class="form-group">
+              <div class="setting-section">
+                <h3>Font Size</h3>
+                <div class="radio-group">
+                  <label for="fontSizeSmall">
+                    Small
+                    <input id="fontSizeSmall" type="radio" class="caption-radio" name="font-size" value="small">
+                  </label>
+                  <label for="fontSizeMedium">
+                    Medium
+                    <input id="fontSizeMedium" type="radio" class="caption-radio" name="font-size" value="medium" checked>
+                  </label>
+                  <label for="fontSizeLarge">
+                    Large
+                    <input id="fontSizeLarge" type="radio" class="caption-radio" name="font-size" value="large">
+                  </label>
+                </div>
+              </div>
+              <div class="setting-section">
+                <h3>Font Color</h3>
+                <div class="radio-group">
+                  <label for="colorDefault">
+                    Default
+                    <input id="colorDefault" type="radio" class="caption-radio" name="font-color" value="default" checked>
+                  </label>
+                  <label for="colorInverted">
+                    Inverted
+                    <input id="colorInverted" type="radio" class="caption-radio" name="font-color" value="inverted">
+                  </label>
+                </div>
+              </div>
+              <div class="setting-section">
+                <h3>Font Alignment</h3>
+                <div class="radio-group">
+                  <label for="alignTop">
+                    Top
+                    <input id="alignTop" type="radio" class="caption-radio" name="font-alignment" value="top" checked>
+                  </label>
+                  <label for="alignBottom">
+                    Bottom
+                    <input id="alignBottom" type="radio" class="caption-radio" name="font-alignment" value="bottom">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
           <button id="pauseButton" class="btn btn-controls">
             <PauseIcon id="pauseIcon" class="controls-icon" />
             <PlayIcon id="playIcon" class="controls-icon" />
@@ -60,7 +114,7 @@
 </template>
 
 <script>
-import { Container, PausePlugin, SoundPlugin, CaptionsTogglePlugin } from 'springroll-container';
+import { Container, PausePlugin, SoundPlugin, CaptionsTogglePlugin, CaptionsStylePlugin } from 'springroll-container';
 import HomeIcon from '../../assets/svg/001-home.svg';
 import HelpIcon from '../../assets/svg/266-question.svg';
 import PlayIcon from '../../assets/svg/285-play3.svg';
@@ -146,6 +200,9 @@ export default {
           voSliders: '#voVolume'
         }),
         new CaptionsTogglePlugin('#captionsButton'),
+        new CaptionsStylePlugin('input[name=font-size]',
+          'input[name=font-color]',
+          'input[name=font-alignment]'),
       ]
     });
 
@@ -155,6 +212,7 @@ export default {
         document.querySelector('#soundToggle').style.display = 'none';
       }
 
+      //extra step to ensure labels are hidden as well
       if (data.soundVolume) {
         document.querySelector('#soundVolumeDiv').classList.remove('--disabled');
       }
@@ -167,11 +225,20 @@ export default {
       if (data.voVolume) {
         document.querySelector('#voVolumeDiv').classList.remove('--disabled');
       }
+
+      if (data.captionsStyles) {
+        document.querySelector('#captionsToggle').classList.remove('--disabled');
+      }
+
     });
     this.springrollContainer.openPath(this.previewURL);
 
     this.springrollContainer.client.on('paused', ({data}) => {
       this.isPaused = data.paused;
+    });
+
+    this.springrollContainer.client.on('soundMuted', ({data}) => {
+      console.log('muted', data);
     });
   },
 
@@ -182,6 +249,20 @@ export default {
     onHomeClick: function() {
       this.$router.push({ path: '/' });
     },
+    /**
+     * handles opening the sound context dropdown
+     */
+    onSoundToggle: function() {
+      this.captionsContextsActive = false;
+      this.soundContextsActive = !this.soundContextsActive;
+    },
+    /**
+     * handles opening the captions context dropdown
+     */
+    onCaptionsToggle: function() {
+      this.soundContextsActive = false;
+      this.captionsContextsActive = !this.captionsContextsActive;
+    }
   }
 };
 </script>
@@ -241,11 +322,8 @@ export default {
         padding: 10px;
         box-sizing: border-box;
 
-        .form-title {
-          color: #ccc;
-          font-size: 16px;
-          text-align: left;
-          margin: 5px 0 15px;
+        &.--disabled {
+          display: none;
         }
 
         .form-group {
@@ -253,6 +331,13 @@ export default {
           width: 100%;
           flex-direction: column;
           font-size: 12px;
+
+         &.form-title {
+          color: #ccc;
+          font-size: 16px;
+          text-align: left;
+          margin: 5px 0 15px;
+        }
 
           .volume-slider {
             width: 100%;
@@ -272,6 +357,37 @@ export default {
               margin-bottom: 5px;
               font-weight: 700
             }
+          }
+
+          .setting-section {
+            box-sizing: border-box;
+            padding: 0 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+
+            h3 {
+              font-size: 15px;
+              color: #ccc;
+              margin-bottom: 5px;
+            }
+
+            .radio-group {
+              box-sizing: border-box;
+              padding: 0 10px;
+              width: 100%;
+              display: flex;
+              justify-content: space-evenly;
+
+              label {
+                font-size: 14px;
+                color: #ccc;
+                text-align: left;
+              }
+            }
+
           }
         }
       }
@@ -300,6 +416,10 @@ export default {
           &.--toggle {
             width: 10%;
             border-left: 1px solid rgba(0,0,0,.1);
+
+            &.--disabled {
+              display: none;
+            }
           }
 
           &.paused {
@@ -318,6 +438,23 @@ export default {
             }
 
             > #playIcon {
+              display: none;
+            }
+          }
+
+          &.muted {
+            > #volumeOnIcon {
+              display: none;
+            }
+            > #volumeOffIcon {
+              display: inline-block;
+            }
+          }
+          &.unmuted {
+            > #volumeOnIcon {
+              display: inline-block;
+            }
+            > #volumeOffIcon {
               display: none;
             }
           }
@@ -350,4 +487,78 @@ export default {
       flex-grow: 1;
     }
   }
+
+  //Icon Font stuff
+  @font-face {
+	font-family: 'icomoon';
+	src:url(../../../fonts/icomoon.eot?dfjxtz);
+	src:url(../../../fonts/icomoon.eot?#iefixdfjxtz) format('embedded-opentype'),
+		url(../../../fonts/icomoon.woff?dfjxtz) format('woff'),
+		url(../../../fonts/icomoon.ttf?dfjxtz) format('truetype'),
+		url(../../../fonts/icomoon.svg?dfjxtz#icomoon) format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-captions-off:before {
+	content: "\e600";
+}
+.icon-captions:before {
+	content: "\e601";
+}
+.icon-close:before {
+	content: "\e602";
+}
+.icon-help:before {
+	content: "\e603";
+}
+.icon-music-off:before {
+	content: "\e604";
+}
+.icon-music:before {
+	content: "\e605";
+}
+.icon-sfx-off:before {
+	content: "\e606";
+}
+.icon-sfx:before {
+	content: "\e607";
+}
+.icon-sound-off:before {
+	content: "\e608";
+}
+.icon-sound:before {
+	content: "\e609";
+}
+.icon-vo-off:before {
+	content: "\e60a";
+}
+.icon-vo:before {
+	content: "\e60b";
+}
+.icon-gear:before {
+	content: "\e60c";
+}
+.icon-play:before {
+	content: "\ea1c";
+}
+.icon-pause:before {
+	content: "\ea1d";
+}
+
+
 </style>
