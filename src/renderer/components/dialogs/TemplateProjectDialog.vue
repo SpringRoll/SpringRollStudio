@@ -4,8 +4,18 @@
       <p class="heading">Create New SpringRoll Project</p>
 
       <div class="options">
+        <div class="projectName">
+          <p class="projectName-heading">Project Name</p>
+          <div class="projectName-content">
+            <input
+              class="nameInput"
+              :value="projectName"
+            />
+          </div>
+        </div>
+
         <div class="projectLocation">
-          <p class="projectLocation-heading">New Project Location</p>
+          <p class="projectLocation-heading">Project Location</p>
           <div class="projectLocation-content">
             <input
               class="urlInput"
@@ -78,6 +88,7 @@
 <script>
 import { mapState } from 'vuex';
 import { remote } from 'electron';
+import { join } from 'path';
 
 export default {
   props: {
@@ -103,7 +114,8 @@ export default {
    */
   data: function() {
     return {
-      templateType: 'pixi'
+      templateType: 'pixi',
+      projectName: 'New SpringRoll Game'
     };
   },
 
@@ -160,10 +172,8 @@ export default {
      * Handler for clicking the confirm button.
      */
     onBtnConfirmClick: function() {
-      this.onConfirm({
-        type: this.templateType,
-        location: this.$el.querySelector('.urlInput').value
-      });
+      const location = join(this.$el.querySelector('.urlInput').value, this.$el.querySelector('.nameInput').value);
+      this.onConfirm({ type: this.templateType, location });
     }
   }
 };
@@ -188,7 +198,7 @@ export default {
     position: relative;
 
     width: 500px;
-    height: 300px;
+    height: 375px;
 
     background-color: white;
 
@@ -212,6 +222,27 @@ export default {
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
+
+      .projectName {
+        width: 100%;
+
+        .projectName-heading {
+          font-size: 10pt;
+          padding-bottom: 5px;
+        }
+
+        .projectName-content {
+          display: flex;
+
+          width: 100%;
+          height: 30px;
+
+          .nameInput {
+            width: 100%;
+            margin-right: 10px;
+          }
+        }
+      }
 
       .projectLocation {
         width: 100%;
