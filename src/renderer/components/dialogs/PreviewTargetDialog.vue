@@ -237,6 +237,8 @@ export default {
       .urlInput {
         width: 95%;
         height: 40px;
+        background-color: white;
+        border: 1px solid black;
       }
     }
 

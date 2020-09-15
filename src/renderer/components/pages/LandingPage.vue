@@ -14,10 +14,10 @@
     <h2 class="description">SpringRoll is a light-weight toolset for building accessible HTML5 games, focusing on utilities to help developers make games more accessible and deployable at scale.</h2>
 
     <div class="navigation">
-      <button class="projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</button>
-      <button class="previewGameBtn" :disabled="disablePreview" @click="togglePreviewTargetDialog(true)">Preview Game</button>
-      <button class="projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</button>
-      <button class="captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</button>
+      <v-btn class="landing-btn projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</v-btn>
+      <v-btn class="landing-btn previewGameBtn" :disabled="disablePreview" @click="togglePreviewTargetDialog(true)">Preview Game</v-btn>
+      <v-btn class="landing-btn projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</v-btn>
+      <v-btn class="landing-btn captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</v-btn>
     </div>
 
     <h3 class="projectLocation">Project: {{ projectLocation }}</h3>
@@ -165,12 +165,24 @@ export default {
       z-index: 1;
     }
 
-    .navigation > button {
-      margin-top: 10px;
-      width: 275px;
-      height: 40px;
-      font-size: 16pt;
+    .navigation {
+      .landing-btn {
+        margin-top: 10px;
+        width: 275px;
+        height: 40px;
+        font-size: 16pt;
+        text-transform: none;
+        letter-spacing: normal;
+        /* import used here to overwrite vuetify light theme*/
+        background-color: #337ab7 !important;
+        color: white !important;
+
+          &:hover {
+            background-color: #286090 !important;
+          }
+      }
     }
+
 
     .navigation > button + button {
       margin-top: 10px;

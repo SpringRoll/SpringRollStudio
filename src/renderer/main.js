@@ -11,7 +11,17 @@ import { ipcRenderer } from 'electron';
 import { EVENTS } from '../contents';
 
 Vue.config.productionTip = false;
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  theme: {
+    primary: '#337ab7',
+    secondary: '#123550',
+    accent: '#0C7AC0',
+    error: '#FF5252',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FFC107'
+  }
+});
 
 const vm = new Vue({
   components: { App },

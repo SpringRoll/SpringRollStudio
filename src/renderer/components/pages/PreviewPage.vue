@@ -8,12 +8,12 @@
         <div class="controls-right">
           <v-btn id="helpButton" class="btn btn-controls" icon><v-icon class="controls-icon">help</v-icon></v-btn>
           <v-btn id="soundButton" class="btn btn-controls" icon>
-            <v-icon id="volumeOnIcon" class="controls-icon" color="white" small>volume_up</v-icon>
-            <v-icon id="volumeOffIcon" class="controls-icon" color="white" small>volume_off</v-icon>
+            <v-icon id="volumeOnIcon" class="controls-icon" color="white">volume_up</v-icon>
+            <v-icon id="volumeOffIcon" class="controls-icon" color="white">volume_off</v-icon>
           </v-btn>
-          <button id="soundToggle" class="btn btn-controls --toggle" @click="onSoundToggle">
-            <CircleDownIcon class="controls-icon --toggle" :class="{ '--active': soundContextsActive }" />
-          </button>
+          <v-btn id="soundToggle" class="btn btn-controls --toggle" icon @click="onSoundToggle">
+            <v-icon class="controls-icon --toggle" :class="{ '--active': soundContextsActive }">expand_more</v-icon>
+          </v-btn>
           <form v-show="soundContextsActive" id="soundContexts" class="dropDown">
             <div class="form-group form-title">
               Audio Settings
@@ -23,39 +23,44 @@
                 <label for="soundVolume">Volume</label>
                 <input id="soundVolume" type="range" name="soundVolume">
               </div>
-              <button id="sfxButton" class="btn btn-contexts" @click.prevent>
-                <SFXIcon class="controls-icon" />
+              <v-btn id="sfxButton" class="btn btn-contexts" icon @click.prevent>
+                <v-icon class="controls-icon volumeOn">notifications</v-icon>
+                <v-icon class="controls-icon volumeOff">notifications_off</v-icon>
                 <span class="volumeOn">Sound FX On</span>
                 <span class="volumeOff">Sound FX Off</span>
-              </button>
+              </v-btn>
               <div id="sfxVolumeDiv" class="volume-slider --disabled">
                 <label for="sfxVolume">Volume</label>
                 <input id="sfxVolume" type="range" name="sfxVolume">
               </div>
-              <button id="musicButton" class="btn btn-contexts" @click.prevent>
-                <MusicIcon class="controls-icon" />
+              <v-btn id="musicButton" class="btn btn-contexts" icon @click.prevent>
+                <v-icon class="controls-icon volumeOn">music_note</v-icon>
+                <v-icon class="controls-icon volumeOff">music_off</v-icon>
                 <span class="volumeOn">Music On</span>
                 <span class="volumeOff">Music Off</span>
-              </button>
+              </v-btn>
               <div id="musicVolumeDiv" class="volume-slider --disabled">
                 <label for="musicVolume">Volume</label>
                 <input id="musicVolume" type="range" name="musicVolume">
               </div>
-              <button id="voButton" class="btn btn-contexts" @click.prevent>
-                <VOIcon class="controls-icon" />
+              <v-btn id="voButton" class="btn btn-contexts" icon @click.prevent>
+                <v-icon class="controls-icon volumeOn">record_voice_over</v-icon>
+                <v-icon class="controls-icon volumeOff">voice_over_off</v-icon>
                 <span class="volumeOn">Voice Over On</span>
                 <span class="volumeOff">Voice Over Off</span>
-              </button>
+              </v-btn>
               <div id="voVolumeDiv" class="volume-slider --disabled">
                 <label for="voVolume">Volume</label>
                 <input id="voVolume" type="range" name="voVolume">
               </div>
             </div>
           </form>
-          <button id="captionsButton" class="btn btn-controls"><CCIcon class="controls-icon" /></button>
-          <button id="captionsToggle" class="btn btn-controls --toggle --disabled" @click="onCaptionsToggle">
-            <CircleDownIcon class="controls-icon --toggle" :class="{ '--active': captionsContextsActive }" />
-          </button>
+          <v-btn id="captionsButton" class="btn btn-controls" icon>
+            <v-icon class="controls-icon">closed_caption</v-icon>
+          </v-btn>
+          <v-btn id="captionsToggle" class="btn btn-controls --toggle --disabled" icon @click="onCaptionsToggle">
+            <v-icon class="controls-icon --toggle" :class="{ '--active': captionsContextsActive }">expand_more</v-icon>
+          </v-btn>
           <form v-show="captionsContextsActive" id="captionsContexts" class="dropDown">
             <div class="form-group form-title">
               Captions Styles
@@ -106,10 +111,10 @@
               </div>
             </div>
           </form>
-          <button id="pauseButton" class="btn btn-controls">
-            <PauseIcon id="pauseIcon" class="controls-icon" />
-            <PlayIcon id="playIcon" class="controls-icon" />
-          </button>
+          <v-btn id="pauseButton" class="btn btn-controls" icon>
+            <v-icon id="pauseIcon" class="controls-icon">pause</v-icon>
+            <v-icon id="playIcon" class="controls-icon">play_arrow</v-icon>
+          </v-btn>
         </div>
       </div>
       <iframe id="gameFrame" class="gameFrame" :src="previewURL" />
@@ -408,6 +413,9 @@ export default {
           border: 0;
           border-radius: 0;
           padding: 0;
+          text-transform: none;
+          letter-spacing: normal;
+
           &:hover {
             background-color: #286090;
           }
@@ -416,6 +424,7 @@ export default {
           height: 100%;
           width: 20%;
           border-left: 1px solid rgba(0,0,0,.6);
+          vertical-align: baseline;
 
           &.--toggle {
             width: 10%;
@@ -427,21 +436,21 @@ export default {
           }
 
           &.paused {
-            > #pauseIcon {
+            #pauseIcon {
               display: none;
             }
 
-            > #playIcon {
+            #playIcon {
               display: inline;
             }
           }
 
           &.unpaused {
-            > #pauseIcon {
+            #pauseIcon {
               display: inline;
             }
 
-            > #playIcon {
+            #playIcon {
               display: none;
             }
           }
