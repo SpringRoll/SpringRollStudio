@@ -3,16 +3,14 @@
     <div class="content">
       <div class="controls">
         <div class="controls-left">
-          <button id="btnHome" class="btn btn-controls" @click="onHomeClick()"><HomeIcon class="controls-icon" /></button>
+          <v-btn id="btnHome" class="btn btn-controls" icon @click="onHomeClick()"><v-icon class="controls-icon">home</v-icon></v-btn>
         </div>
         <div class="controls-right">
-          <button id="helpButton" class="btn btn-controls"><HelpIcon class="controls-icon" /></button>
-          <button id="soundButton" class="btn btn-controls">
-            <!-- <VolumeOnIcon id="volumeOnIcon" class="controls-icon" />
-            <MuteIcon id="volumeOffIcon" class="controls-icon" /> -->
-            <span id="volumeOnIcon" class="controls-icon icon icon-sound on"></span>
-            <span id="volumeOffIcon" class="controls-icon icon icon-sound-off off"></span>
-          </button>
+          <v-btn id="helpButton" class="btn btn-controls" icon><v-icon class="controls-icon">help</v-icon></v-btn>
+          <v-btn id="soundButton" class="btn btn-controls" icon>
+            <v-icon id="volumeOnIcon" class="controls-icon" color="white" small>volume_up</v-icon>
+            <v-icon id="volumeOffIcon" class="controls-icon" color="white" small>volume_off</v-icon>
+          </v-btn>
           <button id="soundToggle" class="btn btn-controls --toggle" @click="onSoundToggle">
             <CircleDownIcon class="controls-icon --toggle" :class="{ '--active': soundContextsActive }" />
           </button>
@@ -26,21 +24,27 @@
                 <input id="soundVolume" type="range" name="soundVolume">
               </div>
               <button id="sfxButton" class="btn btn-contexts" @click.prevent>
-                <SFXIcon class="controls-icon" /> <span>Sound FX {{ sfxMuted ? 'Off' : 'On' }}</span>
+                <SFXIcon class="controls-icon" />
+                <span class="volumeOn">Sound FX On</span>
+                <span class="volumeOff">Sound FX Off</span>
               </button>
               <div id="sfxVolumeDiv" class="volume-slider --disabled">
                 <label for="sfxVolume">Volume</label>
                 <input id="sfxVolume" type="range" name="sfxVolume">
               </div>
               <button id="musicButton" class="btn btn-contexts" @click.prevent>
-                <MusicIcon class="controls-icon" /> <span>Music {{ musicMuted ? 'Off' : 'On' }}</span>
+                <MusicIcon class="controls-icon" />
+                <span class="volumeOn">Music On</span>
+                <span class="volumeOff">Music Off</span>
               </button>
               <div id="musicVolumeDiv" class="volume-slider --disabled">
                 <label for="musicVolume">Volume</label>
                 <input id="musicVolume" type="range" name="musicVolume">
               </div>
               <button id="voButton" class="btn btn-contexts" @click.prevent>
-                <VOIcon class="controls-icon" /> <span>Voice Over {{ voMuted ? 'Off' : 'On' }}</span>
+                <VOIcon class="controls-icon" />
+                <span class="volumeOn">Voice Over On</span>
+                <span class="volumeOff">Voice Over Off</span>
               </button>
               <div id="voVolumeDiv" class="volume-slider --disabled">
                 <label for="voVolume">Volume</label>
@@ -138,8 +142,8 @@ export default {
     HelpIcon,
     PlayIcon,
     PauseIcon,
-    VolumeOnIcon,
-    MuteIcon,
+    // VolumeOnIcon,
+    // MuteIcon,
     CCIcon,
     CircleDownIcon,
     MusicIcon,
@@ -443,18 +447,19 @@ export default {
           }
 
           &.muted {
-            > #volumeOnIcon {
+            #volumeOnIcon {
               display: none;
             }
-            > #volumeOffIcon {
+            #volumeOffIcon {
               display: inline-block;
             }
           }
+
           &.unmuted {
-            > #volumeOnIcon {
+            #volumeOnIcon {
               display: inline-block;
             }
-            > #volumeOffIcon {
+            #volumeOffIcon {
               display: none;
             }
           }
@@ -477,6 +482,26 @@ export default {
             margin-right: 0.5rem;
             scale: 0.8;
           }
+
+          &.muted {
+            .volumeOn {
+              display: none;
+            }
+
+          .volumeOff {
+            display: inline-block;
+          }
+          }
+
+          &.unmuted {
+            .volumeOn {
+              display: inline-block;
+            }
+
+          .volumeOff {
+            display: none;
+          }
+          }
         }
       }
     }
@@ -487,78 +512,6 @@ export default {
       flex-grow: 1;
     }
   }
-
-  //Icon Font stuff
-  @font-face {
-	font-family: 'icomoon';
-	src:url('~@/renderer/assets/fonts/icomoon.eot?dfjxtz');
-	src:url('~@/renderer/assets/fonts/icomoon.eot?#iefixdfjxtz') format('embedded-opentype'),
-		url('~@/renderer/assets/fonts/icomoon.woff?dfjxtz') format('woff'),
-		url('~@/renderer/assets/fonts/icomoon.ttf?dfjxtz') format('truetype'),
-		url('~@/renderer/assets/fonts/icomoon.svg?dfjxtz#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-
-[class^="icon-"], [class*=" icon-"] {
-	font-family: 'icomoon';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.icon-captions-off:before {
-	content: "\e600";
-}
-.icon-captions:before {
-	content: "\e601";
-}
-.icon-close:before {
-	content: "\e602";
-}
-.icon-help:before {
-	content: "\e603";
-}
-.icon-music-off:before {
-	content: "\e604";
-}
-.icon-music:before {
-	content: "\e605";
-}
-.icon-sfx-off:before {
-	content: "\e606";
-}
-.icon-sfx:before {
-	content: "\e607";
-}
-.icon-sound-off:before {
-	content: "\e608";
-}
-.icon-sound:before {
-	content: "\e609";
-}
-.icon-vo-off:before {
-	content: "\e60a";
-}
-.icon-vo:before {
-	content: "\e60b";
-}
-.icon-gear:before {
-	content: "\e60c";
-}
-.icon-play:before {
-	content: "\ea1c";
-}
-.icon-pause:before {
-	content: "\ea1d";
-}
 
 
 </style>

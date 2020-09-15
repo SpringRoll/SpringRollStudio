@@ -25,16 +25,6 @@ module.exports = {
       .end()
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
-
-    const fontsRule = config.module.rule('fonts');
-
-    fontsRule.uses.clear();
-
-    fontsRule
-      .test('/\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/')
-      .use('file-loader')
-      .loader('file-loader');
-    // .end();
   },
 
   pluginOptions: {
