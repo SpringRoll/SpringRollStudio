@@ -33,7 +33,7 @@
 <script>
 import PreviewTargetDialog from '../dialogs/PreviewTargetDialog.vue';
 import TemplateProjectDialog from '../dialogs/TemplateProjectDialog.vue';
-import { ipcRenderer } from 'electron';
+import { ipcMain, ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
 import { EVENTS, DIALOGS } from '../../../contents';
 
@@ -116,7 +116,8 @@ export default {
      */
     onProjectTemplateDialogConfirm: function(results) {
       this.toggleProjectTemplateDialog(false);
-      this.sendEvent(EVENTS.CREATE_PROJECT_TEMPLATE, results);
+      // ipcRenderer.on(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, this.onUpdateTemplateCreationLog);
+      // this.sendEvent(EVENTS.CREATE_PROJECT_TEMPLATE, results);
     },
 
     /**
@@ -131,7 +132,7 @@ export default {
      */
     toggleProjectTemplateDialog: function(toggle) {
       this.showProjectTemplateDialog = toggle;
-    }
+    },
   }
 };
 </script>
