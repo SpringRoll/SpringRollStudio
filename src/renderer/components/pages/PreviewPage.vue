@@ -152,17 +152,16 @@ export default {
        * Returns a formatted preview url.
        */
       previewURL: function(state) {
-        switch (state.gamePreview.previewTarget) {
-        case 'deploy':
-          return join(state.gamePreview.previewURL, 'index.html');
+        if (state.gamePreview.previewURL.indexOf('index.html') === -1)  {
+          switch (state.gamePreview.previewTarget) {
+          case 'deploy':
+            return join(state.gamePreview.previewURL, 'index.html');
 
-        case 'url':
-          let url = `${state.gamePreview.previewURL}/index.html`;
-          if (url.indexOf('http:') === -1) {
-            url = `http://${url}`;
+          case 'url':
+            return `${state.gamePreview.previewURL}/index.html`;
           }
-          return url;
         }
+        return state.gamePreview.previewURL;
       }
     }),
   },
