@@ -8,8 +8,8 @@
         <div class="controls-right">
           <v-btn id="helpButton" class="btn btn-controls" icon><v-icon class="controls-icon">help</v-icon></v-btn>
           <v-btn id="soundButton" class="btn btn-controls" icon>
-            <v-icon id="volumeOnIcon" class="controls-icon" color="white">volume_up</v-icon>
-            <v-icon id="volumeOffIcon" class="controls-icon" color="white">volume_off</v-icon>
+            <v-icon id="volumeOnIcon" class="controls-icon volumeOn">volume_up</v-icon>
+            <v-icon id="volumeOffIcon" class="controls-icon volumeOff">volume_off</v-icon>
           </v-btn>
           <v-btn id="soundToggle" class="btn btn-controls --toggle" icon @click="onSoundToggle">
             <v-icon class="controls-icon --toggle" :class="{ '--active': soundContextsActive }">expand_more</v-icon>
@@ -56,7 +56,8 @@
             </div>
           </form>
           <v-btn id="captionsButton" class="btn btn-controls" icon>
-            <v-icon class="controls-icon">closed_caption</v-icon>
+            <v-icon class="controls-icon volumeOn">closed_caption</v-icon>
+            <v-icon class="controls-icon volumeOff">closed_caption_disabled</v-icon>
           </v-btn>
           <v-btn id="captionsToggle" class="btn btn-controls --toggle --disabled" icon @click="onCaptionsToggle">
             <v-icon class="controls-icon --toggle" :class="{ '--active': captionsContextsActive }">expand_more</v-icon>
@@ -124,37 +125,12 @@
 
 <script>
 import { Container, PausePlugin, SoundPlugin, CaptionsTogglePlugin, CaptionsStylePlugin } from 'springroll-container';
-import HomeIcon from '../../assets/svg/001-home.svg';
-import HelpIcon from '../../assets/svg/266-question.svg';
-import PlayIcon from '../../assets/svg/285-play3.svg';
-import PauseIcon from '../../assets/svg/286-pause2.svg';
-import VolumeOnIcon from '../../assets/svg/295-volume-high.svg';
-import MuteIcon from '../../assets/svg/299-volume-mute2.svg';
-import CCIcon from '../../assets/svg/cc-no-bg.svg';
-import CircleUpIcon from '../../assets/svg/322-circle-up.svg';
-import CircleDownIcon from '../../assets/svg/324-circle-down.svg';
-import MusicIcon from '../../assets/svg/018-music.svg';
-import SFXIcon from '../../assets/svg/082-bell.svg';
-import VOIcon from '../../assets/svg/vo-audio-icon.svg';
 import { mapState } from 'vuex';
 import { join } from 'path';
 
 let springrollContainer;
 
 export default {
-  components: {
-    HomeIcon,
-    HelpIcon,
-    PlayIcon,
-    PauseIcon,
-    // VolumeOnIcon,
-    // MuteIcon,
-    CCIcon,
-    CircleDownIcon,
-    MusicIcon,
-    SFXIcon,
-    VOIcon,
-  },
   /**
    * Data object
    */
@@ -456,19 +432,19 @@ export default {
           }
 
           &.muted {
-            #volumeOnIcon {
+            .volumeOn {
               display: none;
             }
-            #volumeOffIcon {
+            .gameFrame {
               display: inline-block;
             }
           }
 
           &.unmuted {
-            #volumeOnIcon {
+            .volumeOn {
               display: inline-block;
             }
-            #volumeOffIcon {
+            .volumeOff {
               display: none;
             }
           }
@@ -487,9 +463,8 @@ export default {
           align-items: center;
           justify-content: center;
 
-          svg {
+          i {
             margin-right: 0.5rem;
-            scale: 0.8;
           }
 
           &.muted {
