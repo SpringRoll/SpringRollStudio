@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="content">
+    <div v-show="dialogContentVisible === true" class="content">
       <p class="heading">Create New SpringRoll Project</p>
 
       <div class="options">
@@ -81,11 +81,6 @@
             </div>
           </div>
         </div>
-        
-
-        <div class="log">
-          test
-        </div>
       </div>
 
       <div class="actions">
@@ -138,7 +133,8 @@ export default {
     return {
       templateType: 'pixi',
       projectName: 'New SpringRoll Game',
-      logVisible: false
+      logVisible: false,
+      dialogContentVisible: true
     };
   },
 
@@ -195,6 +191,8 @@ export default {
      * Handler for clicking the cancel button.
      */
     onBtnCancelClick: function() {
+      this.logVisible = false;
+      this.dialogContentVisible = true;
       this.onCancel();
     },
 
@@ -207,6 +205,10 @@ export default {
       ipcRenderer.on(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, this.onUpdateTemplateCreationLog);
       ipcRenderer.on(EVENTS.PROJECT_CREATION_COMPLETE, this.onProjectCreationComplete);
 
+      this.$el.querySelector('.logOutputText').innerHTML = '';
+      this.$el.querySelector('#closeLogBtn').disabled = true;
+
+      this.dialogContentVisible = false;
       this.logVisible = true;
 
       this.sendEvent(EVENTS.CREATE_PROJECT_TEMPLATE, { type: this.templateType, location });
@@ -217,7 +219,10 @@ export default {
      */
     onUpdateTemplateCreationLog: function(event, log) {
       const text = this.$el.querySelector('.logOutputText');
-      text.innerHTML += `${text.innerHTML.length === 0 ? '' : '<br/>'}${log}`;
+      text.innerHTML += `${text.innerHTML.length === 0 ? '' : '<br/><br/>'}${log}`;
+      
+      const output = this.$el.querySelector('.logOutput');
+      output.scrollTo(0, output.scrollHeight);
     },
 
     /**
@@ -227,7 +232,7 @@ export default {
       ipcRenderer.off(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, this.onUpdateTemplateCreationLog);
       ipcRenderer.off(EVENTS.PROJECT_CREATION_COMPLETE, this.onProjectCreationComplete);
 
-      //this.onConfirm();
+      this.$el.querySelector('#closeLogBtn').disabled = false;
     }
   }
 };
@@ -268,12 +273,24 @@ export default {
       width: 500px;
       height: 375px;
 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
       background-color: white;
 
       .logOutput {
-        width: 100%;
+        width: 95%;
+        height: 75%;
 
         overflow-y: scroll;
+
+        border: 1px solid black;
+        border-radius: 5px;
+
+        .logOutputText {
+          font-size: 10pt;
+        }
       }
 
       .logActions {
@@ -406,12 +423,6 @@ export default {
           }
         }
       }
-    }
-
-    .log {
-        width: 100%;
-        height: 40px;
-        font-size: 10pt;
     }
 
     .actions {
