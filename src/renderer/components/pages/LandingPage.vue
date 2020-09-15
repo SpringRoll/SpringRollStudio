@@ -173,7 +173,7 @@ export default {
         font-size: 16pt;
         text-transform: none;
         letter-spacing: normal;
-        /* import used here to overwrite vuetify light theme*/
+        /* important used here to overwrite vuetify light theme */
         background-color: #337ab7 !important;
         color: white !important;
 
