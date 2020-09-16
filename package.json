@@ -20,9 +20,10 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "electron-store": "^6.0.0",
-    "springroll-container": "^2.0.1",
+    "springroll-container": "^2.0.3",
     "vue": "^2.6.11",
     "vue-router": "^3.4.1",
+    "vuetify": "^2.3.10",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "file-loader": "^6.1.0",
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
     "karma-electron": "^6.3.1",
@@ -44,6 +46,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^4.0.0-rc.6",
     "less-loader": "^6.2.0",
+    "material-design-icons-iconfont": "^6.1.0",
     "mocha": "^8.0.1",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
@@ -52,6 +55,7 @@
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
     "vue-loader": "^15.9.3",
     "vue-style-loader": "^4.1.2",
+    "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.44.0"
   },

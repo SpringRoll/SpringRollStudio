@@ -1,4 +1,7 @@
 import Vue from 'vue';
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import router from './router';
 import store from './store';
@@ -8,6 +11,7 @@ import { ipcRenderer } from 'electron';
 import { EVENTS } from '../contents';
 
 Vue.config.productionTip = false;
+Vue.use(Vuetify);
 
 const vm = new Vue({
   components: { App },

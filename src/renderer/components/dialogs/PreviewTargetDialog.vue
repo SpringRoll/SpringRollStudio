@@ -2,7 +2,6 @@
   <div v-show="visible === true" class="dialog">
     <div class="content">
       <p class="heading">Choose Preview Target</p>
-
       <div class="options">
         <input
           id="deployOption"
@@ -11,9 +10,7 @@
           :checked="isDeploy"
           @change="setPreviewType('deploy')"
         />
-        <label for="previewType">Deploy Folder</label>
-
-        <br />
+        <label class="radioLabel" for="previewType">Deploy Folder</label>
 
         <input
           id="urlOption"
@@ -22,17 +19,17 @@
           :checked="isURL"
           @change="setPreviewType('url')"
         />
-        <label for="previewType">Custom URL</label>
+        <label class="radioLabel" for="previewType">Custom URL</label>
 
-        <br />
-
-        <input
+        <v-text-field
           id="urlInput"
           class="urlInput"
           :disabled="disableURL"
           :value="previewURL"
+          label="URL"
+          filled
           @input="onUrlInputChange()"
-        />
+        ></v-text-field>
       </div>
 
       <div class="actions">
@@ -233,6 +230,10 @@ export default {
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
+
+      .radioLabel {
+        margin-bottom: 15px;
+      }
 
       .urlInput {
         width: 95%;
