@@ -4,6 +4,7 @@
       <div class="controls">
         <div class="controls-left">
           <v-btn id="btnHome" class="btn btn-controls" icon @click="onHomeClick()"><v-icon class="controls-icon">home</v-icon></v-btn>
+          <v-btn id="btnRefresh" class="btn btn-controls" icon @click="onRefreshClick()"><v-icon class="controls-icon">refresh</v-icon></v-btn>
         </div>
         <div class="controls-right">
           <v-btn id="helpButton" class="btn btn-controls" icon><v-icon class="controls-icon">help</v-icon></v-btn>
@@ -127,6 +128,7 @@
 import { Container, PausePlugin, SoundPlugin, CaptionsTogglePlugin, CaptionsStylePlugin } from 'springroll-container';
 import { mapState } from 'vuex';
 import { join } from 'path';
+import { remote } from 'electron';
 
 let springrollContainer;
 
@@ -232,6 +234,12 @@ export default {
      */
     onHomeClick: function() {
       this.$router.push({ path: '/' });
+    },
+    /**
+     * Handler for clicking the refresh button.
+     */
+    onRefreshClick: function() {
+      remote.getCurrentWebContents().reload();
     },
     /**
      * handles opening the sound context dropdown
