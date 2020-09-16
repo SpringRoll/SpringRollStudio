@@ -30,10 +30,10 @@ export default class ProjectTemplateCreator {
    */
   log(...msg) {
     if (this.logger) {
-      this.logger(msg.join(" "));
+      this.logger(msg.join(' '));
     }
     else {
-      console.log(msg.join(" "));
+      console.log(msg.join(' '));
     }
   }
 
@@ -72,13 +72,13 @@ export default class ProjectTemplateCreator {
     try {
       const resolveDNS = promisify(dns.resolve);
 
-      this.log("Attempting to reach www.github.com.");
+      this.log('Attempting to reach www.github.com.');
 
       await resolveDNS('www.github.com');
       return await this.createFrom('github', type, location);
     }
     catch (err) {
-      this.log("Could not reach www.github.com. Falling back to local template archives.");
+      this.log('Could not reach www.github.com. Falling back to local template archives.');
 
       return await this.createFrom('file', type, location);
     }
@@ -144,7 +144,7 @@ export default class ProjectTemplateCreator {
           session.off('will-download', willDownload);
 
           if (state === 'completed') {
-            this.log('Download complete successful.')
+            this.log('Download complete successful.');
 
             resolve(path);
           }
@@ -179,7 +179,7 @@ export default class ProjectTemplateCreator {
         reject('Failed to extract template.');
       });
       unzipper.on('progress', (fileIndex, fileCount) => {
-        this.log(`Extracting progress: ${Math.ceil(((fileIndex + 1) / fileCount) * 100)}%`)
+        this.log(`Extracting progress: ${Math.ceil(((fileIndex + 1) / fileCount) * 100)}%`);
       });
       unzipper.on('extract', (log) => {
         this.log('Extracting complete');
@@ -212,12 +212,12 @@ export default class ProjectTemplateCreator {
       const copy = promisify(ncp);
       await copy(path, location);
 
-      this.log(`Cleaning up temp folder.`);
+      this.log('Cleaning up temp folder.');
 
       const remove = promisify(rimraf);
       await remove(this.tempDir);
 
-      this.log('Project creation complete.')
+      this.log('Project creation complete.');
 
       return { success: true };
     }

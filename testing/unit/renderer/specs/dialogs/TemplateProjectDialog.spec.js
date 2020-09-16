@@ -50,18 +50,22 @@ describe('TemplateProjectDialog.js', () => {
 
   it('should call confirm with the correct results', async () => {
     const wrapper = createVue(TemplateProjectDialog);
-    const onConfirm = Sinon.fake();
 
-    await wrapper.setProps({ onConfirm });
+    const sendEvent = TemplateProjectDialog.methods.sendEvent;
+    TemplateProjectDialog.methods.sendEvent = Sinon.stub();
+
     await wrapper.find('#pixiOption').setChecked(true);
     await wrapper.find('.urlInput').setValue('path/to/project');
+    await wrapper.find('#confirmBtn').trigger('click');
 
-    wrapper.find('#confirmBtn').trigger('click');
+    expect(TemplateProjectDialog.methods.sendEvent.callCount).to.equal(1);
 
-    const results = onConfirm.args[0][0];
+    const results = TemplateProjectDialog.methods.sendEvent.args[0][0];
 
     expect(results.type).to.equal('pixi');
     expect(results.location).to.equal('path/to/project');
+
+    TemplateProjectDialog.methods.sendEvent = sendEvent;
   });
 
 });

@@ -6,13 +6,13 @@
           <p class="logOutputText"></p>
         </div>
         <div class="logActions">
-        <button
-          id="closeLogBtn"
-          @click="onBtnCancelClick()"
-        >
-          Close
-        </button>
-      </div>
+          <button
+            id="closeLogBtn"
+            @click="onBtnCancelClick()"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
 
