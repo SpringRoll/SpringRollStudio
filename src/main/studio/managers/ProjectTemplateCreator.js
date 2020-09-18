@@ -1,8 +1,7 @@
-import * as dns from 'dns';
 import * as fs from 'fs';
 import { TEMPLATES } from '../../../contents';
 import { join } from 'path';
-import { app, webContents } from 'electron';
+import { app, net } from 'electron';
 import DecompressZip from 'decompress-zip';
 import ncp from 'ncp';
 import { promisify } from 'util';
@@ -62,26 +61,36 @@ export default class ProjectTemplateCreator {
    * @returns
    * @memberof ProjectTemplateCreator
    */
-  async create(type, location) {
-    if (!this.isLocationEmpty(location)) {
-      return { err: 'New project location must be empty.' };
-    }
+  create(type, location) {
+    return new Promise((resolve, reject) => {
+      if (!this.isLocationEmpty(location)) {
+        return reject({ err: 'New project location must be empty.' });
+      }
+      this.log(`Beginning ${type} template project creation:`);
+      this.log('Attempting to reach https://github.com.');
 
-    this.log(`Beginning ${type} template project creation:`);
-
-    try {
-      const resolveDNS = promisify(dns.resolve);
-
-      this.log('Attempting to reach www.github.com.');
-
-      await resolveDNS('www.github.com');
-      return await this.createFrom('github', type, location);
-    }
-    catch (err) {
-      this.log('Could not reach www.github.com. Falling back to local template archives.');
-
-      return await this.createFrom('file', type, location);
-    }
+      const request = net.request('https://github.com');
+      request.on('response', () => {
+        this.createFrom('github', type, location)
+          .then(resolve)
+          .catch((err) => {
+            if (err && err.err) {
+              this.log(err.err);
+            }
+            this.log('Failed to create project from GitHub. Falling back to local template archives.');
+            this.createFrom('file', type, location)
+              .then(resolve)
+              .catch(reject);
+          });
+      });
+      request.on('error', () => {
+        this.log('Could not reach https://github.com. Falling back to local template archives.');
+        this.createFrom('file', type, location)
+          .then(resolve)
+          .catch(reject);
+      });
+      request.end();
+    });
   }
 
   /**
