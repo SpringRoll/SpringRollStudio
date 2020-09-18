@@ -5,7 +5,9 @@ export const EVENTS = {
   PREVIEW_GAME: 'previewGame',
   CREATE_PROJECT_TEMPLATE: 'createProjectTemplate',
   PREVIEW_TARGET_SET: 'previewTargetSet',
-  REQUEST_PREVIEW_HOST_PATH: 'requestPreviewHostPath'
+  REQUEST_PREVIEW_HOST_PATH: 'requestPreviewHostPath',
+  UPDATE_TEMPLATE_CREATION_LOG: 'updateTemplateCreateLog',
+  PROJECT_CREATION_COMPLETE: 'projectCreationComplete'
 };
 
 export const DIALOGS = {

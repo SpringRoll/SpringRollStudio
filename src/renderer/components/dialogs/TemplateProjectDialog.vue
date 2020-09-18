@@ -1,6 +1,22 @@
 <template>
   <div v-show="visible === true" class="dialog">
-    <div class="content">
+    <div v-show="logVisible === true" class="logDisplay">
+      <div class="logContent">
+        <div class="logOutput">
+          <p class="logOutputText"></p>
+        </div>
+        <div class="logActions">
+          <button
+            id="closeLogBtn"
+            @click="onBtnCancelClick()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div v-show="dialogContentVisible === true" class="content">
       <p class="heading">Create New SpringRoll Project</p>
 
       <div class="options">
@@ -68,18 +84,18 @@
       </div>
 
       <div class="actions">
-        <button
+        <v-btn
           id="cancelBtn"
           @click="onBtnCancelClick()"
         >
           Cancel
-        </button>
-        <button
+        </v-btn>
+        <v-btn
           id="confirmBtn"
           @click="onBtnConfirmClick()"
         >
           Confirm
-        </button>
+        </v-btn>
       </div>
     </div>
   </div>
@@ -87,8 +103,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import { remote } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { join } from 'path';
+import { EVENTS } from '../../../contents';
 
 export default {
   props: {
@@ -115,7 +132,9 @@ export default {
   data: function() {
     return {
       templateType: 'pixi',
-      projectName: 'New SpringRoll Game'
+      projectName: 'New SpringRoll Game',
+      logVisible: false,
+      dialogContentVisible: true
     };
   },
 
@@ -132,6 +151,13 @@ export default {
   },
 
   methods: {
+    /**
+     * Button click handler that will send and event through the ipcRenderer.
+     */
+    sendEvent: function(event, ...args) {
+      ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
+    },
+
     /**
      * Sets the template type.
      */
@@ -165,6 +191,8 @@ export default {
      * Handler for clicking the cancel button.
      */
     onBtnCancelClick: function() {
+      this.logVisible = false;
+      this.dialogContentVisible = true;
       this.onCancel();
     },
 
@@ -173,7 +201,38 @@ export default {
      */
     onBtnConfirmClick: function() {
       const location = join(this.$el.querySelector('.urlInput').value, this.$el.querySelector('.nameInput').value);
-      this.onConfirm({ type: this.templateType, location });
+
+      ipcRenderer.on(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, this.onUpdateTemplateCreationLog);
+      ipcRenderer.on(EVENTS.PROJECT_CREATION_COMPLETE, this.onProjectCreationComplete);
+
+      this.$el.querySelector('.logOutputText').innerHTML = '';
+      this.$el.querySelector('#closeLogBtn').disabled = true;
+
+      this.dialogContentVisible = false;
+      this.logVisible = true;
+
+      this.sendEvent(EVENTS.CREATE_PROJECT_TEMPLATE, { type: this.templateType, location });
+    },
+
+    /**
+     * Updates the template creataion log.
+     */
+    onUpdateTemplateCreationLog: function(event, log) {
+      const text = this.$el.querySelector('.logOutputText');
+      text.innerHTML += `${text.innerHTML.length === 0 ? '' : '<br/><br/>'}${log}`;
+      
+      const output = this.$el.querySelector('.logOutput');
+      output.scrollTo(0, output.scrollHeight);
+    },
+
+    /**
+    * Called when the main process is finished creating the template project.
+    */
+    onProjectCreationComplete: function(event, success) {
+      ipcRenderer.off(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, this.onUpdateTemplateCreationLog);
+      ipcRenderer.off(EVENTS.PROJECT_CREATION_COMPLETE, this.onProjectCreationComplete);
+
+      this.$el.querySelector('#closeLogBtn').disabled = false;
     }
   }
 };
@@ -193,6 +252,67 @@ export default {
   align-items: center;
 
   background-color: rgba($color: #0e0e0e, $alpha: 0.5);
+
+  .logDisplay {
+    position: absolute;
+
+    z-index: 101;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba($color: #0e0e0e, $alpha: 0.5);
+
+    .logContent {
+      position: relative;
+
+      width: 500px;
+      height: 375px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background-color: white;
+
+      .logOutput {
+        width: 95%;
+        height: 75%;
+
+        overflow-y: scroll;
+
+        border: 1px solid black;
+        border-radius: 5px;
+
+        .logOutputText {
+          font-size: 10pt;
+        }
+      }
+
+      .logActions {
+        position: absolute;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 110px;
+        height: 40px;
+
+        bottom: 0;
+        right: 0;
+      }
+
+      .logActions > button {
+        width: 100px;
+        height: 30px;
+      }
+    }
+  }
 
   .content {
     position: relative;

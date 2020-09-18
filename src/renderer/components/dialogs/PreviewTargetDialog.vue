@@ -33,19 +33,19 @@
       </div>
 
       <div class="actions">
-        <button
+        <v-btn
           id="cancelBtn"
           @click="onBtnCancelClick()"
         >
           Cancel
-        </button>
-        <button
+        </v-btn>
+        <v-btn
           id="confirmBtn"
           :disabled="disableConfirm()"
           @click="onBtnConfirmClick()"
         >
           Confirm
-        </button>
+        </v-btn>
       </div>
     </div>
   </div>

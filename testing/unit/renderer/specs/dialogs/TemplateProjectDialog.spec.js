@@ -1,6 +1,7 @@
 import { createVue } from '../../utils/VueUtils';
 import TemplateProjectDialog from '@/renderer/components/dialogs/TemplateProjectDialog.vue';
 import Sinon from 'sinon';
+import { EVENTS } from '@/contents';
 
 describe('TemplateProjectDialog.js', () => {
 
@@ -34,34 +35,40 @@ describe('TemplateProjectDialog.js', () => {
     TemplateProjectDialog.methods.setTemplateType = setTemplateType;
   });
 
-  it('should call confirm and cancel callbacks', async () => {
+  it('should call cancel callbacks', async () => {
     const wrapper = createVue(TemplateProjectDialog);
-    const onConfirm = Sinon.fake();
     const onCancel = Sinon.fake();
 
-    await wrapper.setProps({ onConfirm, onCancel });
-
-    wrapper.find('#confirmBtn').trigger('click');
+    await wrapper.setProps({ onCancel });
     wrapper.find('#cancelBtn').trigger('click');
 
-    expect(onConfirm.callCount).to.equal(1);
     expect(onCancel.callCount).to.equal(1);
   });
 
   it('should call confirm with the correct results', async () => {
-    const wrapper = createVue(TemplateProjectDialog);
-    const onConfirm = Sinon.fake();
+    const sendEvent = TemplateProjectDialog.methods.sendEvent;
+    TemplateProjectDialog.methods.sendEvent = Sinon.stub();
 
-    await wrapper.setProps({ onConfirm });
+    const wrapper = createVue(TemplateProjectDialog);
+
     await wrapper.find('#pixiOption').setChecked(true);
-    await wrapper.find('.urlInput').setValue('path/to/project');
+
+    const input = await wrapper.find('.urlInput');
+    input.element.value = 'localhost:8080';
 
     wrapper.find('#confirmBtn').trigger('click');
 
-    const results = onConfirm.args[0][0];
+    expect(TemplateProjectDialog.methods.sendEvent.callCount).to.equal(1);
 
+    const args = TemplateProjectDialog.methods.sendEvent.args[0];
+    const event = args[0];
+    const results = args[1];
+
+    expect(event).to.equal(EVENTS.CREATE_PROJECT_TEMPLATE);
     expect(results.type).to.equal('pixi');
-    expect(results.location).to.equal('path/to/project');
+    expect(results.location).to.equal('localhost:8080\\New SpringRoll Game');
+
+    TemplateProjectDialog.methods.sendEvent = sendEvent;
   });
 
 });

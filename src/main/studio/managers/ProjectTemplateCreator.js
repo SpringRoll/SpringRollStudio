@@ -1,8 +1,7 @@
-import * as dns from 'dns';
 import * as fs from 'fs';
 import { TEMPLATES } from '../../../contents';
 import { join } from 'path';
-import { app } from 'electron';
+import { app, net } from 'electron';
 import DecompressZip from 'decompress-zip';
 import ncp from 'ncp';
 import { promisify } from 'util';
@@ -21,6 +20,20 @@ export default class ProjectTemplateCreator {
   constructor(studio) {
     this.studio = studio;
     this.tempDir = join(app.getPath('userData'), 'tmp/');
+  }
+
+  /**
+   *
+   * @param {string[]} msg
+   * @memberof ProjectTemplateCreator
+   */
+  log(...msg) {
+    if (this.logger) {
+      this.logger(msg.join(' '));
+    }
+    else {
+      console.log(msg.join(' '));
+    }
   }
 
   /**
@@ -48,18 +61,36 @@ export default class ProjectTemplateCreator {
    * @returns
    * @memberof ProjectTemplateCreator
    */
-  async create(type, location) {
-    if (!this.isLocationEmpty(location)) {
-      return { err: 'New project location must be empty.' };
-    }
-    try {
-      const resolveDNS = promisify(dns.resolve);
-      await resolveDNS('www.github.com');
-      return await this.createFrom('github', type, location);
-    }
-    catch (err) {
-      return await this.createFrom('file', type, location);
-    }
+  create(type, location) {
+    return new Promise((resolve, reject) => {
+      if (!this.isLocationEmpty(location)) {
+        return reject({ err: 'New project location must be empty.' });
+      }
+      this.log(`Beginning ${type} template project creation:`);
+      this.log('Attempting to reach https://github.com.');
+
+      const request = net.request('https://github.com');
+      request.on('response', () => {
+        this.createFrom('github', type, location)
+          .then(resolve)
+          .catch((err) => {
+            if (err && err.err) {
+              this.log(err.err);
+            }
+            this.log('Failed to create project from GitHub. Falling back to local template archives.');
+            this.createFrom('file', type, location)
+              .then(resolve)
+              .catch(reject);
+          });
+      });
+      request.on('error', () => {
+        this.log('Could not reach https://github.com. Falling back to local template archives.');
+        this.createFrom('file', type, location)
+          .then(resolve)
+          .catch(reject);
+      });
+      request.end();
+    });
   }
 
   /**
@@ -76,6 +107,7 @@ export default class ProjectTemplateCreator {
       return await this.copyTemplateFilesTo(location);
     }
     catch (err) {
+      this.log('Failed to create new template project.');
       return { err };
     }
   }
@@ -107,23 +139,33 @@ export default class ProjectTemplateCreator {
    * @memberof ProjectTemplateCreator
    */
   downloadTemplateZip(url, type) {
+    this.log(`Downloading ${type} template files from ${url}`);
+
     return new Promise(resolve => {
       const session = this.studio.window.webContents.session;
 
-      session.on('will-download', (event, item, webContents) => {
+      const willDownload = (event, item, webContents) => {
         const path = join(this.tempDir, 'template.zip');
         item.setSavePath(path);
 
         item.once('done', (event, state) => {
+          session.off('will-download', willDownload);
+
           if (state === 'completed') {
+            this.log('Download complete successful.');
+
             resolve(path);
           }
           else {
+            this.log('Failed to download template file from GitHub. Falling back to local archives.');
+
             // If download fails, fallback to the local archive.
             resolve(this.getTemplateZip('file', type));
           }
         });
-      });
+      };
+      session.on('will-download', willDownload);
+
       session.downloadURL(url);
     });
   }
@@ -137,18 +179,25 @@ export default class ProjectTemplateCreator {
   extractTemplateFiles(source) {
     return new Promise((resolve, reject) => {
       const unzipper = new DecompressZip(source);
+      const extractLocation = join(this.tempDir, 'decompressed');
 
       unzipper.on('error', (log) => {
+        this.log('Failed to extract template files.');
+
         reject('Failed to extract template.');
       });
       unzipper.on('progress', (fileIndex, fileCount) => {
-        // TODO - Show extraction progress?
+        this.log(`Extracting progress: ${Math.ceil(((fileIndex + 1) / fileCount) * 100)}%`);
       });
       unzipper.on('extract', (log) => {
+        this.log('Extracting complete');
+
         resolve();
       });
 
-      unzipper.extract({ path: join(this.tempDir, 'decompressed') });
+      this.log(`Extracting template files to ${extractLocation}`);
+
+      unzipper.extract({ path: extractLocation });
     });
   }
 
@@ -166,15 +215,23 @@ export default class ProjectTemplateCreator {
 
       const path = join(decompressed, files[0]);
 
+      this.log(`Copying template files to ${location}`);
+
       const copy = promisify(ncp);
       await copy(path, location);
+
+      this.log('Cleaning up temp folder.');
 
       const remove = promisify(rimraf);
       await remove(this.tempDir);
 
+      this.log('Project creation complete.');
+
       return { success: true };
     }
     catch (err) {
+      this.log('Failed to copy template files.');
+
       return { err };
     }
   }

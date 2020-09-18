@@ -1,10 +1,10 @@
-import { resolve, join } from 'path';
+import { join } from 'path';
 import { ipcMain, dialog, BrowserWindow } from 'electron';
 import { EVENTS, DIALOGS } from '../../contents';
 import { projectInfo, gamePreview } from './storage';
 
 import ProjectTemplateCreator from './managers/ProjectTemplateCreator';
-import { readdirSync, existsSync } from 'fs';
+import { existsSync } from 'fs';
 
 /**
  * Main application Singleton. This object is responsible for setting up logic specific to SpringRoll Studio.
@@ -18,7 +18,10 @@ class SpringRollStudio {
   initialize(window) {
     /** @type {BrowserWindow} */
     this.window = window;
+
     this.templateCreator = new ProjectTemplateCreator(this);
+    this.templateCreator.logger = this.templateCreationLogger.bind(this);
+
     this.setupListeners();
   }
 
@@ -79,6 +82,7 @@ class SpringRollStudio {
     else if (result.success) {
       projectInfo.location = data.location;
     }
+    this.window.webContents.send(EVENTS.PROJECT_CREATION_COMPLETE, result && !!result.success);
   }
 
   /**
@@ -119,6 +123,15 @@ class SpringRollStudio {
     }
 
     this.window.webContents.send(EVENTS.NAVIGATE, 'preview');
+  }
+
+  /**
+   *
+   * @param {string} log
+   * @memberof SpringRollStudio
+   */
+  templateCreationLogger(log) {
+    this.window.webContents.send(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, log);
   }
 }
 
