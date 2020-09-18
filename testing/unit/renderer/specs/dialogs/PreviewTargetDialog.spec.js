@@ -51,9 +51,13 @@ describe('PreviewTargetDialog.js', () => {
 
     await wrapper.setProps({ onConfirm });
     await wrapper.find('#urlOption').setChecked(true);
-    await wrapper.find('#urlInput').setValue('localhost:8080');
 
-    wrapper.find('#confirmBtn').trigger('click');
+    const input = await wrapper.find('#urlInput');
+    input.element.value = 'localhost:8080';
+
+    await wrapper.find('#confirmBtn').trigger('click');
+
+    expect(onConfirm.callCount).to.equal(1);
 
     const results = onConfirm.args[0][0];
 
