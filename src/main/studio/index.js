@@ -1,8 +1,10 @@
-import { resolve } from 'path';
-
-import { ipcMain, dialog } from 'electron';
+import { join } from 'path';
+import { ipcMain, dialog, BrowserWindow } from 'electron';
 import { EVENTS, DIALOGS } from '../../contents';
 import { projectInfo, gamePreview } from './storage';
+
+import ProjectTemplateCreator from './managers/ProjectTemplateCreator';
+import { existsSync } from 'fs';
 
 /**
  * Main application Singleton. This object is responsible for setting up logic specific to SpringRoll Studio.
@@ -14,7 +16,12 @@ class SpringRollStudio {
    * @memberof SpringRollStudio
    */
   initialize(window) {
+    /** @type {BrowserWindow} */
     this.window = window;
+
+    this.templateCreator = new ProjectTemplateCreator(this);
+    this.templateCreator.logger = this.templateCreationLogger.bind(this);
+
     this.setupListeners();
   }
 
@@ -63,8 +70,19 @@ class SpringRollStudio {
    * Handler for EVENTS.CREATE_PROJECT_TEMPLATE event.
    * @memberof SpringRollStudio
    */
-  createProjectTemplate() {
-    console.log('[createProjectTemplate] Missing implementation');
+  async createProjectTemplate(event, data) {
+    const result = await this.templateCreator.create(data.type, data.location);
+    if (!result || result.err) {
+      let msg = `Could not create ${data.type} template at ${data.location}`;
+      if (result && result.err) {
+        msg = result.err;
+      }
+      dialog.showErrorBox('Failed to create template', msg);
+    }
+    else if (result.success) {
+      projectInfo.location = data.location;
+    }
+    this.window.webContents.send(EVENTS.PROJECT_CREATION_COMPLETE, result && !!result.success);
   }
 
   /**
@@ -84,7 +102,16 @@ class SpringRollStudio {
 
     switch (data.type) {
     case 'deploy':
-      gamePreview.previewURL = `file://${resolve(projectInfo.location, 'deploy')}`;
+      const deployPath = join(projectInfo.location, 'deploy');
+      // Make sure the deploy folder exists because attempting to host it.
+      if (!existsSync(deployPath)) {
+        dialog.showErrorBox(
+          'Deploy folder not found.',
+          `Could not find a deploy folder in:\n${projectInfo.location}`
+        );
+        return;
+      }
+      gamePreview.previewURL = `file://${deployPath}`;
       break;
 
     case 'url':
@@ -96,6 +123,15 @@ class SpringRollStudio {
     }
 
     this.window.webContents.send(EVENTS.NAVIGATE, 'preview');
+  }
+
+  /**
+   *
+   * @param {string} log
+   * @memberof SpringRollStudio
+   */
+  templateCreationLogger(log) {
+    this.window.webContents.send(EVENTS.UPDATE_TEMPLATE_CREATION_LOG, log);
   }
 }
 

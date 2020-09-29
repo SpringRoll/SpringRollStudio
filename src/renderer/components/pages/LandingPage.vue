@@ -6,6 +6,12 @@
       :visible="showPreviewTargetDialog"
     />
 
+    <template-project-dialog
+      :on-cancel="onProjectTemplateDialogCancel"
+      :on-confirm="onProjectTemplateDialogConfirm"
+      :visible="showProjectTemplateDialog"
+    />
+
     <div class="heading">
       <img class="logo" src="~@/renderer/assets/img/256x256.png" />
       <h1 class="name">SpringRoll Studio</h1>
@@ -16,7 +22,7 @@
     <div class="navigation">
       <v-btn class="landing-btn projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</v-btn>
       <v-btn class="landing-btn previewGameBtn" :disabled="disablePreview" @click="togglePreviewTargetDialog(true)">Preview Game</v-btn>
-      <v-btn class="landing-btn projectTemplateBtn" @click="sendEvent('createProjectTemplate')">Create Project Template</v-btn>
+      <v-btn class="landing-btn projectTemplateBtn" @click="toggleProjectTemplateDialog(true)">Create Project Template</v-btn>
       <v-btn class="landing-btn captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</v-btn>
     </div>
 
@@ -26,13 +32,15 @@
 
 <script>
 import PreviewTargetDialog from '../dialogs/PreviewTargetDialog.vue';
-import { ipcRenderer } from 'electron';
+import TemplateProjectDialog from '../dialogs/TemplateProjectDialog.vue';
+import { ipcMain, ipcRenderer } from 'electron';
 import { mapState } from 'vuex';
 import { EVENTS, DIALOGS } from '../../../contents';
 
 export default {
   components: {
-    PreviewTargetDialog
+    PreviewTargetDialog,
+    TemplateProjectDialog
   },
 
   /**
@@ -40,7 +48,8 @@ export default {
    */
   data: function() {
     return {
-      showPreviewTargetDialog: false
+      showPreviewTargetDialog: false,
+      showProjectTemplateDialog: false
     };
   },
 
@@ -88,6 +97,13 @@ export default {
     },
 
     /**
+     * Handler for canceling the project template dailog.
+     */
+    onProjectTemplateDialogCancel: function() {
+      this.toggleProjectTemplateDialog(false);
+    },
+
+    /**
      * Handler for confirming the preview target dialog.
      */
     onPreviewTargetDialogConfirm: function(results) {
@@ -96,11 +112,25 @@ export default {
     },
 
     /**
+     * Handler for confirming the project template dailog.
+     */
+    onProjectTemplateDialogConfirm: function(results) {
+      this.toggleProjectTemplateDialog(false);
+    },
+
+    /**
      * Toggle the preview target dialog.
      */
     togglePreviewTargetDialog: function(toggle) {
       this.showPreviewTargetDialog = toggle;
-    }
+    },
+
+    /**
+     * Toggle the project template creation dialog.
+     */
+    toggleProjectTemplateDialog: function(toggle) {
+      this.showProjectTemplateDialog = toggle;
+    },
   }
 };
 </script>
