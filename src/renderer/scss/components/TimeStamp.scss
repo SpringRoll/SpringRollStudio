@@ -1,0 +1,10 @@
+.time-stamp {
+  @extend .font-21;
+  align-items: center;
+  background-color: $white;
+  color: $secondary;
+  display: flex;
+  height: 3.6rem;
+  justify-content: center;
+  width: 15.3rem;
+}

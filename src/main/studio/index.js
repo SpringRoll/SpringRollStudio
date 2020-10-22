@@ -90,7 +90,7 @@ class SpringRollStudio {
    * @memberof SpringRollStudio
    */
   openCaptionStudio() {
-    console.log('[openCaptionStudio] Missing implementation');
+    this.window.webContents.send(EVENTS.NAVIGATE, 'caption-studio');
   }
 
   /**

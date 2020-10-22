@@ -1,0 +1,33 @@
+@mixin font-size($size: 1.6, $height: 2.1) {
+  font-size: $size + rem;
+  line-height: ($height / $size) + em;
+}
+
+@mixin key($width: 4.4rem, $height: 4.4rem, $gap: 0.56rem ) {
+  height: $height;
+  width: $width;
+  border-radius: 0.4rem;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.12),
+    0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  color: $accent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  margin: $gap;
+  transition: background-color 0.25s;
+
+  &.--medium {
+    width: ($width + $gap + 0.3) * 3;
+  }
+
+  &.--large {
+    width: ($width + $gap + 0.5) * 5;
+  }
+
+  &.--active {
+    background-color: $accent;
+    color: $white;
+  }
+}

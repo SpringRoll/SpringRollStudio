@@ -14,6 +14,11 @@ export default new Router({
       path: '/preview',
       name: 'preview-page',
       component: require('../components/pages/PreviewPage').default
+    },
+    {
+      path: '/caption-studio',
+      name: 'caption-studio',
+      component: require('../components/pages/CaptionStudio').default
     }
   ]
 });

@@ -10,6 +10,15 @@ import App from './App.vue';
 import { ipcRenderer } from 'electron';
 import { EVENTS } from '../contents';
 
+// Plugins
+import './plugins';
+
+// Styles
+import './scss/main.scss';
+
+// State
+import './class/CaptionManager';
+
 Vue.config.productionTip = false;
 Vue.use(Vuetify);
 
