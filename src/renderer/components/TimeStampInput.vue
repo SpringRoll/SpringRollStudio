@@ -1,17 +1,17 @@
 <template>
-<div class="time-stamp-input">
-  <span class="time-stamp-input__label capitalize font-semi-bold font-16">{{name}} Time:</span>
-  <div class="time-stamp-input__container">
-    <div class="time-stamp-input__input-group font-21">
-      <input class="time-stamp-input__input" v-model="minutes" type="number" min="0" step="1"/>
-      :
-      <input class="time-stamp-input__input"  v-model="seconds" type="number" min="0"  step="1"/>
-      :
-      <input class="time-stamp-input__input" v-model="milliseconds" type="number" min="0" step="1"/>
+  <div class="time-stamp-input">
+    <span class="time-stamp-input__label capitalize font-semi-bold font-16">{{ name }} Time:</span>
+    <div class="time-stamp-input__container">
+      <div class="time-stamp-input__input-group font-21">
+        <input v-model="minutes" type="number" min="0" step="1" class="time-stamp-input__input" />
+        :
+        <input v-model="seconds" type="number" min="0" step="1" class="time-stamp-input__input" />
+        :
+        <input v-model="milliseconds" type="number" min="0" step="1" class="time-stamp-input__input" />
+      </div>
+      <v-btn text class="time-stamp-input__button font-16 font-semi-bold capitalize" @click="getTime">Use Current Time</v-btn>
     </div>
-    <v-btn flat @click="getTime" class="time-stamp-input__button font-16 font-semi-bold capitalize">Use Current Time</v-btn>
   </div>
-</div>
 </template>
 
 <script>
@@ -19,12 +19,9 @@ import TimeStampMixin from '@/renderer/mixins/TimeStamp';
 import { EventBus } from '@/renderer/class/EventBus';
 export default {
   mixins: [TimeStampMixin],
-  data() {
-    return {
-      time: 0,
-      defaultChanged: false,
-    };
-  },
+  /**
+   *
+   */
   props: {
     name: {
       type: String,
@@ -32,25 +29,49 @@ export default {
     },
     default: Number
   },
+  /**
+   *
+   */
+  data() {
+    return {
+      time: 0,
+      defaultChanged: false,
+    };
+  },
   watch: {
+    /**
+     *
+     */
     time() {
       if (!this.defaultChanged) {
         this.$emit('time', this.time);
       }
       this.defaultChanged = false;
     },
+    /**
+     *
+     */
     default() {
       this.defaultChanged = true;
       this.time = this.default;
     }
   },
+  /**
+   *
+   */
   created() {
     this.time = 'number' === typeof this.default ? this.default : this.time;
   },
   methods: {
+    /**
+     *
+     */
     updateTime($event) {
       this.time = $event.time || 0;
     },
+    /**
+     *
+     */
     getTime() {
       EventBus.$once('time_current', this.updateTime);
       EventBus.$emit('time_get');

@@ -2,10 +2,10 @@
   <div class="explorer">
     <v-text-field
       class="explorer__search"
-      @input="filter"
       prepend-inner-icon="search"
       placeholder="Search file names"
       solo
+      @input="filter"
     />
     <h3 class="font-28 font-semi-bold explorer__header">Files</h3>
     <div class="explorer__dir">
@@ -26,7 +26,9 @@
         slot="activator"
         color="accent"
         class="v-btn accent explorer__input --file font-semi-bold font-16"
-      >Import Files</v-btn>
+      >
+        Import Files
+      </v-btn>
       <v-card>
         <v-card-title class="error" primary-title>
           <h2 class="font-semi-bold json__dialog-title">Warning</h2>
@@ -39,12 +41,14 @@
           <v-spacer></v-spacer>
           <v-btn
             color="accent"
-            @click="dialog = false"
             class="v-btn accent explorer__input --dialog font-semi-bold font-16"
-          >Cancel</v-btn>
+            @click="dialog = false"
+          >
+            Cancel
+          </v-btn>
           <div class="v-btn error explorer__input --dialog font-semi-bold font-16">
             <span>Import Files</span>
-            <input class="explorer__file-input" @change="loadFiles" type="file" accept=".ogg,.mpeg,.mp3" multiple= />
+            <input class="explorer__file-input" type="file" accept=".ogg,.mpeg,.mp3" multiple @change="loadFiles" />
           </div>
         </v-card-actions>
       </v-card>
@@ -60,6 +64,9 @@ export default {
   components: {
     FileDirectory
   },
+  /**
+   *
+   */
   data() {
     return {
       directory: FileProcessor.getDirectory(),
@@ -68,11 +75,26 @@ export default {
       dialog: false,
     };
   },
+  /**
+   *
+   */
+  mounted() {
+    EventBus.$on('caption_changed', this.setActive);
+  },
+  destroyed() {
+    EventBus.$off('caption_changed', this.setActive);
+  },
   methods: {
+    /**
+     *
+     */
     filter($event) {
       FileProcessor.setNameFilter($event);
       this.directory = FileProcessor.generateDirectories(this.rawFiles);
     },
+    /**
+     *
+     */
     loadFiles($event) {
       this.dialog = false;
       if (!$event.target.files.length) {
@@ -82,18 +104,14 @@ export default {
       console.log(this.rawFiles);
       this.directory = FileProcessor.generateDirectories(this.rawFiles);
     },
-
+    /**
+     *
+     */
     setActive($event) {
       if (null !== $event.file) {
         this.active = $event.file;
       }
     }
-  },
-  mounted() {
-    EventBus.$on('caption_changed', this.setActive);
-  },
-  destroyed() {
-    EventBus.$off('caption_changed', this.setActive);
   }
 };
 </script>

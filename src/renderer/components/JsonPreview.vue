@@ -3,11 +3,15 @@
     <v-jsoneditor class="json__editor" :options="options" :plus="false" height="400px" ref="jsonEditor"/>
     <div class="json__button-group">
       <v-dialog v-model="dialog" width="500">
-        <v-btn
-          slot="activator"
-          color="error"
-          class="font-semi-bold --capital json__button-cancel"
-        >Clear</v-btn>
+        <template v-slot:activator="{on}">
+          <v-btn
+            color="error"
+            class="font-semi-bold --capital json__button-cancel"
+            v-on="on"
+          >
+            Clear
+          </v-btn>
+        </template>
         <v-card>
           <v-card-title class="error" primary-title>
             <h2 class="font-semi-bold json__dialog-title">Warning</h2>
@@ -19,10 +23,12 @@
             <v-spacer></v-spacer>
             <v-btn
               color="accent"
-              @click="dialog = false"
               class="font-semi-bold font-16 --capital"
-            >Cancel</v-btn>
-            <v-btn color="error" @click="reset" class="font-semi-bold font-16 --capital">Ok</v-btn>
+              @click="dialog = false"
+            >
+              Cancel
+            </v-btn>
+            <v-btn color="error" class="font-semi-bold font-16 --capital" @click="reset">Ok</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -33,10 +39,12 @@
         color="accent"
         class="font-semi-bold --capital json__button-export"
         :disabled="Object.keys(jsonErrors).length > 0"
-      >Export Code</v-btn>
+      >
+        Export Code
+      </v-btn>
     </div>
-    <ul class="json__errors" v-for="(file, index) in jsonErrors" :key="index">
-      <li v-for="(error, index) in file" :key="index">
+    <ul v-for="(file, index) in jsonErrors" :key="index" class="json__errors">
+      <li v-for="(error, LiIndex) in file" :key="LiIndex">
         {{ error }}
       </li>
     </ul>
@@ -47,6 +55,12 @@
 import { EventBus } from '@/renderer/class/EventBus';
 import VJsoneditor from 'v-jsoneditor';
 export default {
+  components: {
+    VJsoneditor
+  },
+  /**
+   *
+   */
   data() {
     const data = {};
     const json = JSON.stringify(data);
@@ -67,18 +81,41 @@ export default {
       },
     };
   },
-  components: {
-    VJsoneditor
+  /**
+   *
+   */
+  mounted() {
+    this.createBlob();
+    EventBus.$on('caption_update', this.onUpdate);
+    EventBus.$on('caption_changed', this.onCaptionChange);
+    EventBus.$on('caption_data', this.update);
+  },
+  /**
+   *
+   */
+  destroyed() {
+    EventBus.$off('caption_update', this.onUpdate);
+    EventBus.$off('caption_data', this.update);
+    EventBus.$off('caption_changed', this.onCaptionChange);
   },
   methods: {
+    /**
+     *
+     */
     onEdit($event) {
       this.checkErrors($event, this.origin);
       EventBus.$emit('json_update', $event, this.origin);
     },
+    /**
+     *
+     */
     onUpdate(data, $origin) {
       //Pass the origin of the original component on through in this call, since that is the origin that matters
       EventBus.$emit('caption_get', $origin);
     },
+    /**
+     *
+     */
     onEvent(node, event) {
       if (event.type === 'blur') {
         console.log('blurrrred', node);
@@ -105,13 +142,17 @@ export default {
       });
 
     },
+    /**
+     *
+     */
     onCaptionChange({ index, file, name }) {
       this.activeFile = name;
       this.fileNameMap[name] = file;
-
       this.currentIndex = index;
-
     },
+    /**
+     *
+     */
     update(data, $origin) {
       this.checkErrors(data, $origin);
 
@@ -124,6 +165,9 @@ export default {
       this.json = JSON.stringify(this.data, null, 2);
       this.createBlob();
     },
+    /**
+     *
+     */
     cleanData(data) {
       const key = Object.keys(data);
       const output = {};
@@ -147,16 +191,25 @@ export default {
       }
       return output;
     },
+    /**
+     *
+     */
     createBlob() {
       this.blob = URL.createObjectURL(
         new Blob([JSON.stringify(this.data)], { type: 'application/json' })
       );
     },
+    /**
+     *
+     */
     reset() {
       EventBus.$emit('caption_reset');
       this.dialog = false;
       this.update({});
     },
+    /**
+     *
+     */
     validateJSON(json, $origin) {
       const errors = {};
       Object.keys(json).forEach(key => {
@@ -186,6 +239,9 @@ export default {
 
       return errors;
     },
+    /**
+     *
+     */
     checkErrors(data, $origin) {
       this.jsonErrors = false;
       const errors = this.validateJSON(data, $origin);
@@ -196,17 +252,6 @@ export default {
       EventBus.$emit('json_errors', this.jsonErrors);
     }
   },
-  mounted() {
-    this.createBlob();
-    EventBus.$on('caption_update', this.onUpdate);
-    EventBus.$on('caption_changed', this.onCaptionChange);
-    EventBus.$on('caption_data', this.update);
-  },
-  destroyed() {
-    EventBus.$off('caption_update', this.onUpdate);
-    EventBus.$off('caption_data', this.update);
-    EventBus.$off('caption_changed', this.onCaptionChange);
-  }
 };
 </script>
 
