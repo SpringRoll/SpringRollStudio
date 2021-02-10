@@ -9,7 +9,7 @@
     />
     <h3 class="font-28 font-semi-bold explorer__header">Files</h3>
     <div class="explorer__dir">
-      <file-directory
+      <FileDirectory
         v-for="(value, key) in directory.dir"
         :key="key"
         :directory="value"
@@ -19,16 +19,18 @@
     </div>
     <div v-if="!rawFiles" color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
       <span>Import Files</span>
-      <input class="explorer__file-input" @change="loadFiles" type="file" accept=".ogg,.mpeg,.mp3" multiple= />
+      <input class="explorer__file-input" @change="loadFiles" type="file" accept=".ogg,.mpeg,.mp3" multiple="multiple" />
     </div>
     <v-dialog v-else v-model="dialog" width="500">
-      <v-btn
-        slot="activator"
-        color="accent"
-        class="v-btn accent explorer__input --file font-semi-bold font-16"
-      >
-        Import Files
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          color="accent"
+          class="v-btn accent explorer__input --file font-semi-bold font-16"
+          v-on="{ on }"
+        >
+          Import Files
+        </v-btn>
+      </template>
       <v-card>
         <v-card-title class="error" primary-title>
           <h2 class="font-semi-bold json__dialog-title">Warning</h2>
@@ -81,6 +83,9 @@ export default {
   mounted() {
     EventBus.$on('caption_changed', this.setActive);
   },
+  /**
+   *
+   */
   destroyed() {
     EventBus.$off('caption_changed', this.setActive);
   },

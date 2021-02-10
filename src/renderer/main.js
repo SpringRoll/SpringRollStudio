@@ -1,6 +1,5 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
+import vuetify from './plugins/vuetify'; // path to vuetify export
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import router from './router';
@@ -20,10 +19,10 @@ import './scss/main.scss';
 import './class/CaptionManager';
 
 Vue.config.productionTip = false;
-Vue.use(Vuetify);
 
 const vm = new Vue({
   components: { App },
+  vuetify,
   store,
   router,
   template: '<App/>'

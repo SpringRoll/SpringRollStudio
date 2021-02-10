@@ -1,31 +1,31 @@
 <template>
   <v-list>
     <v-list-group class="directory" :value="true" prepend-icon="folder">
-      <v-list-tile slot="activator" class="directory__dir-name">
-        <v-list-tile-content>
-          <v-list-tile-title class="directory__name font-semi-bold font-16">{{ name }}</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-list-tile-content v-for="(value, index) in files" :key="index">
+      <v-list-item slot="activator" class="directory__dir-name">
+        <v-list-item-content>
+          <v-list-item-title class="directory__name font-semi-bold font-16">{{ name }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item-content v-for="(value, index) in files" :key="index">
         <label class="directory__file">
           <v-icon class="directory__icon" :class="{'--active': value.active}">audiotrack</v-icon>
           <input
             :id="`${index}_${value.file.name}`"
             class="directory__select"
-            @change="emit"
             type="radio"
             name="selectedFile"
             :value="value.file"
             :checked="value.active"
+            @change="emit"
           />
           <label
             :for="`${index}_${value.file.name}`"
             class="font-16 directory__label"
           >{{value.file.name}}</label>
-          <v-icon class="directory__icon" v-show="filesWithCaptions[value.file.name]">done</v-icon>
+          <v-icon v-show="filesWithCaptions[value.file.name]" class="directory__icon">done</v-icon>
         </label>
-      </v-list-tile-content>
-      <file-directory
+      </v-list-item-content>
+      <FileDirectory
         v-for="(value, key) in directory.dir"
         :key="key"
         class="directory__nested"
@@ -41,7 +41,7 @@
 <script>
 import { EventBus } from '@/renderer/class/EventBus';
 export default {
-  name: 'file-directory',
+  name: 'FileDirectory',
   props: {
     directory: {
       type: Object,
@@ -57,6 +57,9 @@ export default {
       default: false
     }
   },
+  /**
+   *
+   */
   data() {
     return {
       hasActive: false,
@@ -65,6 +68,9 @@ export default {
     };
   },
   computed: {
+    /**
+     *
+     */
     files() {
       return this.directory.files.map((file) => {
         return {
@@ -75,21 +81,51 @@ export default {
     }
   },
   watch: {
+    /**
+     *
+     */
     directory() {
       if (this.hasActive) {
         this.directory.selectByFile(this.active);
       }
     }
   },
+  /**
+   *
+   */
+  mounted() {
+    EventBus.$on('next_file', this.nextFile);
+    EventBus.$on('previous_file', this.previousFile);
+    EventBus.$on('file_captioned', this.onFileCaptionChange);
+    EventBus.$on('json_file_selected', this.jsonEmit);
+  },
+  /**
+   *
+   */
+  destroyed() {
+    EventBus.$off('next_file', this.nextFile);
+    EventBus.$off('previous_file', this.previousFile);
+    EventBus.$off('file_captioned', this.onFileCaptionChange);
+    EventBus.$off('json_file_selected', this.jsonEmit);
+  },
   methods: {
+    /**
+     *
+     */
     isFile(file) {
       return file instanceof File;
     },
+    /**
+     *
+     */
     nextFile() {
       if (this.hasActive) {
         EventBus.$emit('file_selected', { file: this.directory.nextFile() }, this.origin);
       }
     },
+    /**
+     *
+     */
     previousFile() {
       if (this.hasActive) {
         EventBus.$emit('file_selected', {
@@ -97,6 +133,9 @@ export default {
         }, this.origin);
       }
     },
+    /**
+     *
+     */
     emit($event) {
       this.hasActive = $event.target.checked;
       if (this.hasActive) {
@@ -105,6 +144,9 @@ export default {
         }, this.origin);
       }
     },
+    /**
+     *
+     */
     jsonEmit($event) {
       const newFile = this.directory.selectByFile($event);
       if (!newFile) {
@@ -114,21 +156,12 @@ export default {
         file: newFile
       }, this.origin);
     },
+    /**
+     *
+     */
     onFileCaptionChange($event) {
       this.$set(this.filesWithCaptions, $event.name, $event.isCaptioned);
     }
-  },
-  mounted() {
-    EventBus.$on('next_file', this.nextFile);
-    EventBus.$on('previous_file', this.previousFile);
-    EventBus.$on('file_captioned', this.onFileCaptionChange);
-    EventBus.$on('json_file_selected', this.jsonEmit);
-  },
-  destroyed() {
-    EventBus.$off('next_file', this.nextFile);
-    EventBus.$off('previous_file', this.previousFile);
-    EventBus.$off('file_captioned', this.onFileCaptionChange);
-    EventBus.$off('json_file_selected', this.jsonEmit);
   }
 };
 </script>
