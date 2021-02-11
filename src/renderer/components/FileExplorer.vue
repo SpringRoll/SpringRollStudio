@@ -1,5 +1,6 @@
 <template>
   <div class="explorer">
+    <v-btn id="btnHome" class="btn btn-controls" icon @click="onHomeClick()"><v-icon class="controls-icon">home</v-icon></v-btn>
     <v-text-field
       class="explorer__search"
       prepend-inner-icon="search"
@@ -19,13 +20,13 @@
     </div>
     <div v-if="!rawFiles" color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
       <span>Import Files</span>
-      <input class="explorer__file-input" @change="loadFiles" type="file" accept=".ogg,.mpeg,.mp3" multiple="multiple" />
+      <input class="explorer__file-input" type="file" accept=".ogg,.mpeg,.mp3" multiple="multiple" @change="loadFiles"/>
     </div>
     <v-dialog v-else v-model="dialog" width="500">
       <template v-slot:activator="{ on }">
         <v-btn
           color="accent"
-          class="v-btn accent explorer__input --file font-semi-bold font-16"
+          class="v-btn explorer__input --file font-semi-bold font-16"
           v-on="{ on }"
         >
           Import Files
@@ -43,12 +44,12 @@
           <v-spacer></v-spacer>
           <v-btn
             color="accent"
-            class="v-btn accent explorer__input --dialog font-semi-bold font-16"
+            class="v-btn explorer__input --dialog font-semi-bold font-16"
             @click="dialog = false"
           >
             Cancel
           </v-btn>
-          <div class="v-btn error explorer__input --dialog font-semi-bold font-16">
+          <div color="error" class="v-btn explorer__input --dialog font-semi-bold font-16">
             <span>Import Files</span>
             <input class="explorer__file-input" type="file" accept=".ogg,.mpeg,.mp3" multiple @change="loadFiles" />
           </div>
@@ -91,6 +92,12 @@ export default {
   },
   methods: {
     /**
+     * Handler for clicking the home button.
+     */
+    onHomeClick: function() {
+      this.$router.push({ path: '/' });
+    },
+    /**
      *
      */
     filter($event) {
@@ -127,14 +134,19 @@ export default {
   width: 28.2rem;
   min-width: 28.2rem;
   background-color: $white-background;
-  padding: 2.4rem 0 0;
+  padding: 3.6rem 0 0;
   position: fixed;
-  height: calc(100vh - 5.7rem);
+  //height: calc(100vh - 5.7rem);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
   transition: transform 0.5s;
+
+  .v-list-item__content {
+    padding: 0;
+  }
 
   &.--explorerHidden {
     transform: translateX(-100%);
@@ -189,6 +201,38 @@ export default {
     position: absolute;
     opacity: 0;
   }
+
+  .btn {
+    cursor: pointer;
+      background-color: #337ab7;
+      color: white;
+      outline: 0;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      text-transform: none;
+      letter-spacing: normal;
+
+      &:hover {
+        background-color: #286090;
+      }
+
+      &.btn-controls {
+        height: 3rem;
+        width: 3rem;
+        border-left: 1px solid rgba(0,0,0,.6);
+        vertical-align: baseline;
+
+        &.--toggle {
+          width: 10%;
+          border-left: 1px solid rgba(0,0,0,.1);
+
+          &.--disabled {
+            display: none;
+          }
+        }
+      }
+    }
 }
 </style>
 
