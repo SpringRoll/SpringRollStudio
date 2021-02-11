@@ -20,7 +20,7 @@
     </div>
     <div v-if="!rawFiles" color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
       <span>Import Files</span>
-      <input class="explorer__file-input" type="file" accept=".ogg,.mpeg,.mp3" multiple="multiple" @change="loadFiles"/>
+      <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles"/>
     </div>
     <v-dialog v-else v-model="dialog" width="500">
       <template v-slot:activator="{ on }">
@@ -51,7 +51,7 @@
           </v-btn>
           <div color="error" class="v-btn explorer__input --dialog font-semi-bold font-16">
             <span>Import Files</span>
-            <input class="explorer__file-input" type="file" accept=".ogg,.mpeg,.mp3" multiple @change="loadFiles" />
+            <input class="explorer__file-input" type="file" webkitdirectory="" multiple @change="loadFiles" />
           </div>
         </v-card-actions>
       </v-card>
