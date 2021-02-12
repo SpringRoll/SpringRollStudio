@@ -1,6 +1,6 @@
 <template>
   <div class="explorer">
-    <v-btn id="btnHome" class="btn btn-controls" icon @click="onHomeClick()"><v-icon class="controls-icon">home</v-icon></v-btn>
+    <v-btn id="btnHome" color="white" class="btn btn-controls" icon @click="onHomeClick()"><v-icon class="controls-icon">home</v-icon></v-btn>
     <v-text-field
       class="explorer__search"
       prepend-inner-icon="search"
@@ -20,7 +20,7 @@
     </div>
     <div v-if="!rawFiles" color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
       <span>Import Files</span>
-      <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles"/>
+      <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles" />
     </div>
     <v-dialog v-else v-model="dialog" width="500">
       <template v-slot:activator="{ on }">
@@ -134,7 +134,7 @@ export default {
   width: 28.2rem;
   min-width: 28.2rem;
   background-color: $white-background;
-  padding: 3.6rem 0 0;
+  padding: 4.5rem 0 0;
   position: fixed;
   //height: calc(100vh - 5.7rem);
   height: 100vh;
@@ -218,10 +218,13 @@ export default {
       }
 
       &.btn-controls {
-        height: 3rem;
-        width: 3rem;
+        height: 4rem;
+        width: 4rem;
         border-left: 1px solid rgba(0,0,0,.6);
         vertical-align: baseline;
+        position: absolute;
+        top: 0;
+        left: 0;
 
         &.--toggle {
           width: 10%;
