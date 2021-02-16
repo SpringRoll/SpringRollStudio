@@ -6,7 +6,7 @@
         <template v-slot:activator="{on}">
           <v-btn
             color="error"
-            class="font-semi-bold --capital json__button-cancel"
+            class="font-semi-bold font-16 --capital json__button-cancel"
             v-on="on"
           >
             Clear
@@ -37,7 +37,7 @@
         target="_blank"
         :href="blob"
         color="accent"
-        class="font-semi-bold --capital json__button-export"
+        class="font-semi-bold font-16 --capital json__button-export"
         :disabled="Object.keys(jsonErrors).length > 0"
       >
         Export Code

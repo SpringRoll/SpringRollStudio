@@ -18,11 +18,14 @@
         :active="active"
       />
     </div>
-    <div v-if="!rawFiles" color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
+    <div color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
       <span>Import Files</span>
       <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles" />
     </div>
-    <v-dialog v-else v-model="dialog" width="500">
+    <v-dialog v-model="dialog" width="500">
+      Loading files
+    </v-dialog>
+    <!-- <v-dialog v-else v-model="dialog" width="500">
       <template v-slot:activator="{ on }">
         <v-btn
           color="accent"
@@ -55,7 +58,7 @@
           </div>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -108,13 +111,15 @@ export default {
      *
      */
     loadFiles($event) {
-      this.dialog = false;
+      this.dialog = true;
       if (!$event.target.files.length) {
         return;
       }
       this.rawFiles = $event.target.files;
       console.log(this.rawFiles);
       this.directory = FileProcessor.generateDirectories(this.rawFiles);
+
+      this.dialog = false;
     },
     /**
      *
