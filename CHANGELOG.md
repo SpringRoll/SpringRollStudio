@@ -10,5 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - VUE front end renderer
 - Electron back end
 - Project Templating via Github or bundled seed projects
+- Caption Studio Initial Implementation
 
 
