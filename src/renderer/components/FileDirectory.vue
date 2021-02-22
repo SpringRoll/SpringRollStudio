@@ -21,7 +21,7 @@
           <label
             :for="`${index}_${value.file.name}`"
             class="font-16 directory__label"
-          >{{value.file.name}}</label>
+          >{{ value.file.name }}</label>
           <v-icon v-show="filesWithCaptions[value.file.name]" class="directory__icon">done</v-icon>
         </label>
       </v-list-item-content>

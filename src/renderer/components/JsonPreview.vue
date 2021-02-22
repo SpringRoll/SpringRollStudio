@@ -1,6 +1,6 @@
 <template>
   <div class="json">
-    <v-jsoneditor class="json__editor" :options="options" :plus="false" height="400px" ref="jsonEditor"/>
+    <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="400px" />
     <div class="json__button-group">
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{on}">

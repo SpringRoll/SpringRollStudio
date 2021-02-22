@@ -19,7 +19,7 @@
                 :key="size.value"
                 :value="size.value"
                 :selected="size.default"
-              >{{size.label}}</option>
+              >{{ size.label }}</option>
             </select>
             <select class="ql-color">
               <option
@@ -30,7 +30,7 @@
               />
             </select>
             <button class="ql-bold">Bold</button>
-            <button @click="escapeString" class="editor__escape-button">
+            <button class="editor__escape-button" @click="escapeString">
               <span v-pre>&#123;&#123; &#125;&#125;</span>
             </button>
           </span>

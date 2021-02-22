@@ -27,7 +27,10 @@ export default {
       type: String,
       default: ''
     },
-    default: Number
+    default: {
+      type: Number,
+      default: 0
+    }
   },
   /**
    *

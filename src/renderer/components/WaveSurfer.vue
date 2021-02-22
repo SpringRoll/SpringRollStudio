@@ -3,24 +3,24 @@
     <div id="wave__container" class="wave__wave"></div>
     <div class="wave__controls">
       <div class="wave__buttons">
-        <v-btn @click="rewind" :disabled="!hasFile" class="wave__button" icon small>
+        <v-btn :disabled="!hasFile" class="wave__button" icon small @click="rewind">
           <v-icon>fast_rewind</v-icon>
         </v-btn>
-        <v-btn @click="previous" :disabled="!hasFile" class="wave__button" icon small>
+        <v-btn :disabled="!hasFile" class="wave__button" icon small @click="previous">
           <v-icon>skip_previous</v-icon>
         </v-btn>
-        <v-btn @click="play" :disabled="!hasFile" class="wave__button" icon small>
+        <v-btn :disabled="!hasFile" class="wave__button" icon small @click="play">
           <v-icon> {{ isPlaying ? 'pause' : 'play_arrow' }}</v-icon>
         </v-btn>
-        <v-btn @click="next" :disabled="!hasFile" class="wave__button" icon small>
+        <v-btn :disabled="!hasFile" class="wave__button" icon small @click="next">
           <v-icon>skip_next</v-icon>
         </v-btn>
-        <v-btn @click="forward" :disabled="!hasFile" class="wave__button" icon small>
+        <v-btn :disabled="!hasFile" class="wave__button" icon small @click="forward">
           <v-icon>fast_forward</v-icon>
         </v-btn>
       </div>
       <div class="wave__timer">
-        <TimeStamp :time="currentTime"/>
+        <TimeStamp :time="currentTime" />
       </div>
     </div>
   </div>
@@ -35,6 +35,9 @@ export default {
   components: {
     TimeStamp
   },
+  /**
+   *
+   */
   data() {
     return {
       wave: null,
@@ -43,11 +46,35 @@ export default {
       currentTime: 0
     };
   },
+  /**
+   *
+   */
+  mounted() {
+    this.initWave();
+    EventBus.$on('file_selected', this.loadFile);
+    EventBus.$on('time_get', this.emitTime);
+    EventBus.$on('caption_reset', this.empty);
+  },
+  /**
+   *
+   */
+  destroyed() {
+    EventBus.$off('file_selected', this.loadFile);
+    EventBus.$off('time_get', this.emitTime);
+    EventBus.$off('caption_reset', this.empty);
+    this.wave.destroy();
+  },
   methods: {
+    /**
+     *
+     */
     updateTimeStamp() {
       this.currentTime = this.wave.getCurrentTime() * 1000 | 0;
       this.emitTime();
     },
+    /**
+     *
+     */
     initWave() {
       this.wave = WaveSurfer.create({
         container: '#wave__container',
@@ -66,35 +93,54 @@ export default {
       this.wave.on('seek', this.updateTimeStamp);
       this.wave.on('finish', this.finish);
     },
-
+    /**
+     *
+     */
     forward() {
       this.wave.skipForward();
     },
+    /**
+     *
+     */
     rewind() {
       this.wave.skipBackward();
     },
-
+    /**
+     *
+     */
     finish() {
       this.isPlaying = false;
       this.wave.stop();
     },
-
+    /**
+     *
+     */
     play() {
       this.wave.playPause();
       this.isPlaying = this.wave.isPlaying();
     },
-
+    /**
+     *
+     */
     previous() {
       EventBus.$emit('previous_file');
     },
+    /**
+     *
+     */
     next() {
       EventBus.$emit('next_file');
     },
-
+    /**
+     *
+     */
     empty() {
       this.wave.empty();
       this.currentTime = 0;
     },
+    /**
+     *
+     */
     loadFile($event) {
       if ($event.file instanceof File) {
         this.isPlaying = false;
@@ -103,23 +149,13 @@ export default {
         this.wave.loadBlob($event.file);
       }
     },
+    /**
+     *
+     */
     emitTime() {
       EventBus.$emit('time_current', {time: this.currentTime});
     }
-  },
-  mounted() {
-    this.initWave();
-    EventBus.$on('file_selected', this.loadFile);
-    EventBus.$on('time_get', this.emitTime);
-    EventBus.$on('caption_reset', this.empty);
-  },
-  destroyed() {
-    EventBus.$off('file_selected', this.loadFile);
-    EventBus.$off('time_get', this.emitTime);
-    EventBus.$off('caption_reset', this.empty);
-    this.wave.destroy();
   }
-
 };
 </script>
 
