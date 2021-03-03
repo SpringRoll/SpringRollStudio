@@ -25,40 +25,6 @@
     <v-dialog v-model="dialog" width="500">
       Loading files
     </v-dialog>
-    <!-- <v-dialog v-else v-model="dialog" width="500">
-      <template v-slot:activator="{ on }">
-        <v-btn
-          color="accent"
-          class="v-btn explorer__input --file font-semi-bold font-16"
-          v-on="{ on }"
-        >
-          Import Files
-        </v-btn>
-      </template>
-      <v-card>
-        <v-card-title class="error" primary-title>
-          <h2 class="font-semi-bold json__dialog-title">Warning</h2>
-        </v-card-title>
-        <v-card-text>
-          <p>Importing new files will remove the currently imported files.</p>
-          <p>Your previous work will remain and you will still be able to edit it directly via JSON</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="accent"
-            class="v-btn explorer__input --dialog font-semi-bold font-16"
-            @click="dialog = false"
-          >
-            Cancel
-          </v-btn>
-          <div color="error" class="v-btn explorer__input --dialog font-semi-bold font-16">
-            <span>Import Files</span>
-            <input class="explorer__file-input" type="file" webkitdirectory="" multiple @change="loadFiles" />
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
   </div>
 </template>
 
@@ -66,6 +32,10 @@
 import FileProcessor from '@/renderer/class/FileProcessor';
 import FileDirectory from '@/renderer/components/FileDirectory';
 import { EventBus } from '@/renderer/class/EventBus';
+import { mapState } from 'vuex';
+const fs = require('fs');
+
+
 export default {
   components: {
     FileDirectory
@@ -81,11 +51,25 @@ export default {
       dialog: false,
     };
   },
+  computed: {
+    ...mapState({
+
+      /**
+       * Returns the path for the current project audio files
+       */
+      audioLocation: function(state) {
+        return state.captionInfo.audioLocation;
+      }
+    })
+  },
   /**
    *
    */
   mounted() {
     EventBus.$on('caption_changed', this.setActive);
+    //console.log(state.captionInfo.audioLocation);
+    console.log(this.$store.state.projectInfo.location);
+    //console.log(fs.readdirSync(this.audioLocation));
   },
   /**
    *

@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { ipcMain, dialog, BrowserWindow } from 'electron';
 import { EVENTS, DIALOGS } from '../../contents';
-import { projectInfo, gamePreview } from './storage';
+import { projectInfo, gamePreview, captionInfo } from './storage';
 
 import ProjectTemplateCreator from './managers/ProjectTemplateCreator';
 import { existsSync } from 'fs';
@@ -57,7 +57,9 @@ class SpringRollStudio {
 
       const paths = dialog.showOpenDialogSync(this.window, options);
       if (paths !== undefined) {
+        console.log('set project locaiton', captionInfo);
         projectInfo.location = paths[0];
+        captionInfo.audioLocation = paths[0]; //when the project location changes also change the default audio files directory
       }
       break;
 
@@ -81,6 +83,7 @@ class SpringRollStudio {
     }
     else if (result.success) {
       projectInfo.location = data.location;
+      captionInfo.audioLocation = data.location;
     }
     this.window.webContents.send(EVENTS.PROJECT_CREATION_COMPLETE, result && !!result.success);
   }
