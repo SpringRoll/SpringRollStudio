@@ -1,4 +1,8 @@
 import Directory from './Directory';
+import store from '../store/';
+const fs = require('fs');
+const path = require('path');
+const FileType = require('file-type');
 
 /**
  * @typedef FileProcessorOptions
@@ -39,21 +43,32 @@ class FileProcessor {
    * @memberof FileProcessor
    */
   generateDirectories(files) {
-    if (!(files instanceof FileList)) {
-      return;
-    }
+    // if (!(files instanceof FileList)) {
+    //   return;
+    // }
     this.clear();
 
-    for (let i = 0, l = files.length; i < l; i++) {
-      if (
-        this.fileFilter.test(files[i].type) &&
-        this.nameFilter.test(files[i].name)
-      ) {
-        this.directory.addFile(files[i]);
-        this.hasFiles = true;
-      }
-    }
+    const fileList = fs.readdirSync(store.state.captionInfo.audioLocation, { withFileTypes: true });
+    fileList.forEach(file => {
+      //console.log(file, await FileType.fromFile(path.join(store.state.captionInfo.audioLocation, file.name)));
+      //if (this.nameFilter.test(file.name)) {
+      this.directory.addFile(file);
+      //}
+    });
+
     return this.directory;
+
+
+    // for (let i = 0, l = files.length; i < l; i++) {
+    //   if (
+    //     this.fileFilter.test(files[i].type) &&
+    //     this.nameFilter.test(files[i].name)
+    //   ) {
+    //     this.directory.addFile(files[i]);
+    //     this.hasFiles = true;
+    //   }
+    // }
+    // return this.directory;
   }
 
   /**

@@ -67,9 +67,14 @@ export default {
    */
   mounted() {
     EventBus.$on('caption_changed', this.setActive);
-    //console.log(state.captionInfo.audioLocation);
-    console.log(this.$store.state.projectInfo.location);
-    //console.log(fs.readdirSync(this.audioLocation));
+    //console.log(this.audioLocation);
+    //console.log(this.$store.state.projectInfo.location);
+    //console.log(fs.readdirSync(this.audioLocation, {withFileTypes: true}));
+    //this.loadFiles(fs.readdirSync(this.audioLocation));
+    //this.directory = FileProcessor.generateDirectories();
+    const directory = FileProcessor.generateDirectories();
+    console.log(directory);
+    this.directory = directory;
   },
   /**
    *
@@ -95,11 +100,15 @@ export default {
      *
      */
     loadFiles($event) {
+      console.log($event.target.files);
+      return;
       this.dialog = true;
-      if (!$event.target.files.length) {
+      //if (!$event.target.files.length) {
+      if (!$event.length) {
         return;
       }
-      this.rawFiles = $event.target.files;
+      //this.rawFiles = $event.target.files;
+      this.rawFiles = $event;
       console.log(this.rawFiles);
       this.directory = FileProcessor.generateDirectories(this.rawFiles);
 

@@ -21,6 +21,7 @@
     "core-js": "^3.6.5",
     "decompress-zip": "^0.2.2",
     "electron-store": "^6.0.0",
+    "file-type": "^16.2.0",
     "lodash-es": "^4.17.15",
     "springroll": "^2.3.2",
     "springroll-container": "^2.0.3",
