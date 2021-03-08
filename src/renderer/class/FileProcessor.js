@@ -20,18 +20,17 @@ const FileType = require('file-type');
  */
 class FileProcessor {
   /**
-   *
-   * @param {*} files
-   * @param {*} param1
+   * @constructor
+   * @param {Object} options
+   * @param {RegExp} options.fileFilter
+   * @param {RegExp|string} options.nameFilter
    */
   constructor(
-    files = null,
     { fileFilter = /(audio\/(mp3|ogg|mpeg)|video\/ogg)$/, nameFilter = '' } = {}
   ) {
     this.clear();
     this.fileFilter = fileFilter;
     this.setNameFilter(nameFilter);
-    //this.generateDirectories(files);
     this.directory = new Directory();
     this.hasFiles = false;
     this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
@@ -39,14 +38,11 @@ class FileProcessor {
 
   /**
    * Processes a file list and returns a Directory containing all the files and nested directories to properly simulate the local directory
-   * @param {FileList} files
-   * @returns Directory
+   * @returns Promise<Directory>
    * @memberof FileProcessor
+   * @async
    */
   async generateDirectories() {
-    // if (!(files instanceof FileList)) {
-    //   return;
-    // }
 
     this.clear();
     const files = await this.generateFileList(store.state.captionInfo.audioLocation);
@@ -65,7 +61,12 @@ class FileProcessor {
   }
 
   /**
-   *
+   * Grabs every file in the given directory path and formats it into an array of usable File-like objects
+   * @param {string} dirPath full path to directory
+   * @param {Object[]} [arrayOfFiles] array of prevoiously created file objects. Mostly used for recursive calls
+   * @returns Promise<Object[]>
+   * @memberof FileProcessor
+   * @async
    */
   async generateFileList(dirPath, arrayOfFiles = []) {
     const fileList = fs.readdirSync(dirPath, { withFileTypes: true });

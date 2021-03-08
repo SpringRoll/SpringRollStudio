@@ -61,7 +61,7 @@ export default {
     }
   },
   /**
-   *
+   * Data object
    */
   data() {
     return {
@@ -72,7 +72,8 @@ export default {
   },
   computed: {
     /**
-     *
+     * maps the files in a directory to make iterating easier, also sets the active state if necessary
+     * @return Object[]
      */
     files() {
       return this.directory.files.map((file) => {
@@ -85,7 +86,7 @@ export default {
   },
   watch: {
     /**
-     *
+     * watch method for the active file
      */
     directory() {
       if (this.hasActive) {
@@ -94,7 +95,7 @@ export default {
     }
   },
   /**
-   *
+   * Mounted lifecycle hook
    */
   mounted() {
     EventBus.$on('next_file', this.nextFile);
@@ -103,7 +104,7 @@ export default {
     EventBus.$on('json_file_selected', this.jsonEmit);
   },
   /**
-   *
+   * destroyed lifecycle hook
    */
   destroyed() {
     EventBus.$off('next_file', this.nextFile);
@@ -113,13 +114,7 @@ export default {
   },
   methods: {
     /**
-     *
-     */
-    isFile(file) {
-      return file instanceof File;
-    },
-    /**
-     *
+     * Event handler for next_file event. Selects the next file in the directory
      */
     nextFile() {
       if (this.hasActive) {
@@ -127,7 +122,7 @@ export default {
       }
     },
     /**
-     *
+     * Event handler for previous_file event. Selects the previous file in the directory
      */
     previousFile() {
       if (this.hasActive) {
@@ -137,7 +132,7 @@ export default {
       }
     },
     /**
-     *
+     * Emits the currently active file when a new file is selected
      */
     emit($event) {
       this.hasActive = $event.target.checked;
@@ -148,7 +143,7 @@ export default {
       }
     },
     /**
-     *
+     * Sets the new active file whenever the active file is changed via the JSON preview
      */
     jsonEmit($event) {
       const newFile = this.directory.selectByFile($event);
@@ -160,7 +155,7 @@ export default {
       }, this.origin);
     },
     /**
-     *
+     * Handler for when a caption is set for a file.
      */
     onFileCaptionChange($event) {
       this.$set(this.filesWithCaptions, $event.name, $event.isCaptioned);

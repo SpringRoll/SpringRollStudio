@@ -14,8 +14,11 @@ import { sortBy } from 'lodash-es';
  */
 export default class Directory {
   /**
-   *
-   * @param {*} param0
+   * @constructor
+   * @param {Object} [options={}]
+   * @param {string} [options.name=''] name of the directory
+   * @param {Object[]} [options.files=[]] array of files to use rather than generating them
+   * @param {Object} [options.directories={}] already instantiated directories
    */
   constructor({ name = '', files = [], directories = {} } = {}) {
     this.name = name;

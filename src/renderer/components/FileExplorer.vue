@@ -18,13 +18,6 @@
         :active="active"
       />
     </div>
-    <!-- <div color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
-      <span>Import Files</span>
-      <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles" />
-    </div>
-    <v-dialog v-model="dialog" width="500">
-      Loading files
-    </v-dialog> -->
   </div>
 </template>
 
@@ -41,7 +34,7 @@ export default {
     FileDirectory
   },
   /**
-   *
+   * Data object
    */
   data() {
     return {
@@ -63,19 +56,14 @@ export default {
     })
   },
   /**
-   *
+   * mounted life cycle hook
    */
   async mounted() {
     EventBus.$on('caption_changed', this.setActive);
-    //console.log(this.audioLocation);
-    //console.log(this.$store.state.projectInfo.location);
-    //console.log(fs.readdirSync(this.audioLocation, {withFileTypes: true}));
-    //this.loadFiles(fs.readdirSync(this.audioLocation));
-    //this.directory = FileProcessor.generateDirectories();
     this.directory = await FileProcessor.generateDirectories();
   },
   /**
-   *
+   * destroyed life cycle hook
    */
   destroyed() {
     EventBus.$off('caption_changed', this.setActive);
@@ -88,18 +76,19 @@ export default {
       this.$router.push({ path: '/' });
     },
     /**
-     *
+     * Handler for the filter input field
+     * @param {Object} $event event object
      */
     filter($event) {
       FileProcessor.setNameFilter($event);
       this.directory = FileProcessor.generateDirectories(this.rawFiles);
     },
     /**
-     *
+     * Sets the currently selected file
+     * @param {Object} $event event object
      */
     setActive($event) {
       if (null !== $event.file) {
-        console.log($event.file);
         this.active = $event.file;
       }
     }
