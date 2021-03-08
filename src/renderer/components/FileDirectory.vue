@@ -51,7 +51,10 @@ export default {
       type: String,
       default: ''
     },
-    active: File,
+    active: {
+      type: Object,
+      default: null
+    },
     sub: {
       type: Boolean,
       default: false
@@ -72,10 +75,9 @@ export default {
      *
      */
     files() {
-      console.log(this.directory.files);
       return this.directory.files.map((file) => {
         return {
-          active: this.active === file,
+          active: this.active?.name === file.name,
           file
         };
       });

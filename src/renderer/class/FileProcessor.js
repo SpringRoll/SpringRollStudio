@@ -31,7 +31,7 @@ class FileProcessor {
     this.clear();
     this.fileFilter = fileFilter;
     this.setNameFilter(nameFilter);
-    this.generateDirectories(files);
+    //this.generateDirectories(files);
     this.directory = new Directory();
     this.hasFiles = false;
     this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
@@ -78,9 +78,9 @@ class FileProcessor {
         if (type) {
           arrayOfFiles.push({
             name: fileList[i].name,
+            fullPath: path.join(dirPath, fileList[i].name),
             relativePath: path.join('' + this.parentDirectoryName, path.relative(store.state.captionInfo.audioLocation, path.join(dirPath, fileList[i].name))),
             type,
-            active: false
           });
         }
       }

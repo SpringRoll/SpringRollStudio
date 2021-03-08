@@ -99,6 +99,7 @@ export default {
      */
     setActive($event) {
       if (null !== $event.file) {
+        console.log($event.file);
         this.active = $event.file;
       }
     }

@@ -1,7 +1,9 @@
 <template>
   <div class="caption__studio" :class="{'--explorerHidden': explorerHidden}">
     <v-icon class="caption__hide-sidebar" @click="() => explorerHidden = !explorerHidden">{{ explorerHidden ? 'arrow_forward_ios' : 'arrow_back_ios' }}</v-icon>
-    <FileExplorer :class="{'--explorerHidden': explorerHidden}" />
+    <keep-alive>
+      <FileExplorer :class="{'--explorerHidden': explorerHidden}" />
+    </keep-alive>
     <div class="caption__container" :class="{'--disabled': !enabled}">
       <div class="caption__element">
         <label class="caption__label" for="c-sound">Sound Preview</label>
@@ -75,7 +77,7 @@ export default {
      *
      */
     isEnabled($event) {
-      this.enabled = $event.file instanceof File;
+      this.enabled = !!$event.file;
     },
   },
 };
