@@ -18,13 +18,13 @@
         :active="active"
       />
     </div>
-    <div color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
+    <!-- <div color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
       <span>Import Files</span>
       <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles" />
     </div>
     <v-dialog v-model="dialog" width="500">
       Loading files
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -65,16 +65,14 @@ export default {
   /**
    *
    */
-  mounted() {
+  async mounted() {
     EventBus.$on('caption_changed', this.setActive);
     //console.log(this.audioLocation);
     //console.log(this.$store.state.projectInfo.location);
     //console.log(fs.readdirSync(this.audioLocation, {withFileTypes: true}));
     //this.loadFiles(fs.readdirSync(this.audioLocation));
     //this.directory = FileProcessor.generateDirectories();
-    const directory = FileProcessor.generateDirectories();
-    console.log(directory);
-    this.directory = directory;
+    this.directory = await FileProcessor.generateDirectories();
   },
   /**
    *
@@ -95,24 +93,6 @@ export default {
     filter($event) {
       FileProcessor.setNameFilter($event);
       this.directory = FileProcessor.generateDirectories(this.rawFiles);
-    },
-    /**
-     *
-     */
-    loadFiles($event) {
-      console.log($event.target.files);
-      return;
-      this.dialog = true;
-      //if (!$event.target.files.length) {
-      if (!$event.length) {
-        return;
-      }
-      //this.rawFiles = $event.target.files;
-      this.rawFiles = $event;
-      console.log(this.rawFiles);
-      this.directory = FileProcessor.generateDirectories(this.rawFiles);
-
-      this.dialog = false;
     },
     /**
      *

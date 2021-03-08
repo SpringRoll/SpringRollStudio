@@ -72,6 +72,7 @@ export default {
      *
      */
     files() {
+      console.log(this.directory.files);
       return this.directory.files.map((file) => {
         return {
           active: this.active === file,

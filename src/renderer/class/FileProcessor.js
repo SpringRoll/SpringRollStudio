@@ -34,6 +34,7 @@ class FileProcessor {
     this.generateDirectories(files);
     this.directory = new Directory();
     this.hasFiles = false;
+    this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
   }
 
   /**
@@ -42,34 +43,52 @@ class FileProcessor {
    * @returns Directory
    * @memberof FileProcessor
    */
-  generateDirectories(files) {
+  async generateDirectories() {
     // if (!(files instanceof FileList)) {
     //   return;
     // }
-    this.clear();
 
-    const fileList = fs.readdirSync(store.state.captionInfo.audioLocation, { withFileTypes: true });
-    fileList.forEach(file => {
-      //console.log(file, await FileType.fromFile(path.join(store.state.captionInfo.audioLocation, file.name)));
-      //if (this.nameFilter.test(file.name)) {
-      this.directory.addFile(file);
-      //}
-    });
+    this.clear();
+    const files = await this.generateFileList(store.state.captionInfo.audioLocation);
+
+    for (let i = 0, l = files.length; i < l; i++) {
+      if (
+        this.fileFilter.test(files[i].type.mime) &&
+        this.nameFilter.test(files[i].name)
+      ) {
+        this.directory.addFile(files[i]);
+        this.hasFiles = true;
+      }
+    }
 
     return this.directory;
-
-
-    // for (let i = 0, l = files.length; i < l; i++) {
-    //   if (
-    //     this.fileFilter.test(files[i].type) &&
-    //     this.nameFilter.test(files[i].name)
-    //   ) {
-    //     this.directory.addFile(files[i]);
-    //     this.hasFiles = true;
-    //   }
-    // }
-    // return this.directory;
   }
+
+  /**
+   *
+   */
+  async generateFileList(dirPath, arrayOfFiles = []) {
+    const fileList = fs.readdirSync(dirPath, { withFileTypes: true });
+
+    for (let i = 0, l = fileList.length; i < l; i++) {
+      if (fileList[i].isDirectory()) {
+        arrayOfFiles = await this.generateFileList(path.join(dirPath, fileList[i].name), arrayOfFiles);
+      } else {
+        const type = await FileType.fromFile(path.join(dirPath, fileList[i].name));
+        if (type) {
+          arrayOfFiles.push({
+            name: fileList[i].name,
+            relativePath: path.join('' + this.parentDirectoryName, path.relative(store.state.captionInfo.audioLocation, path.join(dirPath, fileList[i].name))),
+            type,
+            active: false
+          });
+        }
+      }
+    }
+
+    return arrayOfFiles;
+  }
+
 
   /**
    * Clears the current Directory instance

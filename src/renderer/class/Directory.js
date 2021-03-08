@@ -1,10 +1,4 @@
 import { sortBy } from 'lodash-es';
-import store from '../store/';
-const FileType = require('file-type');
-const fs = require('fs');
-
-const path = require('path');
-
 /**
  * @export
  * @class Directory
@@ -40,46 +34,28 @@ export default class Directory {
    * @param {File} file
    * @memberof Directory
    */
-  addFile(file, newPath) {
-    //const pathArray = file.webkitRelativePath.split('/');
+  addFile(file) {
+    const pathArray = file.relativePath.split('/');
 
-    //pathArray.length -= 1;
+    pathArray.length -= 1;
 
     //If a singular file, or multiple files were uploaded rather than a directory set the directory name to /
-    // if (pathArray.length <= 0) {
-    //   pathArray.push('/');
-    // }
-    if (!newPath) {
-      newPath = store.state.captionInfo.audioLocation;
+    if (pathArray.length <= 0) {
+      pathArray.push('/');
     }
     let currentDir = this;
 
-    if (file.isFile()) {
-      currentDir.files.push(file);
+    for (let i = 0, l = pathArray.length; i < l; i++) {
+      let dir = currentDir[pathArray[i]];
+      if ('undefined' === typeof dir) {
+        currentDir.addDirectory(new Directory({ name: pathArray[i] }));
+        dir = currentDir.dir[pathArray[i]];
+      }
+
+      currentDir = dir;
     }
-
-    if (file.isDirectory()) {
-
-      currentDir.addDirectory(new Directory({ name: file.name }));
-      currentDir = currentDir.dir[file.name];
-
-      const fileList = fs.readdirSync(path.join(newPath, file.name), { withFileTypes: true });
-      fileList.forEach(file => {
-        currentDir.addFile(file, path.join(newPath, currentDir.name));
-      });
-    }
-
-    // for (let i = 0, l = pathArray.length; i < l; i++) {
-    //   let dir = currentDir[pathArray[i]];
-    //   if ('undefined' === typeof dir) {
-    //     currentDir.addDirectory(new Directory({ name: pathArray[i] }));
-    //     dir = currentDir.dir[pathArray[i]];
-    //   }
-
-    //   currentDir = dir;
-    // }
-    // currentDir.files.push(file);
-    // currentDir.sortFilesAlphabetically();
+    currentDir.files.push(file);
+    currentDir.sortFilesAlphabetically();
   }
 
   /**
