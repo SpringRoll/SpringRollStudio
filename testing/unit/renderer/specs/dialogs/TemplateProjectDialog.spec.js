@@ -66,7 +66,7 @@ describe('TemplateProjectDialog.js', () => {
 
     expect(event).to.equal(EVENTS.CREATE_PROJECT_TEMPLATE);
     expect(results.type).to.equal('pixi');
-    expect(results.location).to.equal('localhost:8080\\New SpringRoll Game');
+    expect(results.location).to.equal('localhost:8080\/New SpringRoll Game');
 
     TemplateProjectDialog.methods.sendEvent = sendEvent;
   });

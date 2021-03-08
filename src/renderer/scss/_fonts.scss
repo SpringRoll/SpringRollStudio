@@ -1,0 +1,122 @@
+$font-path: '~@/renderer/assets/fonts/';
+$font-aleo: $font-path + 'Aleo-Regular.otf';
+$font-path-assistant: $font-path + 'Assistant/Assistant-';
+
+$aleo: 'Aleo';
+$assistant: 'Assistant';
+$body-font-family: $assistant;
+
+
+@font-face {
+  font-family: $aleo;
+  font-weight: normal;
+  src: url($font-aleo) format('opentype');
+}
+
+@font-face {
+  font-family: $assistant;
+  font-weight: normal;
+  src: url($font-path-assistant + 'Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: $assistant;
+  font-weight: 600;
+  src: url($font-path-assistant + 'SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: $assistant;
+  font-weight: 700;
+  src: url($font-path-assistant + 'Bold.ttf') format('truetype');
+}
+@import 'mixins';
+@font-face {
+  font-family: $assistant;
+  font-weight: 800;
+  src: url($font-path-assistant + 'ExtraBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: $assistant;
+  font-weight: 300;
+  src: url($font-path-assistant + 'Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: $assistant;
+  font-weight: 200;
+  src: url($font-path-assistant + 'ExtraLight.ttf') format('truetype');
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.font {
+  font-family: $assistant;
+}
+
+.font-regular {
+  @extend .font;
+  font-weight: normal;
+}
+
+.font-semi-bold {
+  @extend .font;
+  font-weight: 600;
+}
+
+.font-bold {
+  @extend .font;
+  font-weight: 700;
+}
+
+.font-extra-bold {
+  @extend .font;
+  font-weight: 800;
+}
+
+.font-light {
+  @extend .font;
+  font-weight: 300;
+}
+
+.font-extra-light {
+  @extend .font;
+  font-weight: 200;
+}
+
+.font-aleo {
+  font-family: $aleo;
+  font-weight: normal;
+}
+
+.font-12 {
+  @include font-size(1.2, 1.6);
+}
+
+.font-14 {
+  @include font-size(1.4, 1.6);
+}
+
+.font-16 {
+  @include font-size();
+}
+
+.font-21 {
+  @include font-size(2.1, 2.7);
+}
+
+.font-28 {
+  @include font-size(2.8, 3.7);
+}
+
+.font-31 {
+  @include font-size(3.1, 4.1)
+}
+
+.font-66 {
+  @include font-size(6.6, 7.9);
+}
+
+
+
+
+

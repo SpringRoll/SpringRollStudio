@@ -1,0 +1,12 @@
+@import './colors';
+.--capital {
+  .v-btn__content {
+      text-transform: capitalize !important;
+  }
+}
+
+.--accent {
+  .v-btn__content {
+      color: $accent;
+  }
+}
