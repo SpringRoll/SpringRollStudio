@@ -57,7 +57,6 @@ class SpringRollStudio {
 
       const paths = dialog.showOpenDialogSync(this.window, options);
       if (paths !== undefined) {
-        console.log('set project locaiton', captionInfo);
         projectInfo.location = paths[0];
         captionInfo.audioLocation = paths[0]; //when the project location changes also change the default audio files directory
       }

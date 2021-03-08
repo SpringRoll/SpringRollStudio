@@ -146,7 +146,6 @@ export default {
       if (!!$event.file ) {
         this.isPlaying = false;
         this.hasFile = true;
-        console.log($event.file);
         fs.readFile($event.file.fullPath, {}, (err, data) => {
           const blob = new window.Blob([new Uint8Array(data)]);
           this.wave.loadBlob(blob);
