@@ -242,7 +242,9 @@ class CaptionManager {
    *
    */
   get currentCaptionIndex() {
-    return this.data[this.activeCaption][this.activeIndex];
+    if (this.data[this.activeCaption]) {
+      return this.data[this.activeCaption][this.activeIndex];
+    }
   }
 
   /**

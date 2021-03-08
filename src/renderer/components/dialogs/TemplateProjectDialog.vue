@@ -176,6 +176,7 @@ export default {
       }
       // Open dialog in renderer process because this is a temp location
       // until the template dialog confirm action is selected.
+      //TODO: switch use of remote over to ipcRenderer.invoke() and ipcMain.handle()
       const result = remote.dialog.showOpenDialogSync(remote.getCurrentWindow(), {
         title: 'Select Project Location',
         properties: ['openDirectory'],
@@ -220,7 +221,7 @@ export default {
     onUpdateTemplateCreationLog: function(event, log) {
       const text = this.$el.querySelector('.logOutputText');
       text.innerHTML += `${text.innerHTML.length === 0 ? '' : '<br/><br/>'}${log}`;
-      
+
       const output = this.$el.querySelector('.logOutput');
       output.scrollTo(0, output.scrollHeight);
     },

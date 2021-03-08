@@ -239,6 +239,7 @@ export default {
      * Handler for clicking the refresh button.
      */
     onRefreshClick: function() {
+      //TODO: switch use of remote over to ipcRenderer.invoke() and ipcMain.handle()
       remote.getCurrentWebContents().reload();
     },
     /**
