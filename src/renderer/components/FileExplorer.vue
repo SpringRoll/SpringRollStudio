@@ -18,6 +18,13 @@
         :active="active"
       />
     </div>
+    <v-btn
+      class="v-btn accent explorer__input --file font-semi-bold font-16"
+      :loading="loadingFiles"
+      @click="sendEvent('openDialog', 'audioLocationSetter')"
+    >
+      Change Audio Directory
+    </v-btn>
   </div>
 </template>
 
@@ -26,6 +33,8 @@ import FileProcessor from '@/renderer/class/FileProcessor';
 import FileDirectory from '@/renderer/components/FileDirectory';
 import { EventBus } from '@/renderer/class/EventBus';
 import { mapState } from 'vuex';
+import { ipcMain, ipcRenderer } from 'electron';
+import { EVENTS } from '../../contents';
 const fs = require('fs');
 
 
@@ -42,6 +51,7 @@ export default {
       rawFiles: null,
       active: null,
       dialog: false,
+      loadingFiles: false,
     };
   },
   computed: {
@@ -60,7 +70,10 @@ export default {
    */
   async mounted() {
     EventBus.$on('caption_changed', this.setActive);
+    ipcRenderer.on(EVENTS.UPDATE_AUDIO_LOCATION, this.onAudioLocationUpdate);
+    this.loadingFiles = true;
     this.directory = await FileProcessor.generateDirectories();
+    this.loadingFiles = false;
   },
   /**
    * destroyed life cycle hook
@@ -69,6 +82,20 @@ export default {
     EventBus.$off('caption_changed', this.setActive);
   },
   methods: {
+    /**
+     * Button click handler that will send and event through the ipcRenderer.
+     */
+    sendEvent: function(event, ...args) {
+      ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
+    },
+    /**
+     * Event handler for the project audio file directory changing. Re-builds the directory list with new direction location
+     */
+    onAudioLocationUpdate: async function() {
+      this.loadingFiles = true;
+      this.directory = await FileProcessor.generateDirectories();
+      this.loadingFiles = false;
+    },
     /**
      * Handler for clicking the home button.
      */

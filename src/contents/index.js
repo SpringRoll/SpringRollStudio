@@ -7,11 +7,13 @@ export const EVENTS = {
   PREVIEW_TARGET_SET: 'previewTargetSet',
   REQUEST_PREVIEW_HOST_PATH: 'requestPreviewHostPath',
   UPDATE_TEMPLATE_CREATION_LOG: 'updateTemplateCreateLog',
-  PROJECT_CREATION_COMPLETE: 'projectCreationComplete'
+  PROJECT_CREATION_COMPLETE: 'projectCreationComplete',
+  UPDATE_AUDIO_LOCATION: 'updateAudioLocation',
 };
 
 export const DIALOGS = {
-  PROJECT_LOCATION_SETTER: 'projectLocationSetter'
+  PROJECT_LOCATION_SETTER: 'projectLocationSetter',
+  AUDIO_LOCATION_SETTER: 'audioLocationSetter'
 };
 
 export const TEMPLATES = {

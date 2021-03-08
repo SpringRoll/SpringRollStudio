@@ -62,6 +62,20 @@ class SpringRollStudio {
       }
       break;
 
+    case DIALOGS.AUDIO_LOCATION_SETTER:
+      const audio_options = {
+        title: 'Select SpringRoll Project Audio Files Location',
+        defaultPath: captionInfo.aduioLocation,
+        properties: ['openDirectory']
+      };
+
+      const audio_paths = dialog.showOpenDialogSync(this.window, audio_options);
+      if (audio_paths !== undefined) {
+        captionInfo.audioLocation = audio_paths[0];
+        this.window.webContents.send(EVENTS.UPDATE_AUDIO_LOCATION);
+      }
+      break;
+
     default:
       throw new Error(`[Studio] Unrecognized dialog type. [type = ${type}]`);
     }

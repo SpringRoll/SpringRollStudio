@@ -43,6 +43,7 @@ class FileProcessor {
    * @async
    */
   async generateDirectories() {
+    this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
 
     this.clear();
     const files = await this.generateFileList(store.state.captionInfo.audioLocation);

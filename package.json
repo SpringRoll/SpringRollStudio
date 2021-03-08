@@ -1,6 +1,6 @@
 {
   "name": "springroll-studio",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "test": "npm run lint && npm run unit:renderer",
