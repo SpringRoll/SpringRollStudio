@@ -240,8 +240,6 @@ export default {
     margin-bottom: 5px;
     font-size: 12pt;
 
-    .projectLocation {}
-
     &__appVersion {
       position: absolute;
       left: 0%;
