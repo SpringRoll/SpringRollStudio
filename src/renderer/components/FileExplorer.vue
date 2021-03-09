@@ -33,9 +33,8 @@ import FileProcessor from '@/renderer/class/FileProcessor';
 import FileDirectory from '@/renderer/components/FileDirectory';
 import { EventBus } from '@/renderer/class/EventBus';
 import { mapState } from 'vuex';
-import { ipcMain, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 import { EVENTS } from '../../contents';
-const fs = require('fs');
 
 
 export default {
@@ -48,7 +47,6 @@ export default {
   data() {
     return {
       directory: FileProcessor.getDirectory(),
-      rawFiles: null,
       active: null,
       dialog: false,
       loadingFiles: false,
@@ -108,7 +106,7 @@ export default {
      */
     filter($event) {
       FileProcessor.setNameFilter($event);
-      this.directory = FileProcessor.generateDirectories(this.rawFiles);
+      this.directory = FileProcessor.generateDirectories();
     },
     /**
      * Sets the currently selected file
