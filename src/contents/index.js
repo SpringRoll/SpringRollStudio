@@ -9,6 +9,7 @@ export const EVENTS = {
   UPDATE_TEMPLATE_CREATION_LOG: 'updateTemplateCreateLog',
   PROJECT_CREATION_COMPLETE: 'projectCreationComplete',
   UPDATE_AUDIO_LOCATION: 'updateAudioLocation',
+  SAVE_CAPTION_DATA: 'saveCaptionData',
 };
 
 export const DIALOGS = {

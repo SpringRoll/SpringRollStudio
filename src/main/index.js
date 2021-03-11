@@ -1,6 +1,6 @@
 'use strict';
 
-import { app, protocol, BrowserWindow, Menu, MenuItem } from 'electron';
+import { app, protocol, BrowserWindow, Menu, MenuItem, ipcRenderer } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { studio } from './studio';

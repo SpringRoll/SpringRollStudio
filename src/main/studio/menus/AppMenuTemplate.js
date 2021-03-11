@@ -1,6 +1,9 @@
-const { app } = require('electron');
+import { app, BrowserWindow } from 'electron';
+import { EVENTS } from '../../../contents';
 
 const isMac = process.platform === 'darwin';
+
+const window = BrowserWindow.getFocusedWindow();
 
 export const template = [
   // { role: 'appMenu' }
@@ -24,8 +27,10 @@ export const template = [
     submenu: [
       {
         label: 'Save Audio',
+        accelerator: process.platform === 'darwin' ? 'Cmd+S' : 'Cntrl+S',
         click: () => {
-          console.log('Saved Captions!');
+          const BrowserWindow = require('electron');
+          BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.SAVE_CAPTION_DATA);
         }
       },
       { type: 'separator' },

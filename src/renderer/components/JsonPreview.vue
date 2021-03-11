@@ -54,6 +54,11 @@
 <script>
 import { EventBus } from '@/renderer/class/EventBus';
 import VJsoneditor from 'v-jsoneditor';
+import { ipcRenderer } from 'electron';
+import { EVENTS } from '../../contents';
+
+const fs = require('fs');
+
 export default {
   components: {
     VJsoneditor
@@ -89,6 +94,7 @@ export default {
     EventBus.$on('caption_update', this.onUpdate);
     EventBus.$on('caption_changed', this.onCaptionChange);
     EventBus.$on('caption_data', this.update);
+    ipcRenderer.on(EVENTS.SAVE_CAPTION_DATA, this.onSave);
   },
   /**
    *
@@ -105,6 +111,17 @@ export default {
     onEdit($event) {
       this.checkErrors($event, this.origin);
       EventBus.$emit('json_update', $event, this.origin);
+    },
+    /**
+     *
+     */
+    onSave() {
+      fs.writeFile('captions.json', this.json, err => {
+        if (err) {
+          throw err;
+        }
+        console.log('JSON data is saved.');
+      });
     },
     /**
      *
