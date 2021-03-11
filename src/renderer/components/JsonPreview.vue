@@ -95,6 +95,7 @@ export default {
     EventBus.$on('caption_changed', this.onCaptionChange);
     EventBus.$on('caption_data', this.update);
     ipcRenderer.on(EVENTS.SAVE_CAPTION_DATA, this.onSave);
+    ipcRenderer.on(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
   },
   /**
    *
@@ -103,6 +104,8 @@ export default {
     EventBus.$off('caption_update', this.onUpdate);
     EventBus.$off('caption_data', this.update);
     EventBus.$off('caption_changed', this.onCaptionChange);
+    ipcRenderer.off(EVENTS.SAVE_CAPTION_DATA, this.onSave);
+    ipcRenderer.off(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
   },
   methods: {
     /**
@@ -113,7 +116,7 @@ export default {
       EventBus.$emit('json_update', $event, this.origin);
     },
     /**
-     *
+     * Handles the save caption event from app menu or keyboard shortcut
      */
     onSave() {
       fs.writeFile('captions.json', this.json, err => {
@@ -122,6 +125,12 @@ export default {
         }
         console.log('JSON data is saved.');
       });
+    },
+    /**
+     * Handles the clear event sent from the app menu
+     */
+    onMenuClear() {
+      this.dialog = true;
     },
     /**
      *

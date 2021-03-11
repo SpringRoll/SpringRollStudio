@@ -98,6 +98,7 @@ export default {
      * Handler for clicking the home button.
      */
     onHomeClick: function() {
+      ipcRenderer.send('captionStudio', false);
       this.$router.push({ path: '/' });
     },
     /**

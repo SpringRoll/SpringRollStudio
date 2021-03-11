@@ -10,6 +10,7 @@ export const EVENTS = {
   PROJECT_CREATION_COMPLETE: 'projectCreationComplete',
   UPDATE_AUDIO_LOCATION: 'updateAudioLocation',
   SAVE_CAPTION_DATA: 'saveCaptionData',
+  CLEAR_CAPTION_DATA: 'clearCaptionData',
 };
 
 export const DIALOGS = {

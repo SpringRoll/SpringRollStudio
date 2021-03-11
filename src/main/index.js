@@ -1,10 +1,10 @@
 'use strict';
 
-import { app, protocol, BrowserWindow, Menu, MenuItem, ipcRenderer } from 'electron';
+import { app, protocol, BrowserWindow, Menu, MenuItem, ipcMain } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { studio } from './studio';
-import { template } from './studio/menus/AppMenuTemplate';
+import { template, captionStudioTemplate } from './studio/menus/AppMenuTemplate';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -19,7 +19,16 @@ protocol.registerSchemesAsPrivileged([
 
 // Menu.setApplicationMenu(menu);
 const menu = Menu.buildFromTemplate(template);
+const captionStudioMenu = Menu.buildFromTemplate(captionStudioTemplate);
 Menu.setApplicationMenu(menu);
+
+
+ipcMain.on('captionStudio', (event, page) => {
+  if (page) {
+    console.log('new menu');
+    Menu.setApplicationMenu(captionStudioMenu);
+  }
+});
 
 /**
  * Creates electron window
