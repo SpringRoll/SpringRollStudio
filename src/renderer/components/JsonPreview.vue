@@ -17,7 +17,7 @@
             <h2 class="font-semi-bold json__dialog-title">Warning</h2>
           </v-card-title>
           <v-card-text>
-            <span class>This will clear all captions.</span>
+            <span class="font-16">This will clear all captions.</span>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
