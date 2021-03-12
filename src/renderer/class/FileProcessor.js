@@ -33,7 +33,6 @@ class FileProcessor {
     this.setNameFilter(nameFilter);
     this.directory = new Directory();
     this.hasFiles = false;
-    console.log(store.state.captionInfo.audioLocation);
     this.parentDirectoryName = store.state.captionInfo.audioLocation ? path.basename(store.state.captionInfo.audioLocation) : '';
   }
 

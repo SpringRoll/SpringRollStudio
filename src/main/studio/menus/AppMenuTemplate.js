@@ -57,7 +57,7 @@ export const template = [
           const { captionInfo } = require('../storage');
           const audio_options = {
             title: 'Select SpringRoll Project Audio Files Location',
-            defaultPath: captionInfo.aduioLocation,
+            defaultPath: captionInfo.audioLocation,
             properties: ['openDirectory']
           };
           const window = BrowserWindow.getFocusedWindow();
@@ -178,21 +178,13 @@ export const captionStudioTemplate = [
     label: 'File',
     submenu: [
       {
-        label: 'Save Captions',
-        accelerator: isMac ? 'Cmd+S' : 'Cntrl+S',
-        click: () => {
-          const BrowserWindow = require('electron');
-          BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.SAVE_CAPTION_DATA);
-        }
-      },
-      {
         label: 'Choose Audio Directory',
         click: async () => {
           const { dialog, BrowserWindow } = require('electron');
           const { captionInfo } = require('../storage');
           const audio_options = {
             title: 'Select SpringRoll Project Audio Files Location',
-            defaultPath: captionInfo.aduioLocation,
+            defaultPath: captionInfo.audioLocation,
             properties: ['openDirectory']
           };
           const window = BrowserWindow.getFocusedWindow();
@@ -274,11 +266,81 @@ export const captionStudioTemplate = [
       {
         label: 'Save Captions',
         accelerator: process.platform === 'darwin' ? 'Cmd+S' : 'Cntrl+S',
-        click: () => {
-          const BrowserWindow = require('electron');
-          BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.SAVE_CAPTION_DATA);
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const { captionInfo } = require('../storage');
+
+          const window = BrowserWindow.getFocusedWindow();
+
+          if (captionInfo.captionLocation) {
+            window.webContents.send(EVENTS.SAVE_CAPTION_DATA);
+
+          } else {
+            const options = {
+              title: 'Save As',
+              defaultPath: captionInfo.audioLocation + '/captions.json',
+              properties: ['createDirectory'],
+              filters: [
+                {name: 'JSON', extensions: ['json']}
+              ]
+            };
+
+            dialog.showSaveDialog(window, options).then(({ canceled, filePath }) => {
+              if (filePath !== undefined && !canceled) {
+                captionInfo.captionLocation = filePath;
+                window.webContents.send(EVENTS.SAVE_CAPTION_DATA, filePath);
+              }
+            });
+          }
         }
       },
+      {
+        label: 'Save Captions As...',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+S' : 'Cntrl+Shift+S',
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const { captionInfo } = require('../storage');
+          const options = {
+            title: 'Save As',
+            defaultPath: captionInfo.captionLocation,
+            properties: ['createDirectory'],
+            filters: [
+              {name: 'JSON', extensions: ['json']}
+            ]
+          };
+          const window = BrowserWindow.getFocusedWindow();
+
+          dialog.showSaveDialog(window, options).then(({ canceled, filePath }) => {
+            if (filePath !== undefined && !canceled) {
+              captionInfo.captionLocation = filePath;
+              window.webContents.send(EVENTS.SAVE_CAPTION_DATA, filePath);
+            }
+          });
+        }
+      },
+      {
+        label: 'Open Caption File',
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const { captionInfo } = require('../storage');
+
+          const window = BrowserWindow.getFocusedWindow();
+          const options = {
+            title: 'Open Caption File',
+            defaultPath: captionInfo.captionLocation,
+            properties: ['openFile'],
+            filters: [
+              { name: 'JSON', extensions: [ 'json' ] }
+            ]
+          };
+          const caption_path = dialog.showOpenDialogSync(window, options);
+          if (caption_path !== undefined) {
+            captionInfo.captionLocation = caption_path[0];
+            window.webContents.send(EVENTS.OPEN_CAPTION_FILE, caption_path[0]);
+          }
+        }
+      },
+      { type: 'separator' },
       {
         label: 'Clear Captions',
         click: () => {
@@ -286,13 +348,6 @@ export const captionStudioTemplate = [
           BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.CLEAR_CAPTION_DATA);
         }
       },
-      // {
-      //   label: 'Export Captions',
-      //   click: () => {
-      //     const BrowserWindow = require('electron');
-      //     BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.EXPORT_CAPTION_DATA);
-      //   }
-      // },
     ]
   },
 ];

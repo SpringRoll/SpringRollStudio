@@ -4,11 +4,7 @@
     <div class="json__button-group">
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{on}">
-          <v-btn
-            color="error"
-            class="font-semi-bold font-16 --capital json__button-cancel"
-            v-on="on"
-          >
+          <v-btn color="error" class="font-semi-bold font-16 --capital json__button-cancel" v-on="on">
             Clear
           </v-btn>
         </template>
@@ -21,25 +17,14 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              color="accent"
-              class="font-semi-bold font-16 --capital"
-              @click="dialog = false"
-            >
+            <v-btn color="accent" class="font-semi-bold font-16 --capital" @click="dialog = false">
               Cancel
             </v-btn>
             <v-btn color="error" class="font-semi-bold font-16 --capital" @click="reset">Ok</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-btn
-        download="export.json"
-        target="_blank"
-        :href="blob"
-        color="accent"
-        class="font-semi-bold font-16 --capital json__button-export"
-        :disabled="Object.keys(jsonErrors).length > 0"
-      >
+      <v-btn download="export.json" target="_blank" :href="blob" color="accent" class="font-semi-bold font-16 --capital json__button-export" :disabled="Object.keys(jsonErrors).length > 0">
         Export Code
       </v-btn>
     </div>
@@ -54,7 +39,8 @@
 <script>
 import { EventBus } from '@/renderer/class/EventBus';
 import VJsoneditor from 'v-jsoneditor';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, path } from 'electron';
+import { mapState } from 'vuex';
 import { EVENTS } from '../../contents';
 
 const fs = require('fs');
@@ -86,6 +72,17 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+
+      /**
+       * Returns the path for the current project audio files
+       */
+      captionLocation: function (state) {
+        return state.captionInfo.captionLocation;
+      }
+    })
+  },
   /**
    *
    */
@@ -96,6 +93,12 @@ export default {
     EventBus.$on('caption_data', this.update);
     ipcRenderer.on(EVENTS.SAVE_CAPTION_DATA, this.onSave);
     ipcRenderer.on(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
+    ipcRenderer.on(EVENTS.OPEN_CAPTION_FILE, this.onCaptionFileOpen);
+
+    //If a caption file has been previously saved/opened load it in on caption studio start up
+    if (this.captionLocation) {
+      this.onCaptionFileOpen(null, this.captionLocation);
+    }
   },
   /**
    *
@@ -106,6 +109,7 @@ export default {
     EventBus.$off('caption_changed', this.onCaptionChange);
     ipcRenderer.off(EVENTS.SAVE_CAPTION_DATA, this.onSave);
     ipcRenderer.off(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
+    ipcRenderer.off(EVENTS.OPEN_CAPTION_FILE, this.onCaptionFileOpen);
   },
   methods: {
     /**
@@ -118,12 +122,23 @@ export default {
     /**
      * Handles the save caption event from app menu or keyboard shortcut
      */
-    onSave() {
-      fs.writeFile('captions.json', this.json, err => {
+    onSave(event, filePath) {
+      if (!filePath) {
+        filePath = this.captionLocation;
+      }
+      fs.writeFile(filePath, this.json, err => {
         if (err) {
           throw err;
         }
         console.log('JSON data is saved.');
+      });
+    },
+    /**
+     * Handles opening/loading the user provided caption file
+     */
+    onCaptionFileOpen(event, filePath) {
+      fs.readFile(filePath, 'utf-8', (err, data) => {
+        this.update(JSON.parse(data.toString()), 'userOpen');
       });
     },
     /**
@@ -168,7 +183,11 @@ export default {
     /**
      *
      */
-    onCaptionChange({ index, file, name }) {
+    onCaptionChange({
+      index,
+      file,
+      name
+    }) {
       this.activeFile = name;
       this.fileNameMap[name] = file;
       this.currentIndex = index;
@@ -200,9 +219,13 @@ export default {
         }
 
         const reduced = data[key[i]].reduce((filtered, e) => {
-          if ( (e.content && e.start < e.end) ) {
+          if ((e.content && e.start < e.end)) {
             if (e.content.trim()) {
-              filtered.push({content: e.content.replace(/\n$/, ''), start: e.start, end: e.end});
+              filtered.push({
+                content: e.content.replace(/\n$/, ''),
+                start: e.start,
+                end: e.end
+              });
             }
           }
           return filtered;
@@ -219,7 +242,9 @@ export default {
      */
     createBlob() {
       this.blob = URL.createObjectURL(
-        new Blob([JSON.stringify(this.data)], { type: 'application/json' })
+        new Blob([JSON.stringify(this.data)], {
+          type: 'application/json'
+        })
       );
     },
     /**
@@ -240,7 +265,7 @@ export default {
         const file = json[key];
         file.forEach((caption, index) => {
           if (caption.edited || $origin === this.origin) {
-            if (!caption.content || !caption.content.trim() ) {
+            if (!caption.content || !caption.content.trim()) {
               errors[key].push(`Error at caption [${key}], index [${index}]: Caption content must be non-empty`);
             }
             if ('number' !== typeof caption.start || caption.start < 0) {
@@ -347,8 +372,7 @@ $menu-height: 5.6rem;
       align-items: center;
       border-radius: 2rem;
 
-
-      &> * {
+      &>* {
         width: 50%;
       }
     }

@@ -89,7 +89,6 @@ export default {
    */
   mounted() {
     ipcRenderer.on(EVENTS.OPEN_TEMPLATE_DIALOG, (event, data) => {
-      console.log(data);
       this.toggleProjectTemplateDialog(data);
     });
   },

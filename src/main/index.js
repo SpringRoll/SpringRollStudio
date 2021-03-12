@@ -24,7 +24,6 @@ Menu.setApplicationMenu(menu);
 
 //on caption studio open or close, set the appropriate menu
 ipcMain.on('captionStudio', (event, page) => {
-  console.log('new menu');
   Menu.setApplicationMenu(page ? captionStudioMenu : menu);
 });
 

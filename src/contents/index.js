@@ -11,7 +11,8 @@ export const EVENTS = {
   UPDATE_AUDIO_LOCATION: 'updateAudioLocation',
   SAVE_CAPTION_DATA: 'saveCaptionData',
   CLEAR_CAPTION_DATA: 'clearCaptionData',
-  OPEN_TEMPLATE_DIALOG: 'openTemplateDialog'
+  OPEN_TEMPLATE_DIALOG: 'openTemplateDialog',
+  OPEN_CAPTION_FILE: 'openCaptionFile',
 };
 
 export const DIALOGS = {
