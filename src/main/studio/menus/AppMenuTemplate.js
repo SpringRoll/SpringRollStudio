@@ -11,8 +11,6 @@ export const template = [
     submenu: [
       { role: 'about' },
       { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
       { role: 'hide' },
       { role: 'hideothers' },
       { role: 'unhide' },
@@ -24,9 +22,54 @@ export const template = [
   {
     label: 'File',
     submenu: [
+      {
+        label: 'Open...',
+        accelerator: isMac ? 'Cmd+O' : 'Cntrl+O',
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const { projectInfo, captionInfo } = require('../storage');
+          const options = {
+            title: 'Select SpringRoll Project',
+            defaultPath: projectInfo.location,
+            properties: ['openDirectory']
+          };
+
+          const paths = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), options);
+          if (paths !== undefined) {
+            projectInfo.location = paths[0];
+            captionInfo.audioLocation = paths[0]; //when the project location changes also change the default audio files directory
+          }
+        }
+      },
+      {
+        label: 'New Project',
+        accelerator: isMac ? 'Cmd+N' : 'Cntrl+N',
+        click: async () => {
+          const { BrowserWindow } = require('electron');
+          BrowserWindow.getFocusedWindow().webContents.send(EVENTS.OPEN_TEMPLATE_DIALOG, true);
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Choose Audio Directory',
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const { captionInfo } = require('../storage');
+          const audio_options = {
+            title: 'Select SpringRoll Project Audio Files Location',
+            defaultPath: captionInfo.aduioLocation,
+            properties: ['openDirectory']
+          };
+          const window = BrowserWindow.getFocusedWindow();
+          const audio_paths = dialog.showOpenDialogSync(window, audio_options);
+          if (audio_paths !== undefined) {
+            captionInfo.audioLocation = audio_paths[0];
+            window.webContents.send(EVENTS.UPDATE_AUDIO_LOCATION);
+          }
+        }
+      },
       { type: 'separator' },
       isMac ? { role: 'close' } : { role: 'quit' }
-
     ]
   },
   // { role: 'editMenu' }
@@ -66,9 +109,17 @@ export const template = [
       { role: 'forceReload' },
       { role: 'toggleDevTools' },
       { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
+      // { role: 'resetZoom' },
+      // { role: 'zoomIn' },
+      // { role: 'zoomOut' },
+      {
+        label: 'Preview Game',
+        accelerator: isMac ? 'Alt+Cmd+P' : 'Alt+Shift+P',
+      },
+      {
+        label: 'Caption Studio',
+        accelerator: isMac ? 'Alt+Cmd+C' : 'Alt+Shift+C',
+      },
       { type: 'separator' },
       { role: 'togglefullscreen' }
     ]
@@ -89,18 +140,18 @@ export const template = [
       ])
     ]
   },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click: async () => {
-          const { shell } = require('electron');
-          await shell.openExternal('https://electronjs.org');
-        }
-      }
-    ]
-  }
+  // {
+  //   role: 'help',
+  //   submenu: [
+  //     {
+  //       label: 'Learn More',
+  //       click: async () => {
+  //         const { shell } = require('electron');
+  //         await shell.openExternal('https://electronjs.org');
+  //       }
+  //     }
+  //   ]
+  // }
 ];
 
 /**
@@ -128,10 +179,28 @@ export const captionStudioTemplate = [
     submenu: [
       {
         label: 'Save Captions',
-        accelerator: process.platform === 'darwin' ? 'Cmd+S' : 'Cntrl+S',
+        accelerator: isMac ? 'Cmd+S' : 'Cntrl+S',
         click: () => {
           const BrowserWindow = require('electron');
           BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.SAVE_CAPTION_DATA);
+        }
+      },
+      {
+        label: 'Choose Audio Directory',
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const { captionInfo } = require('../storage');
+          const audio_options = {
+            title: 'Select SpringRoll Project Audio Files Location',
+            defaultPath: captionInfo.aduioLocation,
+            properties: ['openDirectory']
+          };
+          const window = BrowserWindow.getFocusedWindow();
+          const audio_paths = dialog.showOpenDialogSync(window, audio_options);
+          if (audio_paths !== undefined) {
+            captionInfo.audioLocation = audio_paths[0];
+            window.webContents.send(EVENTS.UPDATE_AUDIO_LOCATION);
+          }
         }
       },
       { type: 'separator' },
@@ -217,19 +286,14 @@ export const captionStudioTemplate = [
           BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.CLEAR_CAPTION_DATA);
         }
       },
+      // {
+      //   label: 'Export Captions',
+      //   click: () => {
+      //     const BrowserWindow = require('electron');
+      //     BrowserWindow.webContents.getFocusedWebContents().send(EVENTS.EXPORT_CAPTION_DATA);
+      //   }
+      // },
     ]
   },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click: async () => {
-          const { shell } = require('electron');
-          await shell.openExternal('https://electronjs.org');
-        }
-      }
-    ]
-  }
 ];
 

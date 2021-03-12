@@ -84,7 +84,15 @@ export default {
       }
     })
   },
-
+  /**
+   *
+   */
+  mounted() {
+    ipcRenderer.on(EVENTS.OPEN_TEMPLATE_DIALOG, (event, data) => {
+      console.log(data);
+      this.toggleProjectTemplateDialog(data);
+    });
+  },
   methods: {
     /**
      * Button click handler that will send and event through the ipcRenderer.

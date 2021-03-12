@@ -17,17 +17,15 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
 
-// Menu.setApplicationMenu(menu);
+// Create menus from templates
 const menu = Menu.buildFromTemplate(template);
 const captionStudioMenu = Menu.buildFromTemplate(captionStudioTemplate);
 Menu.setApplicationMenu(menu);
 
-
+//on caption studio open or close, set the appropriate menu
 ipcMain.on('captionStudio', (event, page) => {
-  if (page) {
-    console.log('new menu');
-    Menu.setApplicationMenu(captionStudioMenu);
-  }
+  console.log('new menu');
+  Menu.setApplicationMenu(page ? captionStudioMenu : menu);
 });
 
 /**
