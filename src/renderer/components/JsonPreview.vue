@@ -206,6 +206,12 @@ export default {
       this.$refs.jsonEditor.editor.update(this.data);
       this.json = JSON.stringify(this.data, null, 2);
       this.createBlob();
+
+      if ($origin === 'userOpen') {
+        this.checkErrors(JSON.parse(this.json), this.origin);
+        EventBus.$emit('json_update', JSON.parse(this.json), $origin);
+      }
+
     },
     /**
      *
@@ -256,7 +262,7 @@ export default {
       this.update({});
     },
     /**
-     *
+     * Ensure that each caption line has a value, and has proper time values
      */
     validateJSON(json, $origin) {
       const errors = {};

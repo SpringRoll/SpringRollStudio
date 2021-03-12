@@ -13,7 +13,7 @@ class CaptionManager {
     this.data = {}; //All caption data, organized by file name.
     this.activeCaption = undefined; //currently active caption name, created by stripping the file extension of the active file.
     this.activeIndex = 0; //the index of the currently active caption.
-    this.file = new File([], 'NO_FILE'); //Currently active file, selected in the FileDirectory component
+    this.file = {}; //Currently active file, selected in the FileDirectory component
     this.currentTime = 0; //current time of the waveform component
     EventBus.$on('caption_update', this.updateActiveCaption.bind(this));
     EventBus.$on('caption_reset', this.reset.bind(this));
@@ -68,9 +68,13 @@ class CaptionManager {
    * Caption.
    */
   onJSONUpdate($event, $origin = '') {
-
     Object.keys($event).forEach((key) => {
       $event[key].forEach((caption, index) => {
+
+        if (!this.data[key]) {
+          this.data[key] = [this.template];
+        }
+
         const current = this.data[key];
 
         this.data[key][index] = {
@@ -81,6 +85,9 @@ class CaptionManager {
       });
     });
 
+    if ($origin === 'userOpen') {
+      return;
+    }
     this.currentCaptionIndex.edited = true;
     this.emitCurrent($origin);
     this.emitData($origin);
@@ -228,7 +235,7 @@ class CaptionManager {
    *
    */
   get lastIndex() {
-    return this.currentCaption.length - 1 || 0;
+    return this.currentCaption?.length - 1 || 0;
   }
 
   /**
