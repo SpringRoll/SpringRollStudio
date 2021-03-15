@@ -109,9 +109,6 @@ export const template = [
       { role: 'forceReload' },
       { role: 'toggleDevTools' },
       { type: 'separator' },
-      // { role: 'resetZoom' },
-      // { role: 'zoomIn' },
-      // { role: 'zoomOut' },
       {
         label: 'Preview Game',
         accelerator: isMac ? 'Alt+Cmd+P' : 'Alt+Shift+P',
@@ -140,18 +137,6 @@ export const template = [
       ])
     ]
   },
-  // {
-  //   role: 'help',
-  //   submenu: [
-  //     {
-  //       label: 'Learn More',
-  //       click: async () => {
-  //         const { shell } = require('electron');
-  //         await shell.openExternal('https://electronjs.org');
-  //       }
-  //     }
-  //   ]
-  // }
 ];
 
 /**
@@ -320,6 +305,7 @@ export const captionStudioTemplate = [
       },
       {
         label: 'Open Caption File',
+        accelerator: isMac ? 'Cmd+O' : 'Cntrl+O',
         click: async () => {
           const { dialog, BrowserWindow } = require('electron');
           const { captionInfo } = require('../storage');
