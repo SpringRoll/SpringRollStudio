@@ -80,6 +80,12 @@ export default {
        */
       captionLocation: function (state) {
         return state.captionInfo.captionLocation;
+      },
+      /**
+       * returns whether or not there are unsaved caption changes
+       */
+      isUnsavedChanges: function (state) {
+        return state.captionInfo.isUnsavedChanges;
       }
     })
   },
@@ -131,6 +137,7 @@ export default {
           throw err;
         }
         console.log('JSON data is saved.');
+        this.$store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: false });
       });
     },
     /**
@@ -166,6 +173,7 @@ export default {
       const index = node.path[1];
       const indexDelta = index - this.currentIndex;
 
+      console.log('Yooo0ooooo');
       if (this.activeFile === node.path[0]) {
         EventBus.$emit('caption_move_index', indexDelta, this.origin);
         return;

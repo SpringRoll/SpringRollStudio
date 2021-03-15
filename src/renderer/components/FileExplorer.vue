@@ -1,6 +1,52 @@
 <template>
   <div class="explorer">
-    <v-btn id="btnHome" color="white" class="btn btn-controls" icon @click="onHomeClick()"><v-icon class="controls-icon">home</v-icon></v-btn>
+    <v-btn v-show="!isUnsavedChanges" id="btnHome" color="white" class="btn btn-controls" icon @click="onHomeClick"><v-icon class="controls-icon">home</v-icon></v-btn>
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn v-show="isUnsavedChanges" id="btnHome" color="white" class="btn btn-controls" icon v-bind="attrs" v-on="on"><v-icon class="controls-icon">home</v-icon></v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title class="headline grey lighten-2">
+          Save Changes
+        </v-card-title>
+        <v-card-text></v-card-text>
+        <v-card-text class="font-16">
+          You have unsaved changes. Would you like to save?
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="font-16 text-capitalize"
+            @click="() => {
+              sendEvent('saveCaptionData');
+              onHomeClick();
+            }"
+          >
+            Save
+          </v-btn>
+          <v-btn
+            class="font-16 text-capitalize"
+            @click="onHomeClick()"
+          >
+            Don't Save
+          </v-btn>
+          <v-btn
+            class="font-16 text-capitalize"
+            @click="dialog = false"
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-text-field
       class="explorer__search"
       prepend-inner-icon="search"
@@ -60,6 +106,12 @@ export default {
        */
       audioLocation: function(state) {
         return state.captionInfo.audioLocation;
+      },
+      /**
+       * returns whether or not there are unsaved caption changes
+       */
+      isUnsavedChanges: function (state) {
+        return state.captionInfo.isUnsavedChanges;
       }
     })
   },
@@ -98,6 +150,8 @@ export default {
      * Handler for clicking the home button.
      */
     onHomeClick: function() {
+      this.dialog = false;
+
       ipcRenderer.send('captionStudio', false);
       this.$router.push({ path: '/' });
     },

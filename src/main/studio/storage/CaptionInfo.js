@@ -38,6 +38,22 @@ class CaptionInfo {
     }
     store.dispatch('setCaptionLocation', { captionLocation: val });
   }
+  /**
+   * Returns whether or not there are unsaved changes in caption studio
+   * @readonly
+   * @memberof CaptionInfo
+   */
+  get isUnsavedChanges() { return store.state.captionInfo.isUnsavedChanges; }
+  /**
+   * Sets the value of isUnsavedChanges
+   * @memberof CaptionInfo
+   */
+  set isUnsavedChanges(val) {
+    if (typeof val !== 'boolean') {
+      throw new Error(`[CaptionInfo] Caption file location must be a boolean. [val = ${typeof val}]`);
+    }
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: val });
+  }
 }
 
 /**

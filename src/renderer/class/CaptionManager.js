@@ -1,4 +1,5 @@
 import { EventBus } from './EventBus';
+import store from '../store';
 
 /**
  * Class that controls the creation, and management, of captions in the CaptionStudio Component.
@@ -68,6 +69,8 @@ class CaptionManager {
    * Caption.
    */
   onJSONUpdate($event, $origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
+
     Object.keys($event).forEach((key) => {
       $event[key].forEach((caption, index) => {
 
@@ -121,6 +124,7 @@ class CaptionManager {
    * and creates a new empty caption. Also "saves" the previously active caption in the data object.
    */
   addIndex($origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     this.data[this.activeCaption].push(this.template);
     this.activeIndex++;
     EventBus.$emit('file_captioned', { name: this.file.name, isCaptioned: true });
@@ -135,6 +139,7 @@ class CaptionManager {
    * simply upates the currently active caption with whatever new data is provided.
    */
   updateActiveCaption({ content, start, end }, $origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     const current = this.currentCaptionIndex;
 
     this.data[this.activeCaption][this.activeIndex] = {
@@ -151,6 +156,7 @@ class CaptionManager {
    * Removes all captions from the data object and resets the active caption back to it's initial state.
    */
   reset() {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     this.data = {};
     this.activeIndex = 0;
     this.activeCaption = '';
@@ -185,6 +191,7 @@ class CaptionManager {
    * Used to delete a single caption. Uses the index to look up which caption should be removed. Almost always will be the current caption.
    */
   removeAtIndex($origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     if ('undefined' === typeof this.currentCaption[this.activeIndex]) {
       return;
     }
