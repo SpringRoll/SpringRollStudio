@@ -97,6 +97,8 @@ export default {
     EventBus.$on('caption_update', this.onUpdate);
     EventBus.$on('caption_changed', this.onCaptionChange);
     EventBus.$on('caption_data', this.update);
+    EventBus.$on('file_list_generated', this.createFileNameMap);
+    EventBus.$on(EVENTS.SAVE_CAPTION_DATA, this.onSave);
     ipcRenderer.on(EVENTS.SAVE_CAPTION_DATA, this.onSave);
     ipcRenderer.on(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
     ipcRenderer.on(EVENTS.OPEN_CAPTION_FILE, this.onCaptionFileOpen);
@@ -113,9 +115,9 @@ export default {
     EventBus.$off('caption_update', this.onUpdate);
     EventBus.$off('caption_data', this.update);
     EventBus.$off('caption_changed', this.onCaptionChange);
-    ipcRenderer.off(EVENTS.SAVE_CAPTION_DATA, this.onSave);
-    ipcRenderer.off(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
-    ipcRenderer.off(EVENTS.OPEN_CAPTION_FILE, this.onCaptionFileOpen);
+    ipcRenderer.removeListener(EVENTS.SAVE_CAPTION_DATA, this.onSave);
+    ipcRenderer.removeListener(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
+    ipcRenderer.removeListener(EVENTS.OPEN_CAPTION_FILE, this.onCaptionFileOpen);
   },
   methods: {
     /**
@@ -136,8 +138,8 @@ export default {
         if (err) {
           throw err;
         }
-        console.log('JSON data is saved.');
         this.$store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: false });
+        console.log('JSON data is saved.');
       });
     },
     /**
@@ -173,7 +175,6 @@ export default {
       const index = node.path[1];
       const indexDelta = index - this.currentIndex;
 
-      console.log('Yooo0ooooo');
       if (this.activeFile === node.path[0]) {
         EventBus.$emit('caption_move_index', indexDelta, this.origin);
         return;
@@ -220,6 +221,18 @@ export default {
         EventBus.$emit('json_update', JSON.parse(this.json), $origin);
       }
 
+    },
+    /**
+     *
+     */
+    createFileNameMap($event) {
+      if (!Array.isArray($event)) {
+        return;
+      }
+
+      $event.forEach(file => {
+        this.fileNameMap[file.name.replace(/.(ogg|mp3|mpeg)$/, '').trim()] = file;
+      });
     },
     /**
      *

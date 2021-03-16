@@ -281,7 +281,8 @@ export default {
      *
      */
     setInnerHTML(newValue) {
-      this.$refs.Quill.quill.container.children[0].innerHTML = newValue;
+      //this.$refs.Quill.quill.container.children[0].innerHTML = newValue;
+      this.$refs.Quill.quill.setText(newValue);
       //this.$refs.Quill.quill.container.children[0].innerHTML = '';
       //this.$refs.Quill.quill.pasteHTML(newValue, 'silent');
     },

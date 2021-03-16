@@ -1,5 +1,6 @@
 import Directory from './Directory';
 import store from '../store/';
+import { EventBus } from '../class/EventBus';
 const fs = require('fs');
 const path = require('path');
 const FileType = require('file-type');
@@ -47,6 +48,7 @@ class FileProcessor {
 
     this.clear();
     const files = await this.generateFileList(store.state.captionInfo.audioLocation);
+    EventBus.$emit('file_list_generated', files);
 
     for (let i = 0, l = files.length; i < l; i++) {
       if (
@@ -87,7 +89,6 @@ class FileProcessor {
         }
       }
     }
-
     return arrayOfFiles;
   }
 

@@ -69,7 +69,9 @@ class CaptionManager {
    * Caption.
    */
   onJSONUpdate($event, $origin = '') {
-    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
+    if ($origin !== 'userOpen') {
+      store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
+    }
 
     Object.keys($event).forEach((key) => {
       $event[key].forEach((caption, index) => {

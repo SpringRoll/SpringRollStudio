@@ -1,87 +1,69 @@
 <template>
-  <div class="explorer">
-    <v-btn v-show="!isUnsavedChanges" id="btnHome" color="white" class="btn btn-controls" icon @click="onHomeClick"><v-icon class="controls-icon">home</v-icon></v-btn>
-    <v-dialog
-      v-model="dialog"
-      width="500"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn v-show="isUnsavedChanges" id="btnHome" color="white" class="btn btn-controls" icon v-bind="attrs" v-on="on"><v-icon class="controls-icon">home</v-icon></v-btn>
-      </template>
+<div class="explorer">
+  <v-btn v-show="!isUnsavedChanges" id="btnHome" color="white" class="btn btn-controls" icon @click="onHomeClick">
+    <v-icon class="controls-icon">home</v-icon>
+  </v-btn>
+  <v-dialog v-model="dialog" width="500">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn v-show="isUnsavedChanges" id="btnHome" color="white" class="btn btn-controls" icon v-bind="attrs" v-on="on">
+        <v-icon class="controls-icon">home</v-icon>
+      </v-btn>
+    </template>
 
-      <v-card>
-        <v-card-title class="headline grey lighten-2">
-          Save Changes
-        </v-card-title>
-        <v-card-text></v-card-text>
-        <v-card-text class="font-16">
-          You have unsaved changes. Would you like to save?
-        </v-card-text>
+    <v-card>
+      <v-card-title class="headline grey lighten-2">
+        Save Changes
+      </v-card-title>
+      <v-card-text></v-card-text>
+      <v-card-text class="font-16">
+        You have unsaved changes. Would you like to save?
+      </v-card-text>
 
-        <v-divider></v-divider>
+      <v-divider></v-divider>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            class="font-16 text-capitalize"
-            @click="() => {
-              sendEvent('saveCaptionData');
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" class="font-16 text-capitalize" @click="() => {
+              onSaveClick();
               onHomeClick();
-            }"
-          >
-            Save
-          </v-btn>
-          <v-btn
-            class="font-16 text-capitalize"
-            @click="onHomeClick()"
-          >
-            Don't Save
-          </v-btn>
-          <v-btn
-            class="font-16 text-capitalize"
-            @click="dialog = false"
-          >
-            Cancel
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-text-field
-      class="explorer__search"
-      prepend-inner-icon="search"
-      placeholder="Search file names"
-      solo
-      @input="filter"
-    />
-    <h3 class="font-28 font-semi-bold explorer__header">Files</h3>
-    <div class="explorer__dir">
-      <FileDirectory
-        v-for="(value, key) in directory.dir"
-        :key="key"
-        :directory="value"
-        :name="key"
-        :active="active"
-      />
-    </div>
-    <v-btn
-      class="v-btn accent explorer__input --file font-semi-bold font-16"
-      :loading="loadingFiles"
-      @click="sendEvent('openDialog', 'audioLocationSetter')"
-    >
-      Change Audio Directory
-    </v-btn>
+            }">
+          Save
+        </v-btn>
+        <v-btn class="font-16 text-capitalize" @click="onHomeClick()">
+          Don't Save
+        </v-btn>
+        <v-btn class="font-16 text-capitalize" @click="dialog = false">
+          Cancel
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-text-field class="explorer__search" prepend-inner-icon="search" placeholder="Search file names" solo @input="filter" />
+  <h3 class="font-28 font-semi-bold explorer__header">Files</h3>
+  <div class="explorer__dir">
+    <FileDirectory v-for="(value, key) in directory.dir" :key="key" :directory="value" :name="key" :active="active" />
   </div>
+  <v-btn class="v-btn accent explorer__input --file font-semi-bold font-16" :loading="loadingFiles" @click="sendEvent('openDialog', 'audioLocationSetter')">
+    Change Audio Directory
+  </v-btn>
+</div>
 </template>
 
 <script>
 import FileProcessor from '@/renderer/class/FileProcessor';
 import FileDirectory from '@/renderer/components/FileDirectory';
-import { EventBus } from '@/renderer/class/EventBus';
-import { mapState } from 'vuex';
-import { ipcRenderer } from 'electron';
-import { EVENTS } from '../../contents';
-
+import {
+  EventBus
+} from '@/renderer/class/EventBus';
+import {
+  mapState
+} from 'vuex';
+import {
+  ipcRenderer
+} from 'electron';
+import {
+  EVENTS
+} from '../../contents';
 
 export default {
   components: {
@@ -104,7 +86,7 @@ export default {
       /**
        * Returns the path for the current project audio files
        */
-      audioLocation: function(state) {
+      audioLocation: function (state) {
         return state.captionInfo.audioLocation;
       },
       /**
@@ -120,6 +102,7 @@ export default {
    */
   async mounted() {
     EventBus.$on('caption_changed', this.setActive);
+    EventBus.$on('get_file_in_directory', this.getFileInDirectory);
     ipcRenderer.on(EVENTS.UPDATE_AUDIO_LOCATION, this.onAudioLocationUpdate);
     this.loadingFiles = true;
     this.directory = await FileProcessor.generateDirectories();
@@ -135,13 +118,19 @@ export default {
     /**
      * Button click handler that will send and event through the ipcRenderer.
      */
-    sendEvent: function(event, ...args) {
+    sendEvent: function (event, ...args) {
       ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
+    },
+    /**
+     * Sends message internally through renderer
+     */
+    onSaveClick() {
+      EventBus.$emit(EVENTS.SAVE_CAPTION_DATA);
     },
     /**
      * Event handler for the project audio file directory changing. Re-builds the directory list with new direction location
      */
-    onAudioLocationUpdate: async function() {
+    onAudioLocationUpdate: async function () {
       this.loadingFiles = true;
       this.directory = await FileProcessor.generateDirectories();
       this.loadingFiles = false;
@@ -149,11 +138,13 @@ export default {
     /**
      * Handler for clicking the home button.
      */
-    onHomeClick: function() {
+    onHomeClick: function () {
       this.dialog = false;
 
       ipcRenderer.send('captionStudio', false);
-      this.$router.push({ path: '/' });
+      this.$router.push({
+        path: '/'
+      });
     },
     /**
      * Handler for the filter input field
@@ -171,13 +162,14 @@ export default {
       if (null !== $event.file) {
         this.active = $event.file;
       }
-    }
+    },
   }
 };
 </script>
 
 <style lang="scss">
 @import '~@/renderer/scss/colors';
+
 .explorer {
   width: 28.2rem;
   min-width: 28.2rem;
@@ -211,6 +203,7 @@ export default {
     &.--directory {
       margin: 3rem 0 1rem 0 !important;
     }
+
     &.--file {
       margin: 0 0 3rem 0 !important;
     }
@@ -252,39 +245,37 @@ export default {
 
   .btn {
     cursor: pointer;
-      background-color: #337ab7;
-      color: white;
-      outline: 0;
-      border: 0;
-      border-radius: 0;
-      padding: 0;
-      text-transform: none;
-      letter-spacing: normal;
+    background-color: #337ab7;
+    color: white;
+    outline: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: normal;
 
-      &:hover {
-        background-color: #286090;
-      }
+    &:hover {
+      background-color: #286090;
+    }
 
-      &.btn-controls {
-        height: 4rem;
-        width: 4rem;
-        border-left: 1px solid rgba(0,0,0,.6);
-        vertical-align: baseline;
-        position: absolute;
-        top: 0;
-        left: 0;
+    &.btn-controls {
+      height: 4rem;
+      width: 4rem;
+      border-left: 1px solid rgba(0, 0, 0, .6);
+      vertical-align: baseline;
+      position: absolute;
+      top: 0;
+      left: 0;
 
-        &.--toggle {
-          width: 10%;
-          border-left: 1px solid rgba(0,0,0,.1);
+      &.--toggle {
+        width: 10%;
+        border-left: 1px solid rgba(0, 0, 0, .1);
 
-          &.--disabled {
-            display: none;
-          }
+        &.--disabled {
+          display: none;
         }
       }
     }
+  }
 }
 </style>
-
-

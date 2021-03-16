@@ -107,9 +107,9 @@ export default class Directory {
    * @memberof Directory
    */
   selectByFile(file) {
-    //const index = this.getFileIndex(file);
+    const index = this.getFileIndex(file);
 
-    const index = this.files.indexOf(file);
+    //const index = this.files.indexOf(file);
 
     if (-1 === index) {
       return;
