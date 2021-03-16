@@ -47,6 +47,7 @@ class FileProcessor {
     this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
 
     this.clear();
+
     const files = await this.generateFileList(store.state.captionInfo.audioLocation);
     EventBus.$emit('file_list_generated', files);
 

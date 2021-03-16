@@ -2,6 +2,23 @@
   <div class="json">
     <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="400px" />
     <div class="json__button-group">
+      <v-dialog v-model="saveErrorDialog" width="500">
+        <v-card>
+          <v-card-title class="error" primary-title>
+            <h2 class="font-semi-bold json__dialog-title">Warning</h2>
+          </v-card-title>
+          <v-card-text>
+            <span class="font-16">There are errors in the caption JSON. It is recommended you correct those before saving, otherwise your changes to those captions will not be saved</span>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="accent" class="font-semi-bold font-16 --capital" @click="saveErrorDialog = false">
+              Cancel
+            </v-btn>
+            <v-btn color="error" class="font-semi-bold font-16 --capital" @click="onSave(null, null, true)">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{on}">
           <v-btn color="error" class="font-semi-bold font-16 --capital json__button-cancel" v-on="on">
@@ -60,6 +77,7 @@ export default {
       data,
       blob: null,
       dialog: false,
+      saveErrorDialog: false,
       jsonErrors: false,
       currentIndex: 0,
       origin: 'JsonPreview',
@@ -125,15 +143,26 @@ export default {
      */
     onEdit($event) {
       this.checkErrors($event, this.origin);
+      if (this.jsonErrors) {
+        return;
+      }
       EventBus.$emit('json_update', $event, this.origin);
     },
     /**
      * Handles the save caption event from app menu or keyboard shortcut
      */
-    onSave(event, filePath) {
+    onSave(event, filePath, force = false) {
+
       if (!filePath) {
         filePath = this.captionLocation;
       }
+
+      if (this.jsonErrors && !force) {
+        this.saveErrorDialog = true;
+        return;
+      }
+      this.saveErrorDialog = false;
+
       fs.writeFile(filePath, this.json, err => {
         if (err) {
           throw err;
@@ -208,7 +237,8 @@ export default {
       this.checkErrors(data, $origin);
 
       if ($origin === this.origin) {
-        return;
+        console.log('hello!');
+        //return;
       }
 
       this.data = this.cleanData(data);

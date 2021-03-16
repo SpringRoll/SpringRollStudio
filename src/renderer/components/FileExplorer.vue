@@ -102,7 +102,6 @@ export default {
    */
   async mounted() {
     EventBus.$on('caption_changed', this.setActive);
-    EventBus.$on('get_file_in_directory', this.getFileInDirectory);
     ipcRenderer.on(EVENTS.UPDATE_AUDIO_LOCATION, this.onAudioLocationUpdate);
     this.loadingFiles = true;
     this.directory = await FileProcessor.generateDirectories();
@@ -113,6 +112,7 @@ export default {
    */
   destroyed() {
     EventBus.$off('caption_changed', this.setActive);
+    FileProcessor.clear();
   },
   methods: {
     /**

@@ -82,6 +82,7 @@ export default {
   destroyed() {
     EventBus.$off('file_selected', this.isEnabled);
     EventBus.$off('caption_reset', () => (this.enabled = false));
+    this.enabled = false;
   },
   methods: {
     /**

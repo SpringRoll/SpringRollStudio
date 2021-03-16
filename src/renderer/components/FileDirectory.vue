@@ -111,6 +111,7 @@ export default {
     EventBus.$off('previous_file', this.previousFile);
     EventBus.$off('file_captioned', this.onFileCaptionChange);
     EventBus.$off('json_file_selected', this.jsonEmit);
+    console.log('destroyed!');
   },
   methods: {
     /**
