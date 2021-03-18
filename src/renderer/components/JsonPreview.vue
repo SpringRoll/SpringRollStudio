@@ -1,6 +1,6 @@
 <template>
   <div class="json">
-    <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="400px" />
+    <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="446px" />
     <div class="json__button-group">
       <v-dialog v-model="saveErrorDialog" width="500">
         <v-card>
@@ -136,6 +136,7 @@ export default {
     ipcRenderer.removeListener(EVENTS.SAVE_CAPTION_DATA, this.onSave);
     ipcRenderer.removeListener(EVENTS.CLEAR_CAPTION_DATA, this.onMenuClear);
     ipcRenderer.removeListener(EVENTS.OPEN_CAPTION_FILE, this.onCaptionFileOpen);
+    this.json = '';
   },
   methods: {
     /**
@@ -144,6 +145,7 @@ export default {
     onEdit($event) {
       this.checkErrors($event, this.origin);
       if (this.jsonErrors) {
+        console.log('errors?', this.jsonErrors);
         return;
       }
       EventBus.$emit('json_update', $event, this.origin);
@@ -235,11 +237,6 @@ export default {
      */
     update(data, $origin) {
       this.checkErrors(data, $origin);
-
-      if ($origin === this.origin) {
-        console.log('hello!');
-        //return;
-      }
 
       this.data = this.cleanData(data);
       this.$refs.jsonEditor.editor.update(this.data);
@@ -392,7 +389,7 @@ $menu-height: 5.6rem;
     &-outer.has-main-menu-bar {
       margin-top: 0;
       padding-top: 0;
-      height: calc(100% - #{$menu-height});
+      height: 100%;
     }
   }
 
