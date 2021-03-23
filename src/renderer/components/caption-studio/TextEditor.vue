@@ -133,10 +133,12 @@ export default {
      *
      */
     characterCount() {
-      if (this.$refs.Quill) {
-        return this.$refs.Quill.quill.getText().length;
-      }
-      return new DOMParser().parseFromString(this.content, 'text/html').body.textContent.length;
+      // if (this.$refs.Quill) {
+      //   console.log(this.$refs.Quill.quill.getText().length, '*hello');
+      //   return this.$refs.Quill.quill.getText().length;
+      // }
+      // return new DOMParser().parseFromString(this.content, 'text/html').body.textContent.length;
+      return this.content.replace(/\n$/, '').length;
     },
     /**
      *
@@ -170,11 +172,13 @@ export default {
      *
      */
     onEdit(delta, oldContents, source) {
+      console.log('texttttt', this.formatHTML(this.getInnerHTML()));
       if (!this.canEmit) {
         return;
       }
 
       if (source !== 'user') {
+        console.log(source);
         return;
       }
 
