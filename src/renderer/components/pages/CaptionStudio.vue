@@ -30,11 +30,11 @@
 <script>
 import { EventBus } from '@/renderer/class/EventBus';
 
-import FileExplorer from '@/renderer/components/FileExplorer';
-import WaveSurfer from '@/renderer/components/WaveSurfer';
-import TextEditor from '@/renderer/components/TextEditor';
-import JsonPreview from '@/renderer/components/JsonPreview';
-import CaptionPreview from '@/renderer/components/CaptionPreview';
+import FileExplorer from '@/renderer/components/caption-studio/FileExplorer';
+import WaveSurfer from '@/renderer/components/caption-studio/WaveSurfer';
+import TextEditor from '@/renderer/components/caption-studio/TextEditor';
+import JsonPreview from '@/renderer/components/caption-studio/JsonPreview';
+import CaptionPreview from '@/renderer/components/caption-studio/CaptionPreview';
 import FileProcessor from '@/renderer/class/FileProcessor';
 import { mapState } from 'vuex';
 

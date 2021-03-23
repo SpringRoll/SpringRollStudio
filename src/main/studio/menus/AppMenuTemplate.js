@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { EVENTS } from '../../../contents';
+import { EVENTS } from '../../../constants';
 
 const isMac = process.platform === 'darwin';
 

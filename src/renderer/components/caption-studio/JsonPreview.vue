@@ -58,7 +58,7 @@ import { EventBus } from '@/renderer/class/EventBus';
 import VJsoneditor from 'v-jsoneditor';
 import { ipcRenderer, path } from 'electron';
 import { mapState } from 'vuex';
-import { EVENTS } from '../../contents';
+import { EVENTS } from '@/constants';
 
 const fs = require('fs');
 

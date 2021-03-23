@@ -143,7 +143,7 @@ export default {
      *
      */
     loadFile($event) {
-      if (!!$event.file ) {
+      if ($event.file?.fullPath) {
         this.isPlaying = false;
         this.hasFile = true;
         fs.readFile($event.file.fullPath, {}, (err, data) => {

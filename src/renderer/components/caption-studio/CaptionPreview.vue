@@ -61,7 +61,6 @@ export default {
     this.setup();
     EventBus.$on('caption_changed', this.setActiveCaption);
     EventBus.$on('caption_data', this.loadCaptionData);
-    EventBus.$on('caption_data_opened', this.loadJSONData);
     EventBus.$on('time_current', this.onTimeChange);
     EventBus.$on('caption_reset', this.setup);
   },
@@ -71,7 +70,6 @@ export default {
   destroyed() {
     EventBus.$off('caption_changed', this.setActiveCaption);
     EventBus.$off('caption_data', this.loadCaptionData);
-    EventBus.$off('caption_data_opened', this.loadJSONData);
     EventBus.$off('time_current', this.onTimeChange);
     EventBus.$off('caption_reset', this.setup);
   },
@@ -116,13 +114,6 @@ export default {
         this.name,
         this.data[this.name][this.index].start
       );
-    },
-    /**
-     *
-     */
-    loadJSONData($event) {
-      this.data = $event;
-      this.captionPlayer.captions = CaptionFactory.createCaptionMap($event);
     },
     /**
      *
