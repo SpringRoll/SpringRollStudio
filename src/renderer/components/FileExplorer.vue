@@ -112,6 +112,7 @@ export default {
    */
   destroyed() {
     EventBus.$off('caption_changed', this.setActive);
+    ipcRenderer.removeListener(EVENTS.UPDATE_AUDIO_LOCATION, this.onAudioLocationUpdate);
     FileProcessor.clear();
   },
   methods: {

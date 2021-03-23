@@ -88,11 +88,21 @@ export default {
    *
    */
   mounted() {
-    ipcRenderer.on(EVENTS.OPEN_TEMPLATE_DIALOG, (event, data) => {
-      this.toggleProjectTemplateDialog(data);
-    });
+    ipcRenderer.on(EVENTS.OPEN_TEMPLATE_DIALOG, this.onOpenDialog);
+  },
+  /**
+   *
+  */
+  destroyed() {
+    ipcRenderer.removeListener(EVENTS.OPEN_TEMPLATE_DIALOG, this.onOpenDialog);
   },
   methods: {
+    /**
+     *
+     */
+    onOpenDialog(event, data) {
+      this.toggleProjectTemplateDialog(data);
+    },
     /**
      * Button click handler that will send and event through the ipcRenderer.
      */
