@@ -172,13 +172,11 @@ export default {
      *
      */
     onEdit(delta, oldContents, source) {
-      console.log('texttttt', this.formatHTML(this.getInnerHTML()));
       if (!this.canEmit) {
         return;
       }
 
       if (source !== 'user') {
-        console.log(source);
         return;
       }
 
