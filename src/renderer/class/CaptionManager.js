@@ -91,6 +91,7 @@ class CaptionManager {
     });
 
     if ($origin === 'userOpen') {
+      this.emitOpenedJSON();
       return;
     }
     this.currentCaptionIndex.edited = true;
@@ -229,6 +230,12 @@ class CaptionManager {
    */
   emitData( $origin = '' ) {
     EventBus.$emit('caption_data', this.data, $origin);
+  }
+  /**
+   * Emits the entirety of the current data object, which contains all caption files, and associated captions.
+   */
+  emitOpenedJSON( $origin = '' ) {
+    EventBus.$emit('caption_data_opened', this.data, $origin);
   }
 
   /**
