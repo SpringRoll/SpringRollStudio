@@ -8,7 +8,7 @@
             <h2 class="font-semi-bold json__dialog-title">Warning</h2>
           </v-card-title>
           <v-card-text>
-            <span class="font-16">There are errors in the caption JSON. It is recommended you correct those before saving, otherwise your changes to those specific captions will not be saved</span>
+            <span class="font-16">There are errors in the caption JSON. It is recommended you correct those before saving, otherwise your changes to those specific captions will not be saved.</span>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
