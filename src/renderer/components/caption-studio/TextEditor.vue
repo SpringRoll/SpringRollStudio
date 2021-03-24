@@ -172,13 +172,14 @@ export default {
      *
      */
     onEdit(delta, oldContents, source) {
+    //onEdit({ quill, html, text }) {
       if (!this.canEmit) {
         return;
       }
 
-      if (source !== 'user') {
-        return;
-      }
+      // if (source !== 'user') {
+      //   return;
+      // }
 
       const text = this.formatHTML(this.getInnerHTML());
       this.content = text;

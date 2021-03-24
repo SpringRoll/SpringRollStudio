@@ -77,8 +77,9 @@ export default {
      *
      */
     initWave() {
+      const container = this.$el.querySelector('#wave__container');
       this.wave = WaveSurfer.create({
-        container: '#wave__container',
+        container: container,
         cursorColor: '#000',
         fillParent: true,
         height: 200,
@@ -89,7 +90,6 @@ export default {
         responsive: true,
         waveColor: '#0C7AC0',
       });
-
       this.wave.on('audioprocess',  this.updateTimeStamp);
       this.wave.on('seek', this.updateTimeStamp);
       this.wave.on('finish', this.finish);

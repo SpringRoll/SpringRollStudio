@@ -45,12 +45,14 @@ export default {
      *
      */
     atEnd() {
+      //console.log('at end', this.lastIndex === this.index, 0 === this.lastIndex);
       return this.lastIndex === this.index || 0 === this.lastIndex;
     },
     /**
      *
      */
     atStart() {
+      //console.log('at start', 0 === this.index);
       return 0 === this.index;
     }
   },
@@ -90,6 +92,9 @@ export default {
      *
      */
     setActiveCaption($event) {
+      if ($event === undefined) {
+        return;
+      }
       const { name, index, lastIndex } = $event;
       this.name = name;
       this.index = index;
@@ -99,7 +104,7 @@ export default {
      *
      */
     setup() {
-      const element = document.getElementsByClassName('captions__content')[0];
+      const element = this.$el.querySelectorAll('.captions__content')[0];
       element.innerHTML = '';
 
       this.captionPlayer = new CaptionPlayer([], new HtmlRenderer(element));
