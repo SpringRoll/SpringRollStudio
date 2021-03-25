@@ -45,14 +45,12 @@ export default {
      *
      */
     atEnd() {
-      //console.log('at end', this.lastIndex === this.index, 0 === this.lastIndex);
       return this.lastIndex === this.index || 0 === this.lastIndex;
     },
     /**
      *
      */
     atStart() {
-      //console.log('at start', 0 === this.index);
       return 0 === this.index;
     }
   },
@@ -113,6 +111,9 @@ export default {
      *
      */
     loadCaptionData($event) {
+      if ($event === undefined) {
+        return;
+      }
       this.data = $event;
       this.captionPlayer.captions = CaptionFactory.createCaptionMap($event);
       this.captionPlayer.start(
@@ -124,6 +125,9 @@ export default {
      *
      */
     onTimeChange($event) {
+      if ($event === undefined) {
+        return;
+      }
       this.captionPlayer.start(this.name, $event.time);
       const i = this.captionPlayer.activeCaption.lineIndex - 1;
       if (i !== this.index) {

@@ -145,7 +145,6 @@ export default {
     onEdit($event) {
       this.checkErrors($event, this.origin);
       if (this.jsonErrors) {
-        console.log('errors?', this.jsonErrors);
         return;
       }
       EventBus.$emit('json_update', $event, this.origin);
@@ -170,7 +169,6 @@ export default {
           throw err;
         }
         this.$store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: false });
-        console.log('JSON data is saved.');
       });
     },
     /**

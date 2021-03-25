@@ -78,7 +78,7 @@ export default {
     files() {
       return this.directory.files.map((file) => {
         return {
-          active: this.active?.name === file.name,
+          active: this.active.name === file.name,
           file
         };
       });
@@ -111,7 +111,6 @@ export default {
     EventBus.$off('previous_file', this.previousFile);
     EventBus.$off('file_captioned', this.onFileCaptionChange);
     EventBus.$off('json_file_selected', this.jsonEmit);
-    console.log('destroyed!');
   },
   methods: {
     /**

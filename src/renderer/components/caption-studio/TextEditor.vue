@@ -133,11 +133,6 @@ export default {
      *
      */
     characterCount() {
-      // if (this.$refs.Quill) {
-      //   console.log(this.$refs.Quill.quill.getText().length, '*hello');
-      //   return this.$refs.Quill.quill.getText().length;
-      // }
-      // return new DOMParser().parseFromString(this.content, 'text/html').body.textContent.length;
       return this.content.replace(/\n$/, '').length;
     },
     /**
