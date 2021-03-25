@@ -3,9 +3,8 @@ import FileDirectory from '@/renderer/components/caption-studio/FileDirectory.vu
 import { EventBus } from '@/renderer/class/EventBus';
 import Directory from '@/renderer/class/Directory';
 import Sinon from 'sinon';
+import { directory, active } from '../../utils/data';
 
-const directory = new Directory({'name':'music','files':[{'name':'title.mp3','fullPath':'/Full/path/to/title.mp3','relativePath':'path/to/title.mp3','type':{'ext':'mp3','mime':'audio/mpeg'}},{'name':'title.ogg','fullPath':'/Full/path/to/title.ogg','relativePath':'path/to/title.ogg','type':{'ext':'ogg','mime':'audio/ogg'}}],'directories':{}});
-const active = {'name':'title.mp3','fullPath':'/Full/path/to/title.mp3','relativePath':'path/to/title.mp3','type':{'ext':'mp3','mime':'audio/mpeg'}};
 describe('FileDirectory.js', () => {
 
   it('should recieve all events properly', async () => {
