@@ -3,7 +3,7 @@ import Directory from '@/renderer/class/Directory';
 export const captionData = {
   'acoustic-guitar': [
     {
-      'content': 'PBS Rules!!',
+      'content': 'Test',
       'start': 10,
       'end': 1190
     },
@@ -41,6 +41,7 @@ export const directory = new Directory({'name':'music','files':[{'name':'title.m
 export const active = {'name':'title.mp3','fullPath':'/Full/path/to/title.mp3','relativePath':'path/to/title.mp3','type':{'ext':'mp3','mime':'audio/mpeg'}};
 
 export const files = [{'name':'title.mp3','fullPath':'/Full/path/to/title.mp3','relativePath':'path/to/title.mp3','type':{'ext':'mp3','mime':'audio/mpeg'}}, {'name':'acoustic-guitar.mp3','fullPath':'/Full/path/to/acoustic-guitar.mp3','relativePath':'path/to/acoustic-guitar.mp3','type':{'ext':'mp3','mime':'audio/mpeg'}}];
+export const addFile = {'name':'addFile.mp3','fullPath':'/Full/path/to/addFile.mp3','relativePath':'path/to/addFile.mp3','type':{'ext':'mp3','mime':'audio/mpeg'}};
 
 
 export const badCaptions = {

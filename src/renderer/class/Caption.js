@@ -19,7 +19,7 @@ export class Caption {
    * @param {*} name
    * @param {*} param1
    */
-  constructor(name, { content = '', end = 0, start = 0 } = {}) {
+  constructor(name, { content = ' ', end = 0, start = 0 } = {}) {
     this.updateContent({ name, content, end, start });
   }
 

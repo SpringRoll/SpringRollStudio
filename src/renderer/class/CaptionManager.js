@@ -38,6 +38,7 @@ class CaptionManager {
    * for that file, it creates a new Caption.
    */
   fileChanged($event, $origin = '') {
+
     if (!$event.file) {
       return;
     }
