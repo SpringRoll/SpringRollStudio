@@ -5,7 +5,7 @@ import Sinon from 'sinon';
 import { files, active, badCaptions } from '../../utils/data';
 
 
-describe('JsonPreview.js', () => {
+describe('JsonPreview.vue', () => {
 
   it('Component should mount properly', () => {
     const wrapper = createVue(JsonPreview);

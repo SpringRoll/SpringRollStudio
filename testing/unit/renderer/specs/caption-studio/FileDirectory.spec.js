@@ -5,7 +5,7 @@ import Directory from '@/renderer/class/Directory';
 import Sinon from 'sinon';
 import { directory, active } from '../../utils/data';
 
-describe('FileDirectory.js', () => {
+describe('FileDirectory.vue', () => {
 
   it('should recieve all events properly', async () => {
     const nextFile = FileDirectory.methods.nextFile;

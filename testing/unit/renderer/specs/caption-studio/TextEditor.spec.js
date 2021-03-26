@@ -5,7 +5,7 @@ import { EventBus } from '@/renderer/class/EventBus';
 import Sinon from 'sinon';
 
 
-describe('TextEditor.js', () => {
+describe('TextEditor.vue', () => {
 
   it('Component should createVue properly', () => {
     const wrapper = createVue(TextEditor);

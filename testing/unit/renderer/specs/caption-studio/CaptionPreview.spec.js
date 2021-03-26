@@ -3,7 +3,7 @@ import CaptionPreview from '@/renderer/components/caption-studio/CaptionPreview.
 import { EventBus } from '@/renderer/class/EventBus';
 import Sinon from 'sinon';
 
-describe('CaptionPreview.js', () => {
+describe('CaptionPreview.vue', () => {
 
   it('setup() should create captionPlayer successfully', () => {
     const wrapper = createVue(CaptionPreview);
