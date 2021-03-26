@@ -133,7 +133,7 @@ export default {
      *
      */
     characterCount() {
-      return this.content.replace(/\n$/, '').length;
+      return this.content.replace(/\n$/, '').replace(/<br>/g, '').length;
     },
     /**
      *
@@ -206,6 +206,9 @@ export default {
      *
      */
     onUpdate($event, $origin) {
+      if ( !$event ) {
+        return;
+      }
       if ($origin === this.origin) {
         this.edited = $event.data.edited;
         return;
@@ -284,7 +287,7 @@ export default {
      */
     setInnerHTML(newValue) {
       //this.$refs.Quill.quill.container.children[0].innerHTML = newValue;
-      this.$refs.Quill.quill.setText(newValue);
+      this.$refs?.Quill?.quill?.setText(newValue);
       //this.$refs.Quill.quill.container.children[0].innerHTML = '';
       //this.$refs.Quill.quill.pasteHTML(newValue, 'silent');
     },

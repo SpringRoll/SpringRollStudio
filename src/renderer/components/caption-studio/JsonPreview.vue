@@ -155,6 +155,9 @@ export default {
     onSave(event, filePath, force = false) {
 
       if (!filePath) {
+        if (!this.captionLocation) {
+          return;
+        }
         filePath = this.captionLocation;
       }
 

@@ -9,6 +9,7 @@ describe('JsonPreview.js', () => {
 
   it('Component should mount properly', () => {
     const wrapper = createVue(JsonPreview);
+    wrapper.destroy();
   });
 
   it('should recieve all events properly', async () => {
@@ -45,6 +46,7 @@ describe('JsonPreview.js', () => {
     JsonPreview.methods.update = update;
     JsonPreview.methods.createFileNameMap = createFileNameMap;
     JsonPreview.methods.onSave = onSave;
+    wrapper.destroy();
   });
 
 
@@ -61,6 +63,7 @@ describe('JsonPreview.js', () => {
     expect(wrapper.vm.currentIndex).to.equal(1);
     expect(wrapper.vm.activeFile).to.equal('title.mp3');
     expect(wrapper.vm.fileNameMap['title.mp3'].fullPath).to.equal(active.fullPath);
+    wrapper.destroy();
 
   });
 
@@ -79,7 +82,7 @@ describe('JsonPreview.js', () => {
     EventBus.$emit('caption_data', {data: { caption: 'caption' } }, 'test' );
     await wrapper.vm.$nextTick();
 
-    expect (JsonPreview.methods.cleanData.callCount).to.equal(1);
+    expect(JsonPreview.methods.cleanData.callCount).to.equal(1);
     expect(JsonPreview.methods.checkErrors.callCount).to.equal(1);
     expect(JsonPreview.methods.createBlob.callCount).to.equal(2); //called once on mounted as well      vb
     expect(wrapper.vm.data.data.caption).to.equal('caption');
@@ -97,6 +100,7 @@ describe('JsonPreview.js', () => {
     JsonPreview.methods.checkErrors = checkErrors;
     JsonPreview.methods.cleanData = cleanData;
     JsonPreview.methods.createBlob = createBlob;
+    wrapper.destroy();
   });
 
   it('update() should clean and prepare data using checkErrors() and cleanData()', async () => {
@@ -107,19 +111,16 @@ describe('JsonPreview.js', () => {
     expect(wrapper.vm.data['bad-caption']).to.be.undefined; // bad-caption should be removed
     expect(wrapper.vm.data['good-caption'][0].content).to.equal('good-caption'); // confirm good-caption still exists
     expect(wrapper.vm.jsonErrors).to.be.false; //clean data should remove any captions with errors
-
+    wrapper.destroy();
   });
 
   it('createFileNameMap()', async () => {
     const wrapper = createVue(JsonPreview);
-    // wrapper.vm.createFileNameMap(files);
 
     EventBus.$emit('file_list_generated', files);
 
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.fileNameMap.title.name).to.equal(files[0].name); //title and title.mp3
-  });
-
-  it('reset()', () => {
+    wrapper.destroy();
   });
 });

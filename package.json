@@ -23,7 +23,7 @@
     "electron-store": "^6.0.0",
     "file-type": "^16.2.0",
     "lodash-es": "^4.17.15",
-    "springroll": "^2.3.2",
+    "springroll": "^2.4.0",
     "springroll-container": "^2.0.3",
     "v-jsoneditor": "^1.4.1",
     "vue": "^2.6.11",

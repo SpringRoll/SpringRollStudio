@@ -1,13 +1,13 @@
 import { createVue } from '../../utils/VueUtils';
+import { mount } from '@vue/test-utils';
 import TextEditor from '@/renderer/components/caption-studio/TextEditor.vue';
 import { EventBus } from '@/renderer/class/EventBus';
 import Sinon from 'sinon';
-import { files, active, badCaptions } from '../../utils/data';
 
 
 describe('TextEditor.js', () => {
 
-  it('Component should mount properly', () => {
+  it('Component should createVue properly', () => {
     const wrapper = createVue(TextEditor);
   });
 
@@ -35,6 +35,32 @@ describe('TextEditor.js', () => {
     TextEditor.methods.onUpdate = onUpdate;
     TextEditor.methods.reset = reset;
     TextEditor.methods.onJsonErrors = onJsonErrors;
+  });
+
+  it('computed properites should all return as expected', async () => {
+
+    const wrapper = createVue(TextEditor);
+
+    expect(wrapper.vm.canAdd).to.be.false;
+    expect(wrapper.vm.canRemove).to.be.false;
+    expect(wrapper.vm.characterCount).to.equal(0);
+    expect(wrapper.vm.lineCount).to.equal(0);
+
+    EventBus.$emit('caption_changed', { data: { start: 10, end: 100, content: 'caption-content', edited: true}, index: 1, lastIndex: 1, name: 'test' }, 'test');
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.canAdd).to.be.true;
+    expect(wrapper.vm.canRemove).to.be.false;
+    expect(wrapper.vm.characterCount).to.equal(15);
+    expect(wrapper.vm.lineCount).to.equal(0);
+
+    EventBus.$emit('caption_changed', { data: { start: 10, end: 100, content: 'caption-content<br>line', edited: true}, index: 1, lastIndex: 2, name: 'test' }, 'test');
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.canAdd).to.be.false;
+    expect(wrapper.vm.canRemove).to.be.true;
+    expect(wrapper.vm.characterCount).to.equal(19);
+    expect(wrapper.vm.lineCount).to.equal(1);
   });
 
 });

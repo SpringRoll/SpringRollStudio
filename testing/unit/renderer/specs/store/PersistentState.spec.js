@@ -1,4 +1,5 @@
 import { createVue } from '../../utils/VueUtils';
+import { mount } from '@vue/test-utils';
 import LandingPage from '@/renderer/components/pages/LandingPage.vue';
 
 describe('PersistentState.js', () => {
