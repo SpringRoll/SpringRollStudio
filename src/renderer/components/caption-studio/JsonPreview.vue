@@ -140,7 +140,7 @@ export default {
   },
   methods: {
     /**
-     *
+     * Handles JSON Editor changes
      */
     onEdit($event) {
       this.checkErrors($event, this.origin);
@@ -186,14 +186,14 @@ export default {
       this.dialog = true;
     },
     /**
-     *
+     * When a caption updated in another component, requests the new caption data from CaptionManager
      */
     onUpdate(data, $origin) {
       //Pass the origin of the original component on through in this call, since that is the origin that matters
       EventBus.$emit('caption_get', $origin);
     },
     /**
-     *
+     * Handler for any JSON editor events, filters out any that aren't the 'focus' event.
      */
     onEvent(node, event) {
       if (event.type !== 'focus') {
@@ -219,7 +219,7 @@ export default {
 
     },
     /**
-     *
+     * Handles the "caption_changed" event and updates data to match the new caption
      */
     onCaptionChange({
       index,
@@ -231,7 +231,7 @@ export default {
       this.currentIndex = index;
     },
     /**
-     *
+     * Updates current JSON data when CaptionManager emits the new caption data
      */
     update(data, $origin) {
       this.checkErrors(data, $origin);
@@ -248,7 +248,7 @@ export default {
 
     },
     /**
-     *
+     * Creates a map of file names to their files, use to help with switching active files
      */
     createFileNameMap($event) {
       if (!Array.isArray($event)) {
@@ -260,7 +260,7 @@ export default {
       });
     },
     /**
-     *
+     * Strips out any invalid captions in the json data to avoid caption renderer errors
      */
     cleanData(data) {
       const key = Object.keys(data);
@@ -290,7 +290,7 @@ export default {
       return output;
     },
     /**
-     *
+     * Creates a blob out of the current json data for user download
      */
     createBlob() {
       this.blob = URL.createObjectURL(
@@ -300,7 +300,7 @@ export default {
       );
     },
     /**
-     *
+     * Resets/clears all caption data
      */
     reset() {
       EventBus.$emit('caption_reset');
@@ -314,7 +314,13 @@ export default {
       const errors = {};
       Object.keys(json).forEach(key => {
         errors[key] = [];
+
         const file = json[key];
+
+        if (!Array.isArray(file)) {
+          return;
+        }
+
         file.forEach((caption, index) => {
           if (caption.edited || $origin === this.origin) {
             if (!caption.content || !caption.content.trim()) {
@@ -336,11 +342,10 @@ export default {
           delete errors[key];
         }
       });
-
       return errors;
     },
     /**
-     *
+     * Checks data for error and emits them out for any other components
      */
     checkErrors(data, $origin) {
       this.jsonErrors = false;

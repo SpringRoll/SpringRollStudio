@@ -118,7 +118,7 @@ export default {
      */
     canAdd() {
       let hasErrors = false;
-      if (this.jsonErrors[this.fileName] && this.jsonErrors[this.fileName].length > 0) {
+      if (this.jsonErrors?.[this.fileName] && this.jsonErrors?.[this.fileName].length > 0) {
         hasErrors = true;
       }
       return (this.index >= this.lastIndex) && (!hasErrors) && this.edited;
@@ -152,8 +152,8 @@ export default {
   mounted() {
     EventBus.$on('caption_changed', this.onUpdate);
     EventBus.$on('caption_reset', this.reset);
-    EventBus.$on('json_errors', (e) => this.jsonErrors = e);
-    this.$refs.Quill.quill.on('text-change', this.onEdit);
+    EventBus.$on('json_errors', this.onJsonErrors);
+    this.$refs.Quill?.quill?.on('text-change', this.onEdit);
   },
   /**
    *
@@ -161,8 +161,16 @@ export default {
   destroyed() {
     EventBus.$off('caption_changed', this.onUpdate);
     EventBus.$off('caption_reset', this.reset);
+    EventBus.$off('json_errors', this.onJsonErrors);
+    this.$refs.Quill?.quill?.off('text-change', this.onEdit);
   },
   methods: {
+    /**
+     *
+     */
+    onJsonErrors($event) {
+      this.jsonErrors = $event;
+    },
     /**
      *
      */
@@ -171,10 +179,6 @@ export default {
       if (!this.canEmit) {
         return;
       }
-
-      // if (source !== 'user') {
-      //   return;
-      // }
 
       const text = this.formatHTML(this.getInnerHTML());
       this.content = text;
