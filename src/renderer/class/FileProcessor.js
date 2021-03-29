@@ -74,8 +74,7 @@ class FileProcessor {
    */
   async generateFileList(dirPath, arrayOfFiles = []) {
     if (dirPath === undefined) {
-      console.log('udnefined', dirPath);
-      // return arrayOfFiles;
+      return arrayOfFiles;
     }
     const fileList = fs.readdirSync(dirPath, { withFileTypes: true });
 
