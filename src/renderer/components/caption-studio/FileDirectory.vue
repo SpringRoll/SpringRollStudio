@@ -78,7 +78,7 @@ export default {
     files() {
       return this.directory.files.map((file) => {
         return {
-          active: this.active.name === file.name,
+          active: this.active ? this.active.name === file.name : false,
           file
         };
       });

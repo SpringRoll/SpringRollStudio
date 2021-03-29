@@ -1,19 +1,19 @@
 import { createVue } from '../../utils/VueUtils';
-import { EVENTS, DIALOGS } from '@/constants';
 import CaptionStudio from '@/renderer/components/pages/CaptionStudio.vue';
-import Sinon from 'sinon';
 
-import FileExplorer from '@/renderer/components/caption-studio/FileExplorer';
-import WaveSurfer from '@/renderer/components/caption-studio/WaveSurfer';
-import TextEditor from '@/renderer/components/caption-studio/TextEditor';
-import JsonPreview from '@/renderer/components/caption-studio/JsonPreview';
-import CaptionPreview from '@/renderer/components/caption-studio/CaptionPreview';
-import FileProcessor from '@/renderer/class/FileProcessor';
+describe('CaptionStudio.vue', () => {
 
-// describe('CaptionStudio.js', () => {
+  it('should mount and render', () => {
+    const wrapper = createVue(CaptionStudio);
+    wrapper.vm.$store.commit('audioLocation', { audioLocation: 'this/is/also/a/test' });
+    expect(wrapper.vm.enabled).to.be.false;
+  });
 
-//   it('should mount and render', () => {
-//     const wrapper = createVue(TextEditor);
-//     //expect(wrapper.find('.name').text()).to.equal('SpringRoll Studio');
-//   });
-// });
+  it('hide button should properly set the state to hidden', () => {
+    const wrapper = createVue(CaptionStudio);
+
+    expect(wrapper.vm.explorerHidden).to.be.false;
+    wrapper.find('.caption__hide-sidebar').trigger('click');
+    expect(wrapper.vm.explorerHidden).to.be.true;
+  });
+});

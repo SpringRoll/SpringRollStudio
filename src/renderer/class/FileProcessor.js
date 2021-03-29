@@ -34,7 +34,7 @@ class FileProcessor {
     this.setNameFilter(nameFilter);
     this.directory = new Directory();
     this.hasFiles = false;
-    this.parentDirectoryName = store.state.captionInfo.audioLocation ? path.basename(store.state.captionInfo.audioLocation) : '';
+    this.parentDirectoryName = store.state.captionInfo.audioLocation !== undefined ? path.basename(store.state.captionInfo.audioLocation) : '';
   }
 
   /**
@@ -44,7 +44,7 @@ class FileProcessor {
    * @async
    */
   async generateDirectories() {
-    this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
+    this.parentDirectoryName = store.state.captionInfo.audioLocation !== undefined ? path.basename(store.state.captionInfo.audioLocation) : '';
 
     this.clear();
 
@@ -73,6 +73,10 @@ class FileProcessor {
    * @async
    */
   async generateFileList(dirPath, arrayOfFiles = []) {
+    if (dirPath === undefined) {
+      console.log('udnefined', dirPath);
+      // return arrayOfFiles;
+    }
     const fileList = fs.readdirSync(dirPath, { withFileTypes: true });
 
     for (let i = 0, l = fileList.length; i < l; i++) {
