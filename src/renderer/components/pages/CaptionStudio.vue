@@ -19,7 +19,7 @@
           <TextEditor id="c-editor" class="caption__component" />
         </div>
         <div class="caption__element">
-          <label class="caption__label" for="c-code">JSON Preview</label>
+          <label class="caption__label" for="c-code">JSON Preview <span v-show="isUnsavedChanges">* - Unsaved Changes</span></label>
           <JsonPreview id="c-code" class="caption__component" />
         </div>
       </div>
@@ -36,6 +36,7 @@ import TextEditor from '@/renderer/components/TextEditor';
 import JsonPreview from '@/renderer/components/JsonPreview';
 import CaptionPreview from '@/renderer/components/CaptionPreview';
 import FileProcessor from '@/renderer/class/FileProcessor';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -54,6 +55,16 @@ export default {
       explorerHidden: false,
     };
   },
+  computed: {
+    ...mapState({
+      /**
+       * returns whether or not there are unsaved caption changes
+       */
+      isUnsavedChanges: function (state) {
+        return state.captionInfo.isUnsavedChanges;
+      }
+    })
+  },
   /**
    *
    */
@@ -71,6 +82,7 @@ export default {
   destroyed() {
     EventBus.$off('file_selected', this.isEnabled);
     EventBus.$off('caption_reset', () => (this.enabled = false));
+    this.enabled = false;
   },
   methods: {
     /**

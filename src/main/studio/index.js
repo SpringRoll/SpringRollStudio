@@ -59,6 +59,7 @@ class SpringRollStudio {
       if (paths !== undefined) {
         projectInfo.location = paths[0];
         captionInfo.audioLocation = paths[0]; //when the project location changes also change the default audio files directory
+        captionInfo.captionLocation = '';
       }
       break;
 

@@ -1,4 +1,5 @@
 import { EventBus } from './EventBus';
+import store from '../store';
 
 /**
  * Class that controls the creation, and management, of captions in the CaptionStudio Component.
@@ -13,7 +14,7 @@ class CaptionManager {
     this.data = {}; //All caption data, organized by file name.
     this.activeCaption = undefined; //currently active caption name, created by stripping the file extension of the active file.
     this.activeIndex = 0; //the index of the currently active caption.
-    this.file = new File([], 'NO_FILE'); //Currently active file, selected in the FileDirectory component
+    this.file = {}; //Currently active file, selected in the FileDirectory component
     this.currentTime = 0; //current time of the waveform component
     EventBus.$on('caption_update', this.updateActiveCaption.bind(this));
     EventBus.$on('caption_reset', this.reset.bind(this));
@@ -68,9 +69,17 @@ class CaptionManager {
    * Caption.
    */
   onJSONUpdate($event, $origin = '') {
+    if ($origin !== 'userOpen') {
+      store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
+    }
 
     Object.keys($event).forEach((key) => {
       $event[key].forEach((caption, index) => {
+
+        if (!this.data[key]) {
+          this.data[key] = [this.template];
+        }
+
         const current = this.data[key];
 
         this.data[key][index] = {
@@ -81,6 +90,10 @@ class CaptionManager {
       });
     });
 
+    if ($origin === 'userOpen') {
+      this.emitOpenedJSON();
+      return;
+    }
     this.currentCaptionIndex.edited = true;
     this.emitCurrent($origin);
     this.emitData($origin);
@@ -114,6 +127,7 @@ class CaptionManager {
    * and creates a new empty caption. Also "saves" the previously active caption in the data object.
    */
   addIndex($origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     this.data[this.activeCaption].push(this.template);
     this.activeIndex++;
     EventBus.$emit('file_captioned', { name: this.file.name, isCaptioned: true });
@@ -128,6 +142,7 @@ class CaptionManager {
    * simply upates the currently active caption with whatever new data is provided.
    */
   updateActiveCaption({ content, start, end }, $origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     const current = this.currentCaptionIndex;
 
     this.data[this.activeCaption][this.activeIndex] = {
@@ -144,6 +159,7 @@ class CaptionManager {
    * Removes all captions from the data object and resets the active caption back to it's initial state.
    */
   reset() {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     this.data = {};
     this.activeIndex = 0;
     this.activeCaption = '';
@@ -178,6 +194,7 @@ class CaptionManager {
    * Used to delete a single caption. Uses the index to look up which caption should be removed. Almost always will be the current caption.
    */
   removeAtIndex($origin = '') {
+    store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     if ('undefined' === typeof this.currentCaption[this.activeIndex]) {
       return;
     }
@@ -214,6 +231,12 @@ class CaptionManager {
   emitData( $origin = '' ) {
     EventBus.$emit('caption_data', this.data, $origin);
   }
+  /**
+   * Emits the entirety of the current data object, which contains all caption files, and associated captions.
+   */
+  emitOpenedJSON( $origin = '' ) {
+    EventBus.$emit('caption_data_opened', this.data, $origin);
+  }
 
   /**
    * Combines emitCurrent and emitData, as well as emitting the file_selected event.
@@ -228,7 +251,7 @@ class CaptionManager {
    *
    */
   get lastIndex() {
-    return this.currentCaption.length - 1 || 0;
+    return this.currentCaption?.length - 1 || 0;
   }
 
   /**

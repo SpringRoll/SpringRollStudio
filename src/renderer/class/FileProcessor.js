@@ -1,5 +1,6 @@
 import Directory from './Directory';
 import store from '../store/';
+import { EventBus } from '../class/EventBus';
 const fs = require('fs');
 const path = require('path');
 const FileType = require('file-type');
@@ -33,7 +34,7 @@ class FileProcessor {
     this.setNameFilter(nameFilter);
     this.directory = new Directory();
     this.hasFiles = false;
-    this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
+    this.parentDirectoryName = store.state.captionInfo.audioLocation ? path.basename(store.state.captionInfo.audioLocation) : '';
   }
 
   /**
@@ -46,7 +47,9 @@ class FileProcessor {
     this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
 
     this.clear();
+
     const files = await this.generateFileList(store.state.captionInfo.audioLocation);
+    EventBus.$emit('file_list_generated', files);
 
     for (let i = 0, l = files.length; i < l; i++) {
       if (
@@ -87,7 +90,6 @@ class FileProcessor {
         }
       }
     }
-
     return arrayOfFiles;
   }
 

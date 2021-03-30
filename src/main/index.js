@@ -1,9 +1,10 @@
 'use strict';
 
-import { app, protocol, BrowserWindow } from 'electron';
+import { app, protocol, BrowserWindow, Menu, MenuItem, ipcMain } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { studio } from './studio';
+import { template, captionStudioTemplate } from './studio/menus/AppMenuTemplate';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -15,6 +16,16 @@ let win;
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
+
+// Create menus from templates
+const menu = Menu.buildFromTemplate(template);
+const captionStudioMenu = Menu.buildFromTemplate(captionStudioTemplate);
+Menu.setApplicationMenu(menu);
+
+//on caption studio open or close, set the appropriate menu
+ipcMain.on('captionStudio', (event, page) => {
+  Menu.setApplicationMenu(page ? captionStudioMenu : menu);
+});
 
 /**
  * Creates electron window

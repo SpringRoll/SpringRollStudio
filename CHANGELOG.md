@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - UNRELEASED
 ### Changed
 - Caption Studio now reads audio files directly from project root, or user specified audio directory
+- Caption studio now allows for saving/opening caption JSON files directly from projects
 ### Added
 - This CHANGELOG
 - VUE front end renderer

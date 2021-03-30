@@ -16,7 +16,7 @@
       <v-btn class="landing-btn projectLocationBtn" @click="sendEvent('openDialog', 'projectLocationSetter')">Set Project Location</v-btn>
       <v-btn class="landing-btn previewGameBtn" :disabled="disablePreview" @click="togglePreviewTargetDialog(true)">Preview Game</v-btn>
       <v-btn class="landing-btn projectTemplateBtn" @click="toggleProjectTemplateDialog(true)">Create Project Template</v-btn>
-      <v-btn class="landing-btn captionStudioBtn" @click="sendEvent('openCaptionStudio')">Open Caption Studio</v-btn>
+      <v-btn class="landing-btn captionStudioBtn" @click="onCaptionStudioClick">Open Caption Studio</v-btn>
     </div>
 
     <div class="appInfo">
@@ -84,8 +84,25 @@ export default {
       }
     })
   },
-
+  /**
+   *
+   */
+  mounted() {
+    ipcRenderer.on(EVENTS.OPEN_TEMPLATE_DIALOG, this.onOpenDialog);
+  },
+  /**
+   *
+  */
+  destroyed() {
+    ipcRenderer.removeListener(EVENTS.OPEN_TEMPLATE_DIALOG, this.onOpenDialog);
+  },
   methods: {
+    /**
+     *
+     */
+    onOpenDialog(event, data) {
+      this.toggleProjectTemplateDialog(data);
+    },
     /**
      * Button click handler that will send and event through the ipcRenderer.
      */
@@ -144,6 +161,13 @@ export default {
     toggleProjectTemplateDialog: function (toggle) {
       this.showProjectTemplateDialog = toggle;
     },
+    /**
+     *
+     */
+    onCaptionStudioClick() {
+      ipcRenderer.send('captionStudio', true);
+      this.sendEvent('openCaptionStudio');
+    }
   }
 };
 </script>
