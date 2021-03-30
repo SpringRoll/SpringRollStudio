@@ -1,7 +1,7 @@
 import { createVue } from '../../utils/VueUtils';
 import TemplateProjectDialog from '@/renderer/components/dialogs/TemplateProjectDialog.vue';
 import Sinon from 'sinon';
-import { EVENTS } from '@/contents';
+import { EVENTS } from '@/constants';
 
 describe('TemplateProjectDialog.js', () => {
 

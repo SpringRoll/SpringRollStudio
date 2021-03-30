@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { TEMPLATES } from '../../../contents';
+import { TEMPLATES } from '../../../constants';
 import { join } from 'path';
 import { app, net } from 'electron';
 import DecompressZip from 'decompress-zip';

@@ -118,7 +118,7 @@ export default {
      */
     canAdd() {
       let hasErrors = false;
-      if (this.jsonErrors[this.fileName] && this.jsonErrors[this.fileName].length > 0) {
+      if (this.jsonErrors?.[this.fileName] && this.jsonErrors?.[this.fileName].length > 0) {
         hasErrors = true;
       }
       return (this.index >= this.lastIndex) && (!hasErrors) && this.edited;
@@ -133,10 +133,7 @@ export default {
      *
      */
     characterCount() {
-      if (this.$refs.Quill) {
-        return this.$refs.Quill.quill.getText().length;
-      }
-      return new DOMParser().parseFromString(this.content, 'text/html').body.textContent.length;
+      return this.content.replace(/\n$/, '').replace(/<br>/g, '').length;
     },
     /**
      *
@@ -155,8 +152,8 @@ export default {
   mounted() {
     EventBus.$on('caption_changed', this.onUpdate);
     EventBus.$on('caption_reset', this.reset);
-    EventBus.$on('json_errors', (e) => this.jsonErrors = e);
-    this.$refs.Quill.quill.on('text-change', this.onEdit);
+    EventBus.$on('json_errors', this.onJsonErrors);
+    this.$refs.Quill?.quill?.on('text-change', this.onEdit);
   },
   /**
    *
@@ -164,17 +161,22 @@ export default {
   destroyed() {
     EventBus.$off('caption_changed', this.onUpdate);
     EventBus.$off('caption_reset', this.reset);
+    EventBus.$off('json_errors', this.onJsonErrors);
+    this.$refs.Quill?.quill?.off('text-change', this.onEdit);
   },
   methods: {
     /**
      *
      */
+    onJsonErrors($event) {
+      this.jsonErrors = $event;
+    },
+    /**
+     *
+     */
     onEdit(delta, oldContents, source) {
+    //onEdit({ quill, html, text }) {
       if (!this.canEmit) {
-        return;
-      }
-
-      if (source !== 'user') {
         return;
       }
 
@@ -204,6 +206,9 @@ export default {
      *
      */
     onUpdate($event, $origin) {
+      if ( !$event ) {
+        return;
+      }
       if ($origin === this.origin) {
         this.edited = $event.data.edited;
         return;
@@ -282,7 +287,7 @@ export default {
      */
     setInnerHTML(newValue) {
       //this.$refs.Quill.quill.container.children[0].innerHTML = newValue;
-      this.$refs.Quill.quill.setText(newValue);
+      this.$refs?.Quill?.quill?.setText(newValue);
       //this.$refs.Quill.quill.container.children[0].innerHTML = '';
       //this.$refs.Quill.quill.pasteHTML(newValue, 'silent');
     },

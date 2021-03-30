@@ -25,7 +25,8 @@ module.exports = (config) => {
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '../../../src')
-        }
+        },
+        extensions: ['.js', '.vue']
       },
 
       target: 'electron-renderer'

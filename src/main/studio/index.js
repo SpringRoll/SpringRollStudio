@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { ipcMain, dialog, BrowserWindow } from 'electron';
-import { EVENTS, DIALOGS } from '../../contents';
+import { EVENTS, DIALOGS } from '../../constants';
 import { projectInfo, gamePreview, captionInfo } from './storage';
 
 import ProjectTemplateCreator from './managers/ProjectTemplateCreator';

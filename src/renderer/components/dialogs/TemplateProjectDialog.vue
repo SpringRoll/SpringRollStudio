@@ -105,7 +105,7 @@
 import { mapState } from 'vuex';
 import { ipcRenderer, remote } from 'electron';
 import { join } from 'path';
-import { EVENTS } from '../../../contents';
+import { EVENTS } from '@/constants';
 
 export default {
   props: {

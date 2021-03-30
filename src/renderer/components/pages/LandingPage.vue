@@ -39,7 +39,7 @@ import {
 import {
   EVENTS,
   DIALOGS
-} from '../../../contents';
+} from '@/constants';
 const package_json = require('../../../../package.json');
 
 export default {

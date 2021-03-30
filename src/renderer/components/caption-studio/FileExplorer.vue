@@ -52,7 +52,7 @@
 
 <script>
 import FileProcessor from '@/renderer/class/FileProcessor';
-import FileDirectory from '@/renderer/components/FileDirectory';
+import FileDirectory from '@/renderer/components/caption-studio/FileDirectory';
 import {
   EventBus
 } from '@/renderer/class/EventBus';
@@ -64,7 +64,7 @@ import {
 } from 'electron';
 import {
   EVENTS
-} from '../../contents';
+} from '@/constants';
 
 export default {
   components: {

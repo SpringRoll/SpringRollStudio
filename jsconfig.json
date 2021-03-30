@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "es6",
-    "moduleResolution": "node",
-    "target": "es6",
-    "sourceMap": true,
-  },
-  "include": ["src/**/*"]
-}

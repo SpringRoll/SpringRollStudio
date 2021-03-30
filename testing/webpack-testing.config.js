@@ -39,6 +39,10 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader'
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2|otf)$/,
+        loader: 'file-loader'
       }
     ]
   },
@@ -49,4 +53,4 @@ module.exports = {
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
   }
-}
+};

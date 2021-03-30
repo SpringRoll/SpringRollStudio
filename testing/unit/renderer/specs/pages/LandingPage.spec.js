@@ -1,5 +1,5 @@
 import { createVue } from '../../utils/VueUtils';
-import { EVENTS, DIALOGS } from '@/contents';
+import { EVENTS, DIALOGS } from '@/constants';
 import LandingPage from '@/renderer/components/pages/LandingPage.vue';
 import Sinon from 'sinon';
 

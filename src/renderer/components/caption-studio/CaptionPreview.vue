@@ -61,7 +61,7 @@ export default {
     this.setup();
     EventBus.$on('caption_changed', this.setActiveCaption);
     EventBus.$on('caption_data', this.loadCaptionData);
-    EventBus.$on('caption_data_opened', this.loadJSONData);
+    EventBus.$on('caption_data_opened', this.loadCaptionData);
     EventBus.$on('time_current', this.onTimeChange);
     EventBus.$on('caption_reset', this.setup);
   },
@@ -71,7 +71,6 @@ export default {
   destroyed() {
     EventBus.$off('caption_changed', this.setActiveCaption);
     EventBus.$off('caption_data', this.loadCaptionData);
-    EventBus.$off('caption_data_opened', this.loadJSONData);
     EventBus.$off('time_current', this.onTimeChange);
     EventBus.$off('caption_reset', this.setup);
   },
@@ -92,6 +91,9 @@ export default {
      *
      */
     setActiveCaption($event) {
+      if ($event === undefined) {
+        return;
+      }
       const { name, index, lastIndex } = $event;
       this.name = name;
       this.index = index;
@@ -101,7 +103,7 @@ export default {
      *
      */
     setup() {
-      const element = document.getElementsByClassName('captions__content')[0];
+      const element = this.$el.querySelectorAll('.captions__content')[0];
       element.innerHTML = '';
 
       this.captionPlayer = new CaptionPlayer([], new HtmlRenderer(element));
@@ -110,6 +112,9 @@ export default {
      *
      */
     loadCaptionData($event) {
+      if ($event === undefined) {
+        return;
+      }
       this.data = $event;
       this.captionPlayer.captions = CaptionFactory.createCaptionMap($event);
       this.captionPlayer.start(
@@ -120,14 +125,10 @@ export default {
     /**
      *
      */
-    loadJSONData($event) {
-      this.data = $event;
-      this.captionPlayer.captions = CaptionFactory.createCaptionMap($event);
-    },
-    /**
-     *
-     */
     onTimeChange($event) {
+      if ($event === undefined) {
+        return;
+      }
       this.captionPlayer.start(this.name, $event.time);
       const i = this.captionPlayer.activeCaption.lineIndex - 1;
       if (i !== this.index) {

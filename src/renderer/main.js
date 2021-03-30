@@ -7,7 +7,7 @@ import store from './store';
 
 import App from './App.vue';
 import { ipcRenderer } from 'electron';
-import { EVENTS } from '../contents';
+import { EVENTS } from '@/constants';
 
 // Plugins
 import './plugins';
