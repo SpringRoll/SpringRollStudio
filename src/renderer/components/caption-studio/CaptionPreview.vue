@@ -61,6 +61,7 @@ export default {
     this.setup();
     EventBus.$on('caption_changed', this.setActiveCaption);
     EventBus.$on('caption_data', this.loadCaptionData);
+    EventBus.$on('caption_data_opened', this.loadCaptionData);
     EventBus.$on('time_current', this.onTimeChange);
     EventBus.$on('caption_reset', this.setup);
   },
