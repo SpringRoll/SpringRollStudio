@@ -117,9 +117,6 @@ export default {
      *
      */
     onEvent(node, event) {
-      if (event.type === 'blur') {
-        console.log('blurrrred', node);
-      }
       if (event.type !== 'focus') {
         return;
       }

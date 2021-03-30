@@ -30,6 +30,7 @@
 import { EventBus } from '@/renderer/class/EventBus';
 import TimeStamp from './TimeStamp';
 import WaveSurfer from 'wavesurfer.js';
+const fs = require('fs');
 
 export default {
   components: {
@@ -142,11 +143,13 @@ export default {
      *
      */
     loadFile($event) {
-      if ($event.file instanceof File) {
+      if ($event.file?.fullPath) {
         this.isPlaying = false;
         this.hasFile = true;
-        console.log($event.file);
-        this.wave.loadBlob($event.file);
+        fs.readFile($event.file.fullPath, {}, (err, data) => {
+          const blob = new window.Blob([new Uint8Array(data)]);
+          this.wave.loadBlob(blob);
+        });
       }
     },
     /**

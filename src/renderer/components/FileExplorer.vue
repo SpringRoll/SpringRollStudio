@@ -18,47 +18,13 @@
         :active="active"
       />
     </div>
-    <div color="accent" class="v-btn accent explorer__input --file font-semi-bold font-16">
-      <span>Import Files</span>
-      <input class="explorer__file-input" type="file" webkitdirectory="" multiple="multiple" @change="loadFiles" />
-    </div>
-    <v-dialog v-model="dialog" width="500">
-      Loading files
-    </v-dialog>
-    <!-- <v-dialog v-else v-model="dialog" width="500">
-      <template v-slot:activator="{ on }">
-        <v-btn
-          color="accent"
-          class="v-btn explorer__input --file font-semi-bold font-16"
-          v-on="{ on }"
-        >
-          Import Files
-        </v-btn>
-      </template>
-      <v-card>
-        <v-card-title class="error" primary-title>
-          <h2 class="font-semi-bold json__dialog-title">Warning</h2>
-        </v-card-title>
-        <v-card-text>
-          <p>Importing new files will remove the currently imported files.</p>
-          <p>Your previous work will remain and you will still be able to edit it directly via JSON</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="accent"
-            class="v-btn explorer__input --dialog font-semi-bold font-16"
-            @click="dialog = false"
-          >
-            Cancel
-          </v-btn>
-          <div color="error" class="v-btn explorer__input --dialog font-semi-bold font-16">
-            <span>Import Files</span>
-            <input class="explorer__file-input" type="file" webkitdirectory="" multiple @change="loadFiles" />
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
+    <v-btn
+      class="v-btn accent explorer__input --file font-semi-bold font-16"
+      :loading="loadingFiles"
+      @click="sendEvent('openDialog', 'audioLocationSetter')"
+    >
+      Change Audio Directory
+    </v-btn>
   </div>
 </template>
 
@@ -66,34 +32,68 @@
 import FileProcessor from '@/renderer/class/FileProcessor';
 import FileDirectory from '@/renderer/components/FileDirectory';
 import { EventBus } from '@/renderer/class/EventBus';
+import { mapState } from 'vuex';
+import { ipcRenderer } from 'electron';
+import { EVENTS } from '../../contents';
+
+
 export default {
   components: {
     FileDirectory
   },
   /**
-   *
+   * Data object
    */
   data() {
     return {
       directory: FileProcessor.getDirectory(),
-      rawFiles: null,
       active: null,
       dialog: false,
+      loadingFiles: false,
     };
   },
-  /**
-   *
-   */
-  mounted() {
-    EventBus.$on('caption_changed', this.setActive);
+  computed: {
+    ...mapState({
+
+      /**
+       * Returns the path for the current project audio files
+       */
+      audioLocation: function(state) {
+        return state.captionInfo.audioLocation;
+      }
+    })
   },
   /**
-   *
+   * mounted life cycle hook
+   */
+  async mounted() {
+    EventBus.$on('caption_changed', this.setActive);
+    ipcRenderer.on(EVENTS.UPDATE_AUDIO_LOCATION, this.onAudioLocationUpdate);
+    this.loadingFiles = true;
+    this.directory = await FileProcessor.generateDirectories();
+    this.loadingFiles = false;
+  },
+  /**
+   * destroyed life cycle hook
    */
   destroyed() {
     EventBus.$off('caption_changed', this.setActive);
   },
   methods: {
+    /**
+     * Button click handler that will send and event through the ipcRenderer.
+     */
+    sendEvent: function(event, ...args) {
+      ipcRenderer.send.apply(ipcRenderer, [event].concat(args));
+    },
+    /**
+     * Event handler for the project audio file directory changing. Re-builds the directory list with new direction location
+     */
+    onAudioLocationUpdate: async function() {
+      this.loadingFiles = true;
+      this.directory = await FileProcessor.generateDirectories();
+      this.loadingFiles = false;
+    },
     /**
      * Handler for clicking the home button.
      */
@@ -101,28 +101,16 @@ export default {
       this.$router.push({ path: '/' });
     },
     /**
-     *
+     * Handler for the filter input field
+     * @param {Object} $event event object
      */
     filter($event) {
       FileProcessor.setNameFilter($event);
-      this.directory = FileProcessor.generateDirectories(this.rawFiles);
+      this.directory = FileProcessor.generateDirectories();
     },
     /**
-     *
-     */
-    loadFiles($event) {
-      this.dialog = true;
-      if (!$event.target.files.length) {
-        return;
-      }
-      this.rawFiles = $event.target.files;
-      console.log(this.rawFiles);
-      this.directory = FileProcessor.generateDirectories(this.rawFiles);
-
-      this.dialog = false;
-    },
-    /**
-     *
+     * Sets the currently selected file
+     * @param {Object} $event event object
      */
     setActive($event) {
       if (null !== $event.file) {

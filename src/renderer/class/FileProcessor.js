@@ -1,4 +1,8 @@
 import Directory from './Directory';
+import store from '../store/';
+const fs = require('fs');
+const path = require('path');
+const FileType = require('file-type');
 
 /**
  * @typedef FileProcessorOptions
@@ -16,45 +20,77 @@ import Directory from './Directory';
  */
 class FileProcessor {
   /**
-   *
-   * @param {*} files
-   * @param {*} param1
+   * @constructor
+   * @param {Object} options
+   * @param {RegExp} options.fileFilter
+   * @param {RegExp|string} options.nameFilter
    */
   constructor(
-    files = null,
     { fileFilter = /(audio\/(mp3|ogg|mpeg)|video\/ogg)$/, nameFilter = '' } = {}
   ) {
     this.clear();
     this.fileFilter = fileFilter;
     this.setNameFilter(nameFilter);
-    this.generateDirectories(files);
     this.directory = new Directory();
     this.hasFiles = false;
+    this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
   }
 
   /**
    * Processes a file list and returns a Directory containing all the files and nested directories to properly simulate the local directory
-   * @param {FileList} files
-   * @returns Directory
+   * @returns Promise<Directory>
    * @memberof FileProcessor
+   * @async
    */
-  generateDirectories(files) {
-    if (!(files instanceof FileList)) {
-      return;
-    }
+  async generateDirectories() {
+    this.parentDirectoryName = path.basename(store.state.captionInfo.audioLocation);
+
     this.clear();
+    const files = await this.generateFileList(store.state.captionInfo.audioLocation);
 
     for (let i = 0, l = files.length; i < l; i++) {
       if (
-        this.fileFilter.test(files[i].type) &&
+        this.fileFilter.test(files[i].type.mime) &&
         this.nameFilter.test(files[i].name)
       ) {
         this.directory.addFile(files[i]);
         this.hasFiles = true;
       }
     }
+
     return this.directory;
   }
+
+  /**
+   * Grabs every file in the given directory path and formats it into an array of usable File-like objects
+   * @param {string} dirPath full path to directory
+   * @param {Object[]} [arrayOfFiles] array of prevoiously created file objects. Mostly used for recursive calls
+   * @returns Promise<Object[]>
+   * @memberof FileProcessor
+   * @async
+   */
+  async generateFileList(dirPath, arrayOfFiles = []) {
+    const fileList = fs.readdirSync(dirPath, { withFileTypes: true });
+
+    for (let i = 0, l = fileList.length; i < l; i++) {
+      if (fileList[i].isDirectory()) {
+        arrayOfFiles = await this.generateFileList(path.join(dirPath, fileList[i].name), arrayOfFiles);
+      } else {
+        const type = await FileType.fromFile(path.join(dirPath, fileList[i].name));
+        if (type) {
+          arrayOfFiles.push({
+            name: fileList[i].name,
+            fullPath: path.join(dirPath, fileList[i].name),
+            relativePath: path.join('' + this.parentDirectoryName, path.relative(store.state.captionInfo.audioLocation, path.join(dirPath, fileList[i].name))),
+            type,
+          });
+        }
+      }
+    }
+
+    return arrayOfFiles;
+  }
+
 
   /**
    * Clears the current Directory instance

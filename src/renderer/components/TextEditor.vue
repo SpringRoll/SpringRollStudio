@@ -208,7 +208,6 @@ export default {
         this.edited = $event.data.edited;
         return;
       }
-      console.log($event, $origin);
       const { start, end, content, edited } = $event.data;
       this.start = start;
       this.end = end;
@@ -268,7 +267,6 @@ export default {
      *
      */
     formatHTML(html) {
-      console.log(html, this.content);
       const parser = new DOMParser();
       const lines = Array.from(parser.parseFromString(html.replace((/<p><br><\/p>/g), ''), 'text/html').querySelectorAll('p')).map(line => line.innerHTML);
       return lines.join('<br>');
