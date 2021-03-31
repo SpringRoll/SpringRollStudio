@@ -1,0 +1,73 @@
+name: Build/release
+
+on:
+  push:
+    tags:
+      - v1.*
+
+jobs:
+  full-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: npm install
+      run: npm ci
+      env:
+        CI: true
+
+    - name: Running tests
+      uses: GabrielBB/xvfb-action@v1.2
+      with:
+        run: npm test
+
+  release:
+    needs: full-test
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+
+          # Use vue-cli-service electron:build
+          use_vue_cli: true
+
+          # Mac OSX signing information
+          # mac_certs: ${{ secrets.mac_signing_cert }}
+          # mac_certs_password: ${{ secrets.mac_signing_pass }}
+
+          # Windows signing information
+          # windows_certs:${{ secrets.win_signing_cert }}
+          # windows_certs_password: ${{ secrets.win_signing_pass }}
+
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}

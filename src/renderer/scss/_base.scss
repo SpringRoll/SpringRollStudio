@@ -1,0 +1,14 @@
+html {
+  font-size: 62.5%;
+  width: 100%;
+}
+
+body, .application, #app {
+  @extend .font;
+  @extend .font-16;
+  background-color: $white;
+  color: #293F4F;
+  width: 100%;
+}
+
+

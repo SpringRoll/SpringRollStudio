@@ -1,86 +1,51 @@
-# Deprecated
-With the release of SpringRoll 2.0 this repository has been deprecated.
+# springroll-studio
 
-To manage captions you can checkout the new online solution at [springroll.io](http://springroll.io) and for creating new game projects you can check out [SpringRoll-Seed](https://github.com/SpringRoll/Springroll-Seed)
+Springroll Studio provides a convenient desktop application for creating and managing [Springroll](https://github.com/SpringRoll/SpringRoll) applications.
 
-SpringRollStudio [![Dependency Status](https://david-dm.org/SpringRoll/SpringRollStudio.svg)](https://david-dm.org/SpringRoll/SpringRollStudio)
-============
+## Features
 
-SpringRollStudio is an native application (build with [NW.js](http://nwjs.io/) and designed to provide graphic user interfaces for building and managing [SpringRoll](https://github.com/SpringRoll/SpringRoll) projects.
+### Game Preview
+Springroll Studio has a built in [SpringrollContainer](https://github.com/SpringRoll/SpringRollContainer) environment that can load your game directly from your projects deploy folder or from a URL(local or otherwise), allowing you to test your game within the full Springroll environment.
 
-**Features**
-* Manage a captions library
-* Remote debugging over a network
-* Run Grunt tasks for SpringRoll projects
-* Scaffold a new project with support for custom templates
+### Project Templating
+Using the Create Project option you can download one of the [Springroll Seed Projects](https://github.com/SpringRoll/Springroll-Seed) and have a Springroll project set up and ready for development in seconds. PIXI, Phaser, and CreateJS versions are available.
 
-## Dependencies
+### Caption Studio
+Caption Studio is designed to help you in creating audio caption files (JSON format) for use in Springroll projects. Caption Studio reads your project (or selected audio directory) for any appropriate audio files and allows you to select which files you want to caption. It features:
+- An interactable waveform of your audio file
+- A directory structure for easy file selection and searching
+- A Springroll caption renderer that will display your captions while the audio file is playing
+- A JSON preview that allows you to edit your caption JSON output directly. You can either save this JSON to your project, or export it as a file to download if you so choose.
 
-In order to build SpringRollStudio, there are some external global dependencies that are required.
+###
 
-### grunt
-
-Grunt is required to build. See the [getting started guide](http://gruntjs.com/getting-started).
-
-```bash
-npm install -g grunt-cli
+## Project setup
 ```
-
-### appdmg
-
-[node-appdmg](https://github.com/LinusU/node-appdmg) is required to create the OS X DMG installer image.
-
-```bash
-npm install -g appdmg
-```
-
-### makensis
-
-[makensis](http://nsis.sourceforge.net/Main_Page) is required to create the Windows setup executable. Can be installed with [brew](http://brew.sh/):
-
-```bash
-brew install makensis
-```
-
-### xquarts & wine
-
-On OSX if building for Windows, Wine needs to be installed to create the application icon. First install xquartz by downloading [here](http://xquartz.macosforge.org/landing/), then Wine can be installed with [Homebrew](http://brew.sh/)
-
-```bash
-brew install wine
-```
-
-## Building
-
-Before building, make sure to run NPM install to import Node dependencies for building the project.
-
-```bash
 npm install
 ```
 
-The build tasks extend [project-grunt](https://github.com/CloudKidStudio/project-grunt) and all those Grunt tasks can be used when building SpringRoll Studio. In addition, there are several Grunt tasks that are specific and useful to building the [NW.js](http://nwjs.io/) app:
-
-Task | Description
----|---
-**app:(win32,win64,osx64,osx32)** | Builds a release version of the NW.js app, when no platform is specified, all platforms are built.
-**app-debug:(win32,win64,osx64,osx32)** | Builds a debug version of the NW.js app, when no platform is specified, all platforms are build in debug mode.
-**package:(win32,win64,osx64,osx32)** | Create the OSX and Windows installers, also optional platform
-**open:(win32,win64,osx64,osx32)** | Open the OSX application, also optional platform
-
-### Examples
-
-Build SpringRollStudio in debug mode for OS X run:
-
-```bash
-grunt app-debug:osx64 open:osx64
+### Compiles and hot-reloads for development
+```
+npm run dev
 ```
 
-Build SpringRollStudio for all platforms and package for all using:
-
-```bash
-grunt app package
+### Compiles and minifies for production
+```
+npm run electron:build
 ```
 
-### Known Issues
+After running this command you will find the application install files in the `build` directory. These can be run and/or installed in the same manner as any other desktop application.
 
-* On OS X,  building Windows 32-bit and 64-bit platforms back-to-back have been known to fail when using Wine to update the icon. The workaround is to build one platform at a time.
+### Testing
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

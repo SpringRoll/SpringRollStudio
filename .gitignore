@@ -1,25 +1,28 @@
-build
+.DS_Store
 node_modules
-components
-cache
-docs
-deploy/*.html
-*.log
-*.map
-deploy/assets/js/*.js
-deploy/assets/css/*.css
-deploy/tasks-test.html
-deploy/assets/templates/default
-deploy/captions.html
+/dist
 
-deploy/index.html
+build/*
+!build/icons
 
-deploy/new.html
+# local env files
+.env.local
+.env.*.local
 
-deploy/preview.html
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-deploy/remote.html
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-deploy/tasks-terminal.html
-
-deploy/tasks.html
+#Electron-builder output
+/dist_electron

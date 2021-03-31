@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="378px" viewBox="0 0 1024 378" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>Path 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="26.671468%" y1="54.7662306%" x2="98.5550582%" y2="41.0832526%" id="linearGradient-1">
+            <stop stop-color="#02D6F3" offset="0%"></stop>
+            <stop stop-color="#079EDA" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.2">
+        <g id="Home" transform="translate(0.000000, -616.000000)" fill="url(#linearGradient-1)">
+            <g id="wave" transform="translate(0.000000, 402.000000)">
+                <path d="M-381.479675,335 C-233.479675,335 -206.479675,463 -59.4796748,463 C87.5203252,463 206.520325,257 329.520325,257 C452.520325,257 504.520325,395 672.520325,395 C840.520325,395 902,210 1065,210 C1173.66667,210 1163.50678,430.666667 1034.52033,872 L317.520325,859 L-185.479675,841 C-414.813008,503.666667 -480.146341,335 -381.479675,335 Z" id="Path-6"></path>
+            </g>
+        </g>
+    </g>
+</svg>

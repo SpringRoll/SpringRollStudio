@@ -1,0 +1,51 @@
+@import "~@/renderer/scss/sizes";
+@import "~@/renderer/scss/colors";
+
+@mixin quill-label($label, $size) {
+  .ql-snow .ql-picker.ql-size {
+    & .ql-picker-item[data-value="#{$size}"]::before {
+      content: $label;
+    }
+
+    & .ql-picker-label[data-value="#{$size}"]::before {
+      content: $label;
+    }
+  }
+}
+
+@include quill-label("14px", "14px");
+@include quill-label("16px", "16px");
+@include quill-label("18px", "18px");
+@include quill-label("21px", "21px");
+
+.ql-toolbar.ql-snow {
+  border: none;
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+}
+
+.ql-container.ql-snow {
+  border: none;
+}
+
+.ql-snow .ql-color-picker,
+.ql-snow .ql-icon-picker {
+  width: 31px;
+}
+
+.ql- {
+  &toolbar {
+    height: 5.6rem;
+    display: flex;
+    align-items: center;
+    background-color: $grey;
+  }
+
+  &editor {
+    background-color: $white-background-opacity;
+  }
+
+  &container {
+    height: 23.6rem !important;
+  }
+}
