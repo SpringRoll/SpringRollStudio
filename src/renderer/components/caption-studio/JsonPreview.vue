@@ -324,7 +324,7 @@ export default {
         }
         file.forEach((caption, index) => {
           if (caption.edited || $origin === this.origin) {
-            if (!caption.content || !caption.content.trim() ) {
+            if (!caption.content || !caption.content.trim()) {
               errors[key].push(`Error at caption [${key}], index [${index}]: Caption content must be non-empty`);
             }
             if ('number' !== typeof caption.start || caption.start < 0) {

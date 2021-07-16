@@ -73,6 +73,7 @@ class CaptionManager {
     if ($origin !== 'userOpen') {
       store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     }
+
     Object.keys($event).forEach((key) => {
       $event[key].forEach((caption, index) => {
 
@@ -84,6 +85,7 @@ class CaptionManager {
         if (!current) {
           this.addCaption(key, $origin);
         }
+
         this.data[key][index] = {
           content: caption.content || current.content,
           end: 'number' === typeof caption.end ? caption.end : current.end,
