@@ -322,6 +322,7 @@ export default {
         if (!Array.isArray(file)) {
           return;
         }
+
         file.forEach((caption, index) => {
           if (caption.edited || $origin === this.origin) {
             if (!caption.content || !caption.content.trim()) {
