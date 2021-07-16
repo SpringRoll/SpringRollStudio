@@ -316,27 +316,28 @@ export default {
         errors[key] = [];
 
         const file = json[key];
+        if (!file) {
+          return;
+        }
         if (!Array.isArray(file)) {
           return;
         }
-        if (file) {
-          file.forEach((caption, index) => {
-            if (caption.edited || $origin === this.origin) {
-              if (!caption.content || !caption.content.trim() ) {
-                errors[key].push(`Error at caption [${key}], index [${index}]: Caption content must be non-empty`);
-              }
-              if ('number' !== typeof caption.start || caption.start < 0) {
-                errors[key].push(`Error at caption [${key}], index [${index}]: Caption start must have a positive number value`);
-              }
-              if ('number' !== typeof caption.end || caption.end < 0) {
-                errors[key].push(`Error at caption [${key}], index [${index}]: Caption end must have a positive number value`);
-              }
-              if (caption.start >= caption.end) {
-                errors[key].push(`Error at caption [${key}], index [${index}]: Caption start must be less than the caption end`);
-              }
+        file.forEach((caption, index) => {
+          if (caption.edited || $origin === this.origin) {
+            if (!caption.content || !caption.content.trim() ) {
+              errors[key].push(`Error at caption [${key}], index [${index}]: Caption content must be non-empty`);
             }
-          });
-        }
+            if ('number' !== typeof caption.start || caption.start < 0) {
+              errors[key].push(`Error at caption [${key}], index [${index}]: Caption start must have a positive number value`);
+            }
+            if ('number' !== typeof caption.end || caption.end < 0) {
+              errors[key].push(`Error at caption [${key}], index [${index}]: Caption end must have a positive number value`);
+            }
+            if (caption.start >= caption.end) {
+              errors[key].push(`Error at caption [${key}], index [${index}]: Caption start must be less than the caption end`);
+            }
+          }
+        });
 
         if (errors[key].length <= 0) {
           delete errors[key];
