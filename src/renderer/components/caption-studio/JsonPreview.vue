@@ -234,7 +234,7 @@ export default {
      * Updates current JSON data when CaptionManager emits the new caption data
      */
     update(data, $origin) {
-      // this.checkErrors(data, $origin);
+      this.checkErrors(data, $origin);
 
       this.data = this.cleanData(data);
       this.$refs.jsonEditor.editor.update(this.data);
