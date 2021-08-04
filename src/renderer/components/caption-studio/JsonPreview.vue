@@ -1,7 +1,7 @@
 <template>
   <div class="json">
     <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="446px" />
-    <div class="json__button-group" :class="{'--code': mode === 'code'}">
+    <div class="json__button-group" :class="{'--code': currentMode === 'code'}">
       <v-dialog v-model="saveErrorDialog" width="500">
         <v-card>
           <v-card-title class="error" primary-title>
@@ -83,14 +83,12 @@ export default {
       origin: 'JsonPreview',
       activeFile: '',
       fileNameMap: {},
-      mode: 'form',
+      currentMode: 'form',
       options: {
-        //onChangeJSON: this.onEdit,
         onChangeText: this.onEdit,
         modes: [ 'form', 'code'],
         onEvent: this.onEvent,
         onModeChange: this.onModeChange,
-        onError: this.onError,
       },
     };
   },
@@ -162,16 +160,10 @@ export default {
       EventBus.$emit('json_update', parsed, this.origin);
     },
     /**
-     * handles errors from jso editor
-     */
-    onError($event) {
-      console.log($event);
-    },
-    /**
      * handles JSON viewer mode change (text or form)
      */
     onModeChange(newMode) {
-      this.mode = newMode;
+      this.currentMode = newMode;
     },
     /**
      * Handles the save caption event from app menu or keyboard shortcut
