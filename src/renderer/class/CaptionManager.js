@@ -83,10 +83,6 @@ class CaptionManager {
 
         const current = this.data[key];
 
-        if (!current) {
-          this.addCaption(key, $origin);
-        }
-
         this.data[key][index] = {
           content: caption.content || current.content,
           end: 'number' === typeof caption.end ? caption.end : current.end,

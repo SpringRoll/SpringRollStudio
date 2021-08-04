@@ -117,6 +117,10 @@ export default {
       }
       this.data = $event;
       this.captionPlayer.captions = CaptionFactory.createCaptionMap($event);
+
+      if (!this.name) {
+        return;
+      }
       this.captionPlayer.start(
         this.name,
         this.data[this.name][this.index].start
