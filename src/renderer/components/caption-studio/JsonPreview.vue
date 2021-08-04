@@ -84,8 +84,9 @@ export default {
       activeFile: '',
       fileNameMap: {},
       options: {
-        onChangeJSON: this.onEdit,
-        mode: 'form',
+        //onChangeJSON: this.onEdit,
+        onChangeText: this.onEdit,
+        modes: [ 'form', 'text'],
         onEvent: this.onEvent
       },
     };
@@ -143,11 +144,11 @@ export default {
      * Handles JSON Editor changes
      */
     onEdit($event) {
-      this.checkErrors($event, this.origin);
+      this.checkErrors(JSON.parse($event), this.origin);
       if (this.jsonErrors) {
         return;
       }
-      EventBus.$emit('json_update', $event, this.origin);
+      EventBus.$emit('json_update', JSON.parse($event), this.origin);
     },
     /**
      * Handles the save caption event from app menu or keyboard shortcut
@@ -206,6 +207,10 @@ export default {
       const file = this.fileNameMap[node.path[0]];
       const index = node.path[1];
       const indexDelta = index - this.currentIndex;
+
+      if (this.currentIndex === index) {
+        return;
+      }
 
       if (this.activeFile === node.path[0]) {
         EventBus.$emit('caption_move_index', indexDelta, this.origin);
@@ -319,6 +324,10 @@ export default {
         errors[key] = [];
 
         const file = json[key];
+
+        if (!file) {
+          return;
+        }
 
         if (!Array.isArray(file)) {
           return;
