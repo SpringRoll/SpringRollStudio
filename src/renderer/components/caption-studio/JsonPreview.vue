@@ -1,7 +1,7 @@
 <template>
   <div class="json">
     <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="446px" />
-    <div class="json__button-group">
+    <div class="json__button-group" :class="{'--code': mode === 'code'}">
       <v-dialog v-model="saveErrorDialog" width="500">
         <v-card>
           <v-card-title class="error" primary-title>
@@ -83,11 +83,14 @@ export default {
       origin: 'JsonPreview',
       activeFile: '',
       fileNameMap: {},
+      mode: 'form',
       options: {
         //onChangeJSON: this.onEdit,
         onChangeText: this.onEdit,
-        modes: [ 'form', 'text'],
-        onEvent: this.onEvent
+        modes: [ 'form', 'code'],
+        onEvent: this.onEvent,
+        onModeChange: this.onModeChange,
+        onError: this.onError,
       },
     };
   },
@@ -144,11 +147,31 @@ export default {
      * Handles JSON Editor changes
      */
     onEdit($event) {
-      this.checkErrors(JSON.parse($event), this.origin);
+      let parsed;
+
+      //the code will work without this block, but the console.errors will fill up the console
+      try {
+        parsed = JSON.parse($event);
+      } catch {
+        return;
+      }
+      this.checkErrors(parsed, this.origin);
       if (this.jsonErrors) {
         return;
       }
-      EventBus.$emit('json_update', JSON.parse($event), this.origin);
+      EventBus.$emit('json_update', parsed, this.origin);
+    },
+    /**
+     * handles errors from jso editor
+     */
+    onError($event) {
+      console.log($event);
+    },
+    /**
+     * handles JSON viewer mode change (text or form)
+     */
+    onModeChange(newMode) {
+      this.mode = newMode;
     },
     /**
      * Handles the save caption event from app menu or keyboard shortcut
@@ -385,6 +408,20 @@ $menu-height: 5.6rem;
   &__editor {
     width: 100%;
   }
+  .jsoneditor-contextmenu {
+    .jsoneditor-menu {
+      border-radius: 10px;
+      color: white;
+
+      button {
+        color: $white;
+
+        &:hover {
+          color: $black;
+        }
+      }
+    }
+  }
 
   .jsoneditor-menu {
     background-color: $accent;
@@ -413,8 +450,6 @@ $menu-height: 5.6rem;
   }
 
   &__errors {
-    position: relative;
-    top: 2.25rem;
     color: red;
   }
 
@@ -437,9 +472,14 @@ $menu-height: 5.6rem;
     &-group {
       display: flex;
       width: 100%;
+      margin-top: 2.2rem;
       min-height: 3.6rem;
       align-items: center;
       border-radius: 2rem;
+
+      &.--code {
+        margin-top: 5.2rem;
+      }
 
       &>* {
         width: 50%;
