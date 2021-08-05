@@ -6,7 +6,6 @@
       <v-btn
         color="accent"
         class="font-semi-bold font-16 capitalize"
-        :block="true"
         :disabled="atStart"
         @click="prev"
       >
@@ -15,7 +14,7 @@
       <v-btn
         color="accent"
         class="font-semi-bold font-16 capitalize"
-        :block="true"
+
         :disabled="atEnd"
         @click="next"
       >
@@ -179,6 +178,7 @@ export default {
     .v-btn {
       border-radius: 0;
       margin: 0 0.09rem;
+      width: 50%;
     }
   }
 }
