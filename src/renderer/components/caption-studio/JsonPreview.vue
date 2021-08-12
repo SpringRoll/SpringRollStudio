@@ -86,7 +86,7 @@ export default {
       currentMode: 'form',
       options: {
         onChangeText: this.onEdit,
-        modes: [ 'form', 'code'],
+        modes: [ 'form', 'code' ],
         onEvent: this.onEvent,
         onModeChange: this.onModeChange,
       },
@@ -153,7 +153,9 @@ export default {
       } catch {
         return;
       }
+
       this.checkErrors(parsed, this.origin);
+
       if (this.jsonErrors) {
         return;
       }
