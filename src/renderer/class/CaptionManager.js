@@ -74,6 +74,10 @@ class CaptionManager {
       store.dispatch('setIsUnsavedChanges', { isUnsavedChanges: true });
     }
 
+    // reset the data obect everytime the JSON updates rather than just update the captions that need it
+    // because otherwise when the editor is in "code" mode, any deletions will get overwritten
+    this.data = {};
+
     Object.keys($event).forEach((key) => {
       $event[key].forEach((caption, index) => {
 
