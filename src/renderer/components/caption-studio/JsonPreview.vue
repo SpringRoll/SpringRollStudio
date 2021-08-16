@@ -1,7 +1,7 @@
 <template>
   <div class="json">
     <v-jsoneditor ref="jsonEditor" class="json__editor" :options="options" :plus="false" height="446px" />
-    <div class="json__button-group">
+    <div class="json__button-group" :class="{'--code': currentMode === 'code'}">
       <v-dialog v-model="saveErrorDialog" width="500">
         <v-card>
           <v-card-title class="error" primary-title>
@@ -83,10 +83,12 @@ export default {
       origin: 'JsonPreview',
       activeFile: '',
       fileNameMap: {},
+      currentMode: 'form',
       options: {
-        onChangeJSON: this.onEdit,
-        mode: 'form',
-        onEvent: this.onEvent
+        onChangeText: this.onEdit,
+        modes: [ 'form', 'code' ],
+        onEvent: this.onEvent,
+        onModeChange: this.onModeChange,
       },
     };
   },
@@ -143,11 +145,27 @@ export default {
      * Handles JSON Editor changes
      */
     onEdit($event) {
-      this.checkErrors($event, this.origin);
+      let parsed;
+
+      //the code will work without this block, but the console.errors will fill up the console
+      try {
+        parsed = JSON.parse($event);
+      } catch {
+        return;
+      }
+
+      this.checkErrors(parsed, this.origin);
+
       if (this.jsonErrors) {
         return;
       }
-      EventBus.$emit('json_update', $event, this.origin);
+      EventBus.$emit('json_update', parsed, this.origin);
+    },
+    /**
+     * handles JSON viewer mode change (text or form)
+     */
+    onModeChange(newMode) {
+      this.currentMode = newMode;
     },
     /**
      * Handles the save caption event from app menu or keyboard shortcut
@@ -206,6 +224,10 @@ export default {
       const file = this.fileNameMap[node.path[0]];
       const index = node.path[1];
       const indexDelta = index - this.currentIndex;
+
+      if (this.currentIndex === index) {
+        return;
+      }
 
       if (this.activeFile === node.path[0]) {
         EventBus.$emit('caption_move_index', indexDelta, this.origin);
@@ -320,6 +342,10 @@ export default {
 
         const file = json[key];
 
+        if (!file) {
+          return;
+        }
+
         if (!Array.isArray(file)) {
           return;
         }
@@ -376,6 +402,20 @@ $menu-height: 5.6rem;
   &__editor {
     width: 100%;
   }
+  .jsoneditor-contextmenu {
+    .jsoneditor-menu {
+      border-radius: 10px;
+      color: white;
+
+      button {
+        color: $white;
+
+        &:hover {
+          color: $black;
+        }
+      }
+    }
+  }
 
   .jsoneditor-menu {
     background-color: $accent;
@@ -404,8 +444,6 @@ $menu-height: 5.6rem;
   }
 
   &__errors {
-    position: relative;
-    top: 2.25rem;
     color: red;
   }
 
@@ -428,9 +466,14 @@ $menu-height: 5.6rem;
     &-group {
       display: flex;
       width: 100%;
+      margin-top: 2.2rem;
       min-height: 3.6rem;
       align-items: center;
       border-radius: 2rem;
+
+      &.--code {
+        margin-top: 5.2rem;
+      }
 
       &>* {
         width: 50%;
