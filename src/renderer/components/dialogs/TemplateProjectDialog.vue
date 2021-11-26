@@ -103,7 +103,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer, dialog } from 'electron';
 import { join } from 'path';
 import { EVENTS } from '@/constants';
 
@@ -176,8 +176,7 @@ export default {
       }
       // Open dialog in renderer process because this is a temp location
       // until the template dialog confirm action is selected.
-      //TODO: switch use of remote over to ipcRenderer.invoke() and ipcMain.handle()
-      const result = remote.dialog.showOpenDialogSync(remote.getCurrentWindow(), {
+      const result = dialog.showOpenDialogSync({
         title: 'Select Project Location',
         properties: ['openDirectory'],
         defaultPath

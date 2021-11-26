@@ -128,7 +128,7 @@
 import { Container, PausePlugin, SoundPlugin, CaptionsTogglePlugin, CaptionsStylePlugin } from 'springroll-container';
 import { mapState } from 'vuex';
 import { join } from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 let springrollContainer;
 
@@ -239,8 +239,7 @@ export default {
      * Handler for clicking the refresh button.
      */
     onRefreshClick: function() {
-      //TODO: switch use of remote over to ipcRenderer.invoke() and ipcMain.handle()
-      remote.getCurrentWebContents().reload();
+      ipcRenderer.send('reload');
     },
     /**
      * handles opening the sound context dropdown
