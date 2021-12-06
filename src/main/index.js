@@ -27,6 +27,11 @@ ipcMain.on('captionStudio', (event, page) => {
   Menu.setApplicationMenu(page ? captionStudioMenu : menu);
 });
 
+// Reload event for game preview
+ipcMain.on('reload', async () => {
+  win.webContents.executeJavaScript('location.reload()');
+});
+
 /**
  * Creates electron window
  */
