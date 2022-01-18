@@ -22,6 +22,7 @@
     "decompress-zip": "^0.2.2",
     "electron-store": "^7.0.0",
     "file-type": "^16.2.0",
+    "http-proxy": "^1.18.1",
     "lodash-es": "^4.17.15",
     "springroll": "^2.4.0",
     "springroll-container": "^2.0.3",
