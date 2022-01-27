@@ -154,6 +154,7 @@ export default {
     EventBus.$on('caption_reset', this.reset);
     EventBus.$on('json_errors', this.onJsonErrors);
     this.$refs.Quill?.quill?.on('text-change', this.onEdit);
+    document.getElementById('quill-editor').addEventListener('paste', catchPasteEvent);
   },
   /**
    *
@@ -300,6 +301,21 @@ export default {
       this.start = this.end = 0;
     }
   },
+};
+
+/**
+ * An event listener that catches the past event on the text editor and pastes all content as plain text
+ * Only works specifically for Quill Editors
+ */
+const catchPasteEvent = (e) => {
+  // cancel paste
+  e.preventDefault();
+
+  // get text representation of clipboard
+  const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+
+  const editor = e.currentTarget.getElementsByClassName('ql-editor')[0];
+  editor.innerText = text;
 };
 </script>
 
