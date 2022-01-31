@@ -154,7 +154,7 @@ export default {
     EventBus.$on('caption_reset', this.reset);
     EventBus.$on('json_errors', this.onJsonErrors);
     this.$refs.Quill?.quill?.on('text-change', this.onEdit);
-    document.getElementById('quill-editor').addEventListener('paste', catchPasteEvent);
+    this.$refs.Quill?.$el.addEventListener('paste', catchPasteEvent);
   },
   /**
    *
