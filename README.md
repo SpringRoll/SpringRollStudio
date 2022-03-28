@@ -21,6 +21,7 @@ Caption Studio is designed to help you in creating audio caption files (JSON for
 
 ## Project setup
 ```
+nvm use
 npm install
 ```
 
