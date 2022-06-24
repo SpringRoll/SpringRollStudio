@@ -18,6 +18,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "7.17.12",
     "core-js": "^3.6.5",
     "decompress-zip": "^0.2.2",
     "electron-store": "^7.0.0",
@@ -50,7 +51,7 @@
     "file-loader": "^6.1.0",
     "karma": "^6.3.16",
     "karma-chai": "^0.1.0",
-    "karma-electron": "^6.3.1",
+    "karma-electron": "7.2.0",
     "karma-mocha": "^2.0.1",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^4.0.0-rc.6",
