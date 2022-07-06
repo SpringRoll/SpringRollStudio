@@ -43,14 +43,15 @@
     "chai": "^4.2.0",
     "css-loader": "^4.0.0",
     "deepmerge": "^4.2.2",
-    "electron": "^11.5.0",
+    "electron": "^13.1.4",
+    "electron-builder": "^23.1.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^6.1.0",
     "karma": "^6.3.16",
     "karma-chai": "^0.1.0",
-    "karma-electron": "^6.3.1",
+    "karma-electron": "^7.2.0",
     "karma-mocha": "^2.0.1",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^4.0.0-rc.6",
@@ -63,7 +64,7 @@
     "sass-loader": "^9.0.2",
     "sinon": "^9.0.3",
     "url-loader": "^4.1.0",
-    "vue-cli-plugin-electron-builder": "~2.0.0-rc.4",
+    "vue-cli-plugin-electron-builder": "^2.1.1",
     "vue-loader": "^15.9.3",
     "vue-style-loader": "^4.1.2",
     "vue-svg-loader": "^0.16.0",
@@ -83,6 +84,10 @@
       "parser": "babel-eslint"
     },
     "rules": {}
+  },
+  "overrides": {
+    "electron-builder": "^23.1.0",
+    "electron": "^13.1.4"
   },
   "browserslist": [
     "> 1%",
