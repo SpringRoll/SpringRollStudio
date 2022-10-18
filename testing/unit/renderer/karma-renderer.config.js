@@ -8,12 +8,17 @@ module.exports = (config) => {
     autoWatch: true,
     singleRun: true,
 
-    files: ['specs/class/*.spec.js','specs/caption-studio/*.spec.js','specs/dialogs/*.spec.js','specs/store/*.spec.js'],
+    files: ['specs/class/*.spec.js','specs/pages/*.spec.js','specs/caption-studio/*.spec.js','specs/dialogs/*.spec.js','specs/store/*.spec.js'],
+    //files: ['specs/**/*.spec.js'],
+    //files: ['specs/**/*.spec.js'],
+
 
     client: {
       useIframe: false
     },
-
+    browserDisconnectTimeout: 100000,
+    browserNoActivityTimeout: 100000,
+    browserDisconnectTolerance: 10,
     frameworks: ['mocha', 'chai'],
     preprocessors: {
       'specs/**/*.spec.js': ['webpack']
