@@ -8,9 +8,10 @@ module.exports = (config) => {
     autoWatch: true,
     singleRun: true,
 
-    files: ['specs/class/*.spec.js','specs/pages/*.spec.js','specs/caption-studio/*.spec.js','specs/dialogs/*.spec.js','specs/store/*.spec.js'],
+    //files: ['specs/class/*.spec.js','specs/caption-studio/*.spec.js','specs/dialogs/*.spec.js','specs/store/*.spec.js'],
     //files: ['specs/**/*.spec.js'],
-    //files: ['specs/**/*.spec.js'],
+    //files: ['specs/pages/*.spec.js'],
+    files: ['specs/test.spec.js'],
 
 
     client: {
