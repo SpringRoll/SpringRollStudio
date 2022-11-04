@@ -7,7 +7,7 @@ module.exports = (config) => {
     colors: true,
     autoWatch: true,
     singleRun: true,
-    files: ['specs/class/*.spec.js','specs/caption-studio/*.spec.js','specs/dialogs/*.spec.js','specs/store/*.spec.js','specs/pages/LandingPage.spec.js'],
+    files: ['specs/pages/CaptionStudio.spec.js'],
     client: {
       useIframe: false
     },
@@ -16,7 +16,7 @@ module.exports = (config) => {
     browserDisconnectTolerance: 10,
     frameworks: ['mocha', 'chai'],
     preprocessors: {
-      'specs/**/*.spec.js': ['webpack']
+      'specs/pages/CaptionStudio.spec.js': ['webpack']
     },
 
     webpack: {

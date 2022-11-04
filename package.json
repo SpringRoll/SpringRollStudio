@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "test": "npm run lint && npm run unit:renderer",
+    "test": "npm run lint && npm run unit:renderer && npm run unit:caption-studio",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "eslint --ext .js,.vue src",
@@ -14,6 +14,7 @@
     "postuninstall": "electron-builder install-app-deps",
     "unit:main": "node_modules/.bin/karma start testing/unit/main/karma-main.config.js",
     "unit:renderer": "node_modules/.bin/karma start testing/unit/renderer/karma-renderer.config.js",
+    "unit:caption-studio": "node_modules/.bin/karma start testing/unit/renderer/karma-caption-studio.config.js",
     "unit:full": "npm run unit:main && npm run unit:renderer"
   },
   "main": "background.js",
