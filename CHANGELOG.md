@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded follow-redirects dependancy for security alert
 - Bumped Node version for tests to 16.x
+- Bumped electron version
+- Created new testing process for CaptionStudio
 
 ## [1.1.0] - 2021-08-16
 
