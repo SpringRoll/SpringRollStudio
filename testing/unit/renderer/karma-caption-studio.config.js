@@ -7,16 +7,16 @@ module.exports = (config) => {
     colors: true,
     autoWatch: true,
     singleRun: true,
-
-    files: ['specs/**/*.spec.js'],
-
+    files: ['specs/pages/CaptionStudio.spec.js'],
     client: {
       useIframe: false
     },
-
+    browserDisconnectTimeout: 100000,
+    browserNoActivityTimeout: 100000,
+    browserDisconnectTolerance: 10,
     frameworks: ['mocha', 'chai'],
     preprocessors: {
-      'specs/**/*.spec.js': ['webpack', 'electron', 'sourcemap']
+      'specs/pages/CaptionStudio.spec.js': ['webpack']
     },
 
     webpack: {
@@ -24,19 +24,16 @@ module.exports = (config) => {
 
       resolve: {
         alias: {
-          '@': path.resolve(__dirname, '../../../src/main')
-        }
+          '@': path.resolve(__dirname, '../../../src')
+        },
+        extensions: ['.js', '.vue']
       },
 
-      target: 'electron-main'
+      target: 'electron-renderer'
     },
     webpackMiddleware: {
       stats: 'errors-only'
     },
-
-    colors: true,
-    autoWatch: true,
-    singleRun: true,
 
     logLevel: config.LOG_INFO,
     reporters: ['progress'],

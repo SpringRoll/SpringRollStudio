@@ -29,7 +29,7 @@ describe('CaptionManager.js', () => {
   });
 
   it('addCaption', async () => {
-    EventBus.$emit('add_caption');
+    EventBus.$emit('caption_add');
     await sleep(10);
     expect(CaptionManager.activeCaption).to.equal(activeName);
     expect(CaptionManager.currentCaptionIndex.content).to.equal(' ');

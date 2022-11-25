@@ -20,14 +20,7 @@ export const createVue = (component, options = {}) => {
         projectInfo,
         gamePreview,
         captionInfo,
-      },
-
-      plugins: [
-        persistentState({
-          name: 'studioConfig',
-          key: 'studio'
-        })
-      ]
+      }
     })
   });
 };
