@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed unit test errors
 - Created new testing process for CaptionStudio
 
+### Fixed
+
+- fixed bug when selecting a caption that caused the new audio file to not be selected and loaded into the wave form
+
 ## [1.1.0] - 2021-08-16
 
 ### Added
@@ -40,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - This CHANGELOG
+
 - VUE front end renderer
 - Electron back end
 - Project Templating via Github or bundled seed projects

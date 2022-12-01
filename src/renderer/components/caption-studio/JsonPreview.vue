@@ -225,11 +225,7 @@ export default {
       const index = node.path[1];
       const indexDelta = index - this.currentIndex;
 
-      if (this.currentIndex === index) {
-        return;
-      }
-
-      if (this.activeFile === node.path[0]) {
+      if (this.activeFile === node.path[0] && indexDelta !== 0) {
         EventBus.$emit('caption_move_index', indexDelta, this.origin);
         return;
       }
