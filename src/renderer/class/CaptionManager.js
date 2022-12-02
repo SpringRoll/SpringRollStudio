@@ -91,6 +91,7 @@ class CaptionManager {
           content: caption.content || current.content,
           end: 'number' === typeof caption.end ? caption.end : current.end,
           start: 'number' === typeof caption.start ? caption.start : current.start,
+          edited: true
         };
       });
     });
@@ -99,7 +100,7 @@ class CaptionManager {
       this.emitOpenedJSON();
       return;
     }
-    this.currentCaptionIndex.edited = true;
+
     this.emitCurrent($origin);
     this.emitData($origin);
   }
@@ -154,7 +155,7 @@ class CaptionManager {
       content: content || current.content,
       end: 'number' === typeof end ? end : current.end,
       start: 'number' === typeof start ? start : current.start,
-      edited: true,
+      edited: true
     };
 
     this.emitCurrent($origin);

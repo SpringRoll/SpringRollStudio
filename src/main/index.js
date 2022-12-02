@@ -5,9 +5,10 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { studio } from './studio';
 import { template, captionStudioTemplate } from './studio/menus/AppMenuTemplate';
+import Store from 'electron-store';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-
+Store.initRenderer();
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -45,7 +46,9 @@ function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       webviewTag: true,
-      webSecurity: false
+      webSecurity: false,
+      contextIsolation: false,
+      enableRemoteModule: true
     }
   });
 
