@@ -100,8 +100,7 @@ class CaptionManager {
       this.emitOpenedJSON();
       return;
     }
-    //this.currentCaptionIndex.edited = true;
-    // -- the above line didnt make sense, edited it out, and set the current caption edited to be true
+
     this.emitCurrent($origin);
     this.emitData($origin);
   }
