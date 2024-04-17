@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded follow-redirects dependancy for security alert
+- Upgraded follow-redirects dependency for security alert
 - Bumped Node version for tests to 16.x
 - Bumped electron version
 - Fixed unit test errors
