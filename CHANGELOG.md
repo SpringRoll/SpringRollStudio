@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped Electron, Mocha, and other dependencies suggested by dependabot
 
-## [1.2.0] - 2024-12-02
+## [1.2.0] - 2022-12-02
 
 ### Changed
 
